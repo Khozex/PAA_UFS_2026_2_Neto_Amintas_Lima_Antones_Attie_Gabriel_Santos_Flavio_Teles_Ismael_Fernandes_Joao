@@ -25,8 +25,8 @@ type Manifest struct {
 }
 
 func main() {
-	in := flag.String("in", "data/githubApiDoc.json", "")
-	out := flag.String("out", "data/processed", "")
+	in := flag.String("in", "../data/githubApiDoc.json", "")
+	out := flag.String("out", "../data/processed", "")
 	size := flag.Int("chunk", 0, "")
 	overlap := flag.Int("overlap", 0, "")
 	flag.Parse()
