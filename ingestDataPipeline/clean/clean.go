@@ -1,8 +1,10 @@
-package main
+package clean
 
 import (
 	"regexp"
 	"strings"
+
+	"paa/ingestDataPipeline/types"
 )
 
 var (
@@ -25,7 +27,7 @@ func CleanText(s string) string {
 	return strings.TrimSpace(s)
 }
 
-func Clean(d Document) Document {
+func Clean(d types.Document) types.Document {
 	d.Summary = CleanText(d.Summary)
 	d.Description = CleanText(d.Description)
 	for i := range d.Params {
@@ -50,6 +52,6 @@ func Clean(d Document) Document {
 	return d
 }
 
-func slicesConcat(a, b []Field) []Field {
-	return append(append([]Field{}, a...), b...)
+func slicesConcat(a, b []types.Field) []types.Field {
+	return append(append([]types.Field{}, a...), b...)
 }

@@ -1,9 +1,4 @@
-package main
-
-import (
-	"encoding/json"
-	"os"
-)
+package types
 
 type Spec struct {
 	Info struct {
@@ -55,11 +50,33 @@ type Schema struct {
 	AllOf       []*Schema          `json:"allOf"`
 }
 
-func Load(path string) (*Spec, error) {
-	b, err := os.ReadFile(path)
-	if err != nil {
-		return nil, err
-	}
-	var s Spec
-	return &s, json.Unmarshal(b, &s)
+type Field struct {
+	Name        string `json:"name"`
+	In          string `json:"in"`
+	Required    bool   `json:"required"`
+	Description string `json:"description"`
+}
+
+type Document struct {
+	ID          string  `json:"id"`
+	Method      string  `json:"method"`
+	Path        string  `json:"path"`
+	Summary     string  `json:"summary"`
+	Description string  `json:"description"`
+	Category    string  `json:"category"`
+	Params      []Field `json:"params"`
+	Body        []Field `json:"body"`
+	Deprecated  bool    `json:"deprecated"`
+	DocsURL     string  `json:"docs_url"`
+	Text        string  `json:"text"`
+}
+
+type Manifest struct {
+	Spec      string             `json:"spec"`
+	Version   string             `json:"version"`
+	License   string             `json:"license"`
+	Docs      int                `json:"docs"`
+	Words     int                `json:"words"`
+	StageMs   map[string]float64 `json:"stage_ms"`
+	Generated string             `json:"generated_at"`
 }
