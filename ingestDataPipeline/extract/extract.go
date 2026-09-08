@@ -1,15 +1,18 @@
-package main
+package extract
 
 import (
+	"maps"
 	"slices"
 	"strings"
+
+	"paa/ingestDataPipeline/types"
 )
 
 var methods = []string{"get", "post", "put", "patch", "delete"}
 
-func Extract(s *Spec) []Document {
-	var docs []Document
-	for _, path := range sortedKeys(s.Paths) {
+func Extract(s *types.Spec) []types.Document {
+	var docs []types.Document
+	for _, path := range slices.Sorted(maps.Keys(s.Paths)) {
 		for _, m := range methods {
 			op := s.Paths[path][m]
 			if op == nil {
@@ -21,8 +24,8 @@ func Extract(s *Spec) []Document {
 	return docs
 }
 
-func toDocument(s *Spec, op *Operation, method, path string) Document {
-	d := Document{
+func toDocument(s *types.Spec, op *types.Operation, method, path string) types.Document {
+	d := types.Document{
 		ID:          op.OperationID,
 		Method:      method,
 		Path:        path,
@@ -38,7 +41,7 @@ func toDocument(s *Spec, op *Operation, method, path string) Document {
 		if name, ok := strings.CutPrefix(p.Ref, "#/components/parameters/"); ok {
 			p = s.Components.Parameters[name]
 		}
-		d.Params = append(d.Params, Field{p.Name, p.In, p.Required, p.Description})
+		d.Params = append(d.Params, types.Field{Name: p.Name, In: p.In, Required: p.Required, Description: p.Description})
 	}
 	if op.RequestBody != nil {
 		d.Body = schemaFields(s, op.RequestBody.Content["application/json"].Schema, 0)
@@ -46,18 +49,18 @@ func toDocument(s *Spec, op *Operation, method, path string) Document {
 	return d
 }
 
-func schemaFields(s *Spec, sc *Schema, depth int) []Field {
+func schemaFields(s *types.Spec, sc *types.Schema, depth int) []types.Field {
 	sc = resolve(s, sc)
 	if sc == nil || depth > 1 {
 		return nil
 	}
-	var out []Field
-	for _, name := range sortedKeys(sc.Properties) {
+	var out []types.Field
+	for _, name := range slices.Sorted(maps.Keys(sc.Properties)) {
 		desc := ""
 		if p := resolve(s, sc.Properties[name]); p != nil {
 			desc = p.Description
 		}
-		out = append(out, Field{name, "body", slices.Contains(sc.Required, name), desc})
+		out = append(out, types.Field{Name: name, In: "body", Required: slices.Contains(sc.Required, name), Description: desc})
 	}
 	for _, alt := range slices.Concat(sc.OneOf, sc.AnyOf, sc.AllOf) {
 		out = append(out, schemaFields(s, alt, depth+1)...)
@@ -65,7 +68,7 @@ func schemaFields(s *Spec, sc *Schema, depth int) []Field {
 	return out
 }
 
-func resolve(s *Spec, sc *Schema) *Schema {
+func resolve(s *types.Spec, sc *types.Schema) *types.Schema {
 	if sc == nil {
 		return nil
 	}
@@ -73,13 +76,4 @@ func resolve(s *Spec, sc *Schema) *Schema {
 		return s.Components.Schemas[name]
 	}
 	return sc
-}
-
-func sortedKeys[V any](m map[string]V) []string {
-	keys := make([]string, 0, len(m))
-	for k := range m {
-		keys = append(keys, k)
-	}
-	slices.Sort(keys)
-	return keys
 }
