@@ -72,11 +72,19 @@ type Document struct {
 }
 
 type Manifest struct {
-	Spec      string             `json:"spec"`
-	Version   string             `json:"version"`
-	License   string             `json:"license"`
-	Docs      int                `json:"docs"`
-	Words     int                `json:"words"`
-	StageMs   map[string]float64 `json:"stage_ms"`
-	Generated string             `json:"generated_at"`
+	Spec        string             `json:"spec"`
+	Version     string             `json:"version"`
+	License     string             `json:"license"`
+	Docs        int                `json:"docs"`
+	Words       int                `json:"words"`
+	WordsPerDoc WordStats          `json:"words_per_doc"`
+	StageMs     map[string]float64 `json:"stage_ms"`
+	Generated   string             `json:"generated_at"`
+}
+
+type WordStats struct {
+	Min    int     `json:"min"`
+	Median float64 `json:"median"`
+	Mean   float64 `json:"mean"`
+	Max    int     `json:"max"`
 }
