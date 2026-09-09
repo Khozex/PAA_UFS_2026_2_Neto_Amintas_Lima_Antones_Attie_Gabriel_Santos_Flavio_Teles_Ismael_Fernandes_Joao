@@ -12,10 +12,15 @@ import (
 	"paa/searchEngine/utils"
 )
 
+var (
+	defaultQuery = "create a repository in an organization"
+	defaultK     = 5
+)
+
 func main() {
 	corpusPath := flag.String("corpus", "data/processed/docs.jsonl", "")
-	query := flag.String("query", "", "pergunta")
-	k := flag.Int("k", 5, "quantos resultados")
+	query := flag.String("query", defaultQuery, "pergunta")
+	k := flag.Int("k", defaultK, "quantos resultados")
 	limit := flag.Int("limit", 0, "usa só os N primeiros documentos")
 	config := flag.String("config", "linear", "linear")
 	flag.Parse()
@@ -26,7 +31,7 @@ func main() {
 	}
 
 	start := time.Now()
-	raws, err := utils.ReadJSONL(*corpusPath)
+	raws, err := utils.ReadJSONL(utils.Resolve(*corpusPath))
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)

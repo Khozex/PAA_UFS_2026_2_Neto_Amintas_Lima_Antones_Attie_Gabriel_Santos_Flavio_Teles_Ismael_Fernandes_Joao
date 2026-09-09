@@ -5,11 +5,11 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"strings"
 	"time"
 
 	"paa/ingestDataPipeline/clean"
 	"paa/ingestDataPipeline/extract"
+	"paa/ingestDataPipeline/stats"
 	"paa/ingestDataPipeline/types"
 	"paa/ingestDataPipeline/utils"
 )
@@ -18,12 +18,13 @@ func main() {
 	in := flag.String("in", "data/githubApiDoc.json", "")
 	out := flag.String("out", "data/processed", "")
 	flag.Parse()
+	outDir := utils.Resolve(*out)
 
 	m := types.Manifest{StageMs: map[string]float64{}, Generated: time.Now().Format(time.RFC3339)}
 	start := time.Now()
 
 	t := time.Now()
-	spec, err := utils.LoadSpec(*in)
+	spec, err := utils.LoadSpec(utils.Resolve(*in))
 	check(err)
 	m.StageMs["load"] = ms(t)
 	m.Spec, m.Version, m.License = spec.Info.Title, spec.Info.Version, spec.Info.License.Name
@@ -35,18 +36,18 @@ func main() {
 	t = time.Now()
 	for i := range docs {
 		docs[i] = clean.Clean(docs[i])
-		m.Words += len(strings.Fields(docs[i].Text))
 	}
 	m.StageMs["clean"] = ms(t)
+	m.Words, m.WordsPerDoc = stats.Words(docs)
 
 	t = time.Now()
-	check(os.MkdirAll(*out, 0o755))
-	check(utils.WriteJSONL(filepath.Join(*out, "docs.jsonl"), docs))
+	check(os.MkdirAll(outDir, 0o755))
+	check(utils.WriteJSONL(filepath.Join(outDir, "docs.jsonl"), docs))
 	m.StageMs["write"] = ms(t)
 	m.Docs = len(docs)
 	m.StageMs["total"] = ms(start)
 
-	b, err := utils.WriteManifest(filepath.Join(*out, "manifest.json"), m)
+	b, err := utils.WriteManifest(filepath.Join(outDir, "manifest.json"), m)
 	check(err)
 	fmt.Println(string(b))
 }

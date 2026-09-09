@@ -11,6 +11,7 @@ ingestDataPipeline/       lê data/githubApiDoc.json, grava data/processed/docs.
   utils/                  LoadSpec, WriteJSONL, WriteManifest
   extract/                Extract: um Document por operação, resolve $ref
   clean/                  Clean: regexes de limpeza, monta o campo text
+  stats/                  Words: total e mín/mediana/média/máx de palavras por documento
 searchEngine/             lê docs.jsonl e responde consultas
   main.go                 execução
   types/                  structs: Document, Field
