@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"paa/searchEngine/corpus"
+	indexedsearch "paa/searchEngine/indexedSearch"
 	linearsearch "paa/searchEngine/linearSearch"
 	"paa/searchEngine/types"
 	"paa/searchEngine/utils"
@@ -47,6 +48,9 @@ func main() {
 	switch *config {
 	case "linear":
 		hits, stats = linearsearch.Search(c, *query, *k)
+	case "indexed":
+		indexedsearch.BuildIndex(c)
+		hits, stats = indexedsearch.Search(c, *query, *k)
 	default:
 		fmt.Fprintf(os.Stderr, "config desconhecida: %s\n", *config)
 		os.Exit(2)

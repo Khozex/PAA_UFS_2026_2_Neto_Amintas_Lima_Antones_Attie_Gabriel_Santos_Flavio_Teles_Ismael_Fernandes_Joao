@@ -27,9 +27,10 @@ type Document struct {
 }
 
 type Corpus struct {
-	Docs []Document
-	DF   map[string]int
-	IDF  map[string]float64
+	Docs         []Document
+	DF           map[string]int
+	IDF          map[string]float64
+	InverseIndex map[string][]int
 }
 
 func NewCorpus() *Corpus {
