@@ -1,4 +1,3 @@
-// searchEngine/sorting/quick.go
 package sorting
 
 import "paa/searchEngine/types"

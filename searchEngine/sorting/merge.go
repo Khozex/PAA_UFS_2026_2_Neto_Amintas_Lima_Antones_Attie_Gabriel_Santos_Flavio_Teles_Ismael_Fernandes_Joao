@@ -1,4 +1,3 @@
-// searchEngine/sorting/merge.go
 package sorting
 
 import "paa/searchEngine/types"
