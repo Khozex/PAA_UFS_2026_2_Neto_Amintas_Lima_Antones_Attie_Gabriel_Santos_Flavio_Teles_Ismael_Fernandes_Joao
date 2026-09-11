@@ -10,6 +10,7 @@ import (
 	linearsearch "paa/searchEngine/linearSearch"
 	"paa/searchEngine/types"
 	"paa/searchEngine/utils"
+	"paa/searchEngine/sorting"
 )
 
 var (
@@ -23,6 +24,8 @@ func main() {
 	k := flag.Int("k", defaultK, "quantos resultados")
 	limit := flag.Int("limit", 0, "usa só os N primeiros documentos")
 	config := flag.String("config", "linear", "linear")
+	order := flag.String("order", "desc", "asc ou desc")
+	orderStrategy := flag.String("order_strategy", "quick", "quick|heap|merge")
 	flag.Parse()
 
 	if *query == "" {
@@ -52,15 +55,43 @@ func main() {
 		os.Exit(2)
 	}
 
+	algo, ok := sorting.Registry[*orderStrategy]
+	if !ok {
+		fmt.Fprintf(os.Stderr, "order_strategy desconhecida: %s\n", *orderStrategy)
+		os.Exit(2)
+	}
+
+	var ord sorting.Order
+	switch *order {
+	case "asc":
+		ord = sorting.Asc
+	case "desc":
+		ord = sorting.Desc
+	default:
+		fmt.Fprintf(os.Stderr, "order deve ser asc ou desc, recebido: %s\n", *order)
+		os.Exit(2)
+	}
+
+	sortStart := time.Now()
+	stats.SortComparisons = algo(hits, sorting.LessFor(ord))
+	stats.SortTime = time.Since(sortStart)
+	stats.SortStrategy = *orderStrategy
+	stats.SortOrder = *order
+
 	fmt.Printf("query: %q   k=%d   config=%s\n\n", *query, *k, *config)
+
 	if stats.EmptyQuery {
 		fmt.Println("consulta vazia após normalização")
 	}
+
 	for pos, hit := range hits {
-		fmt.Printf("%2d. %-42s %-6s %-45s %6.2f\n    %s\n",
+		fmt.Printf("%2d. %-42s %-6s %-75s %6.2f\n    %s\n",
 			pos+1, hit.Doc.ID, hit.Doc.Method, hit.Doc.Path, hit.Score, hit.Doc.Summary)
 	}
-	fmt.Printf("\nN=%d  candidatos=%d  comparações=%d  carga=%s  consulta=%s\n",
-		stats.N, stats.Candidates, stats.Comparisons,
-		loadTime.Round(time.Millisecond), stats.QueryTime.Round(time.Microsecond))
+
+	fmt.Printf("\nN=%d  candidatos=%d  comparações(score)=%d  comparações(sort)=%d  ordenação=%s/%s  carga=%s  consulta=%s  sort=%s\n",
+		stats.N, stats.Candidates, stats.Comparisons, stats.SortComparisons,
+		stats.SortStrategy, stats.SortOrder,
+		loadTime.Round(time.Millisecond), stats.QueryTime.Round(time.Microsecond),
+		stats.SortTime.Round(time.Microsecond))
 }

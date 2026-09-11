@@ -20,13 +20,25 @@ searchEngine/             lê docs.jsonl e responde consultas
 
 ## Rodar
 
+Realizar ingestão dos dados:
 ```
 go run ./ingestDataPipeline
+```
+
+Buscas:
+```
 go run ./searchEngine -query "create a repository in an organization" -k 5
 go run ./searchEngine -query "..." -limit 300        # subconjunto do corpus
 ```
 
-Go 1.26. Sem dependências externas.
+Uso de ordenação:
+```
+go run ./searchEngine -query "create a repository in an organization" -k 5 -order desc -order_strategy heap
+```
+
+## Stack
+
+Go >=1.26 sem dependências externas.
 
 ## Vídeo da atividade
 
