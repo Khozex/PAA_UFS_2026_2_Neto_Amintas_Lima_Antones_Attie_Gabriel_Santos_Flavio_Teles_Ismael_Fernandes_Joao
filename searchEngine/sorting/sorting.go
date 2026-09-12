@@ -23,7 +23,7 @@ func LessFor(order Order) Comparator {
 type Algorithm func(hits []types.Hit, less Comparator) int
 
 var Registry = map[string]Algorithm{
-	"quick":     QuickSort,
-	"heap":      HeapSort,
-	"merge":     MergeSort,
+	"quick": QuickSort,
+	"heap":  HeapSort,
+	"merge": MergeSort,
 }

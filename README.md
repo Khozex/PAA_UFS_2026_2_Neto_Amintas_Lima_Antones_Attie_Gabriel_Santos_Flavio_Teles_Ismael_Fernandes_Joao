@@ -29,6 +29,7 @@ Buscas:
 ```
 go run ./searchEngine -query "create a repository in an organization" -k 5
 go run ./searchEngine -query "..." -limit 300        # subconjunto do corpus
+go run ./searchEngine -query "..." -context          # imprime text e docs_url dos resultados
 ```
 
 Uso de ordenação:

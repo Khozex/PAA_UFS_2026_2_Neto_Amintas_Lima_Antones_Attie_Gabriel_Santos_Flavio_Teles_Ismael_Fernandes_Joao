@@ -42,6 +42,8 @@ func PrepareDocuments(raw types.RawDocument) types.Document {
 		Method:  raw.Method,
 		Path:    raw.Path,
 		Summary: raw.Summary,
+		DocsURL: raw.DocsURL,
+		Text:    raw.Text,
 		TF:      map[string]map[string]int{},
 	}
 

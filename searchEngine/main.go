@@ -9,9 +9,9 @@ import (
 	"paa/searchEngine/corpus"
 	indexedsearch "paa/searchEngine/indexedSearch"
 	linearsearch "paa/searchEngine/linearSearch"
+	"paa/searchEngine/sorting"
 	"paa/searchEngine/types"
 	"paa/searchEngine/utils"
-	"paa/searchEngine/sorting"
 )
 
 var (
@@ -27,6 +27,7 @@ func main() {
 	config := flag.String("config", "linear", "linear")
 	order := flag.String("order", "desc", "asc ou desc")
 	orderStrategy := flag.String("order_strategy", "quick", "quick|heap|merge")
+	context := flag.Bool("context", false, "imprime o texto completo dos resultados")
 	flag.Parse()
 
 	if *query == "" {
@@ -92,10 +93,20 @@ func main() {
 		fmt.Printf("%2d. %-42s %-6s %-75s %6.2f\n    %s\n",
 			pos+1, hit.Doc.ID, hit.Doc.Method, hit.Doc.Path, hit.Score, hit.Doc.Summary)
 	}
+	if *context {
+		printContext(hits)
+	}
 
 	fmt.Printf("\nN=%d  candidatos=%d  comparações(score)=%d  comparações(sort)=%d  ordenação=%s/%s  carga=%s  consulta=%s  sort=%s\n",
 		stats.N, stats.Candidates, stats.Comparisons, stats.SortComparisons,
 		stats.SortStrategy, stats.SortOrder,
 		loadTime.Round(time.Millisecond), stats.QueryTime.Round(time.Microsecond),
 		stats.SortTime.Round(time.Microsecond))
+}
+
+func printContext(hits []types.Hit) {
+	fmt.Println()
+	for pos, hit := range hits {
+		fmt.Printf("[%d] %s %s\n%s\nFonte: %s\n\n", pos+1, hit.Doc.Method, hit.Doc.Path, hit.Doc.Text, hit.Doc.DocsURL)
+	}
 }
