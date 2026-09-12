@@ -15,6 +15,8 @@ type RawDocument struct {
 	Description string  `json:"description"`
 	Params      []Field `json:"params"`
 	Body        []Field `json:"body"`
+	DocsURL     string  `json:"docs_url"`
+	Text        string  `json:"text"`
 }
 
 type Document struct {
@@ -22,6 +24,8 @@ type Document struct {
 	Method  string
 	Path    string
 	Summary string
+	DocsURL string
+	Text    string
 	TF      map[string]map[string]int
 	Len     int
 }
