@@ -1,0 +1,225 @@
+=== Benchmark de busca ===
+timestamp: 2026-09-12T17:23:54-03:00
+os: windows/amd64
+go_version: go1.27.1
+query: create a repository in an organization
+k: 5
+
+total_de_execucoes: 12
+
+=== linear_full_quick | repeticao 1 | duracao=332ms ===
+comando: go run ./searchEngine -query create a repository in an organization -k 5 -config linear -order desc -order_strategy quick
+query: "create a repository in an organization"   k=5   config=linear
+
+ 1. repos/create-in-org                        POST   /orgs/{org}/repos                                                            20.84
+    Create an organization repository
+ 2. repos/create-using-template                POST   /repos/{template_owner}/{template_repo}/generate                             19.33
+    Create a repository using a template
+ 3. orgs/update                                PATCH  /orgs/{org}                                                                  17.65
+    Update an organization
+ 4. copilot-spaces/create-for-org              POST   /orgs/{org}/copilot-spaces                                                   16.17
+    Create an organization Copilot Space
+ 5. actions/create-or-update-org-secret        PUT    /orgs/{org}/actions/secrets/{secret_name}                                    15.54
+    Create or update an organization secret
+
+N=1224  candidatos=1022  comparações(score)=1088  comparações(sort)=10  ordenação=quick/desc  carga=82ms  consulta=1.085ms  sort=0s
+
+
+=== linear_full_quick | repeticao 2 | duracao=324ms ===
+comando: go run ./searchEngine -query create a repository in an organization -k 5 -config linear -order desc -order_strategy quick
+query: "create a repository in an organization"   k=5   config=linear
+
+ 1. repos/create-in-org                        POST   /orgs/{org}/repos                                                            20.84
+    Create an organization repository
+ 2. repos/create-using-template                POST   /repos/{template_owner}/{template_repo}/generate                             19.33
+    Create a repository using a template
+ 3. orgs/update                                PATCH  /orgs/{org}                                                                  17.65
+    Update an organization
+ 4. copilot-spaces/create-for-org              POST   /orgs/{org}/copilot-spaces                                                   16.17
+    Create an organization Copilot Space
+ 5. actions/create-or-update-org-secret        PUT    /orgs/{org}/actions/secrets/{secret_name}                                    15.54
+    Create or update an organization secret
+
+N=1224  candidatos=1022  comparações(score)=1089  comparações(sort)=10  ordenação=quick/desc  carga=81ms  consulta=1ms  sort=0s
+
+
+=== indexed_full_quick | repeticao 1 | duracao=349ms ===
+comando: go run ./searchEngine -query create a repository in an organization -k 5 -config indexed -order desc -order_strategy quick
+query: "create a repository in an organization"   k=5   config=indexed
+
+ 1. repos/create-in-org                        POST   /orgs/{org}/repos                                                            20.84
+    Create an organization repository
+ 2. repos/create-using-template                POST   /repos/{template_owner}/{template_repo}/generate                             19.33
+    Create a repository using a template
+ 3. orgs/update                                PATCH  /orgs/{org}                                                                  17.65
+    Update an organization
+ 4. copilot-spaces/create-for-org              POST   /orgs/{org}/copilot-spaces                                                   16.17
+    Create an organization Copilot Space
+ 5. actions/create-or-update-org-secret        PUT    /orgs/{org}/actions/secrets/{secret_name}                                    15.54
+    Create or update an organization secret
+
+N=1224  candidatos=1022  comparações(score)=1096  comparações(sort)=10  ordenação=quick/desc  carga=82ms  consulta=1.559ms  sort=0s
+
+
+=== indexed_full_quick | repeticao 2 | duracao=348ms ===
+comando: go run ./searchEngine -query create a repository in an organization -k 5 -config indexed -order desc -order_strategy quick
+query: "create a repository in an organization"   k=5   config=indexed
+
+ 1. repos/create-in-org                        POST   /orgs/{org}/repos                                                            20.84
+    Create an organization repository
+ 2. repos/create-using-template                POST   /repos/{template_owner}/{template_repo}/generate                             19.33
+    Create a repository using a template
+ 3. orgs/update                                PATCH  /orgs/{org}                                                                  17.65
+    Update an organization
+ 4. copilot-spaces/create-for-org              POST   /orgs/{org}/copilot-spaces                                                   16.17
+    Create an organization Copilot Space
+ 5. actions/create-or-update-org-secret        PUT    /orgs/{org}/actions/secrets/{secret_name}                                    15.54
+    Create or update an organization secret
+
+N=1224  candidatos=1022  comparações(score)=1088  comparações(sort)=10  ordenação=quick/desc  carga=80ms  consulta=1.505ms  sort=0s
+
+
+=== linear_full_heap | repeticao 1 | duracao=323ms ===
+comando: go run ./searchEngine -query create a repository in an organization -k 5 -config linear -order desc -order_strategy heap
+query: "create a repository in an organization"   k=5   config=linear
+
+ 1. repos/create-in-org                        POST   /orgs/{org}/repos                                                            20.84
+    Create an organization repository
+ 2. repos/create-using-template                POST   /repos/{template_owner}/{template_repo}/generate                             19.33
+    Create a repository using a template
+ 3. orgs/update                                PATCH  /orgs/{org}                                                                  17.65
+    Update an organization
+ 4. copilot-spaces/create-for-org              POST   /orgs/{org}/copilot-spaces                                                   16.17
+    Create an organization Copilot Space
+ 5. actions/create-or-update-org-secret        PUT    /orgs/{org}/actions/secrets/{secret_name}                                    15.54
+    Create or update an organization secret
+
+N=1224  candidatos=1022  comparações(score)=1088  comparações(sort)=12  ordenação=heap/desc  carga=79ms  consulta=1.507ms  sort=0s
+
+
+=== linear_full_heap | repeticao 2 | duracao=329ms ===
+comando: go run ./searchEngine -query create a repository in an organization -k 5 -config linear -order desc -order_strategy heap
+query: "create a repository in an organization"   k=5   config=linear
+
+ 1. repos/create-in-org                        POST   /orgs/{org}/repos                                                            20.84
+    Create an organization repository
+ 2. repos/create-using-template                POST   /repos/{template_owner}/{template_repo}/generate                             19.33
+    Create a repository using a template
+ 3. orgs/update                                PATCH  /orgs/{org}                                                                  17.65
+    Update an organization
+ 4. copilot-spaces/create-for-org              POST   /orgs/{org}/copilot-spaces                                                   16.17
+    Create an organization Copilot Space
+ 5. actions/create-or-update-org-secret        PUT    /orgs/{org}/actions/secrets/{secret_name}                                    15.54
+    Create or update an organization secret
+
+N=1224  candidatos=1022  comparações(score)=1088  comparações(sort)=12  ordenação=heap/desc  carga=81ms  consulta=1.001ms  sort=0s
+
+
+=== linear_subset_quick | repeticao 1 | duracao=265ms ===
+comando: go run ./searchEngine -query create a repository in an organization -k 5 -config linear -order desc -order_strategy quick -limit 100
+query: "create a repository in an organization"   k=5   config=linear
+
+ 1. apps/scope-token                           POST   /applications/{client_id}/token/scoped                                       17.41
+    Create a scoped access token
+ 2. enterprise-teams/create                    POST   /enterprises/{enterprise}/teams                                              14.64
+    Create an enterprise team
+ 3. apps/create-installation-access-token      POST   /app/installations/{installation_id}/access_tokens                           14.39
+    Create an installation access token for an app
+ 4. dependabot/update-repository-access-for-enterprise PATCH  /enterprises/{enterprise}/dependabot/repository-access                       13.54
+    Updates Dependabot's repository access list for an enterprise
+ 5. dependabot/set-repository-access-default-level-for-enterprise PUT    /enterprises/{enterprise}/dependabot/repository-access/default-level         12.83
+    Set the default repository access level for Dependabot in an enterprise
+
+N=100  candidatos=36  comparações(score)=55  comparações(sort)=10  ordenação=quick/desc  carga=22ms  consulta=0s  sort=0s
+
+
+=== linear_subset_quick | repeticao 2 | duracao=271ms ===
+comando: go run ./searchEngine -query create a repository in an organization -k 5 -config linear -order desc -order_strategy quick -limit 100
+query: "create a repository in an organization"   k=5   config=linear
+
+ 1. apps/scope-token                           POST   /applications/{client_id}/token/scoped                                       17.41
+    Create a scoped access token
+ 2. enterprise-teams/create                    POST   /enterprises/{enterprise}/teams                                              14.64
+    Create an enterprise team
+ 3. apps/create-installation-access-token      POST   /app/installations/{installation_id}/access_tokens                           14.39
+    Create an installation access token for an app
+ 4. dependabot/update-repository-access-for-enterprise PATCH  /enterprises/{enterprise}/dependabot/repository-access                       13.54
+    Updates Dependabot's repository access list for an enterprise
+ 5. dependabot/set-repository-access-default-level-for-enterprise PUT    /enterprises/{enterprise}/dependabot/repository-access/default-level         12.83
+    Set the default repository access level for Dependabot in an enterprise
+
+N=100  candidatos=36  comparações(score)=55  comparações(sort)=10  ordenação=quick/desc  carga=20ms  consulta=0s  sort=0s
+
+
+=== indexed_subset_quick | repeticao 1 | duracao=281ms ===
+comando: go run ./searchEngine -query create a repository in an organization -k 5 -config indexed -order desc -order_strategy quick -limit 100
+query: "create a repository in an organization"   k=5   config=indexed
+
+ 1. apps/scope-token                           POST   /applications/{client_id}/token/scoped                                       17.41
+    Create a scoped access token
+ 2. enterprise-teams/create                    POST   /enterprises/{enterprise}/teams                                              14.64
+    Create an enterprise team
+ 3. apps/create-installation-access-token      POST   /app/installations/{installation_id}/access_tokens                           14.39
+    Create an installation access token for an app
+ 4. dependabot/update-repository-access-for-enterprise PATCH  /enterprises/{enterprise}/dependabot/repository-access                       13.54
+    Updates Dependabot's repository access list for an enterprise
+ 5. dependabot/set-repository-access-default-level-for-enterprise PUT    /enterprises/{enterprise}/dependabot/repository-access/default-level         12.83
+    Set the default repository access level for Dependabot in an enterprise
+
+N=100  candidatos=36  comparações(score)=60  comparações(sort)=10  ordenação=quick/desc  carga=21ms  consulta=0s  sort=0s
+
+
+=== indexed_subset_quick | repeticao 2 | duracao=266ms ===
+comando: go run ./searchEngine -query create a repository in an organization -k 5 -config indexed -order desc -order_strategy quick -limit 100
+query: "create a repository in an organization"   k=5   config=indexed
+
+ 1. apps/scope-token                           POST   /applications/{client_id}/token/scoped                                       17.41
+    Create a scoped access token
+ 2. enterprise-teams/create                    POST   /enterprises/{enterprise}/teams                                              14.64
+    Create an enterprise team
+ 3. apps/create-installation-access-token      POST   /app/installations/{installation_id}/access_tokens                           14.39
+    Create an installation access token for an app
+ 4. dependabot/update-repository-access-for-enterprise PATCH  /enterprises/{enterprise}/dependabot/repository-access                       13.54
+    Updates Dependabot's repository access list for an enterprise
+ 5. dependabot/set-repository-access-default-level-for-enterprise PUT    /enterprises/{enterprise}/dependabot/repository-access/default-level         12.83
+    Set the default repository access level for Dependabot in an enterprise
+
+N=100  candidatos=36  comparações(score)=60  comparações(sort)=10  ordenação=quick/desc  carga=22ms  consulta=0s  sort=0s
+
+
+=== linear_subset_heap | repeticao 1 | duracao=277ms ===
+comando: go run ./searchEngine -query create a repository in an organization -k 5 -config linear -order desc -order_strategy heap -limit 100
+query: "create a repository in an organization"   k=5   config=linear
+
+ 1. apps/scope-token                           POST   /applications/{client_id}/token/scoped                                       17.41
+    Create a scoped access token
+ 2. enterprise-teams/create                    POST   /enterprises/{enterprise}/teams                                              14.64
+    Create an enterprise team
+ 3. apps/create-installation-access-token      POST   /app/installations/{installation_id}/access_tokens                           14.39
+    Create an installation access token for an app
+ 4. dependabot/update-repository-access-for-enterprise PATCH  /enterprises/{enterprise}/dependabot/repository-access                       13.54
+    Updates Dependabot's repository access list for an enterprise
+ 5. dependabot/set-repository-access-default-level-for-enterprise PUT    /enterprises/{enterprise}/dependabot/repository-access/default-level         12.83
+    Set the default repository access level for Dependabot in an enterprise
+
+N=100  candidatos=36  comparações(score)=55  comparações(sort)=12  ordenação=heap/desc  carga=20ms  consulta=0s  sort=0s
+
+
+=== linear_subset_heap | repeticao 2 | duracao=262ms ===
+comando: go run ./searchEngine -query create a repository in an organization -k 5 -config linear -order desc -order_strategy heap -limit 100
+query: "create a repository in an organization"   k=5   config=linear
+
+ 1. apps/scope-token                           POST   /applications/{client_id}/token/scoped                                       17.41
+    Create a scoped access token
+ 2. enterprise-teams/create                    POST   /enterprises/{enterprise}/teams                                              14.64
+    Create an enterprise team
+ 3. apps/create-installation-access-token      POST   /app/installations/{installation_id}/access_tokens                           14.39
+    Create an installation access token for an app
+ 4. dependabot/update-repository-access-for-enterprise PATCH  /enterprises/{enterprise}/dependabot/repository-access                       13.54
+    Updates Dependabot's repository access list for an enterprise
+ 5. dependabot/set-repository-access-default-level-for-enterprise PUT    /enterprises/{enterprise}/dependabot/repository-access/default-level         12.83
+    Set the default repository access level for Dependabot in an enterprise
+
+N=100  candidatos=36  comparações(score)=55  comparações(sort)=12  ordenação=heap/desc  carga=21ms  consulta=0s  sort=0s
+
+
