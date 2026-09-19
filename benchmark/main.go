@@ -6,105 +6,113 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
-	"runtime"
 	"strings"
 	"time"
+
+	"paa/benchmark/hardware"
+	"paa/benchmark/report"
+	"paa/benchmark/scenarios"
+	"paa/searchEngine/utils"
 )
 
-const (
-	queryText = "create a repository in an organization"
-	defaultK  = 5
-)
-
-type Scenario struct {
-	Name          string
-	Config        string
-	Order         string
-	OrderStrategy string
-	Limit         int
-	Repetitions   int
-}
+const queryText = "create a repository in an organization"
 
 func main() {
-	repoRoot, err := os.Getwd()
-	if err != nil {
-		panic(err)
-	}
-	//tres configurações: linear, indexed, linear com heap-sort
-	//pra cada configuração: quick-sort e heap-sort
-	//pra cada configuração: corpus completo e limitado a 100
-	scenarios := []Scenario{
-		{Name: "linear_full_quick", Config: "linear", Order: "desc", OrderStrategy: "quick", Limit: 0, Repetitions: 2},
-		{Name: "indexed_full_quick", Config: "indexed", Order: "desc", OrderStrategy: "quick", Limit: 0, Repetitions: 2},
-		{Name: "linear_full_heap", Config: "linear", Order: "desc", OrderStrategy: "heap", Limit: 0, Repetitions: 2},
-		{Name: "linear_subset_quick", Config: "linear", Order: "desc", OrderStrategy: "quick", Limit: 100, Repetitions: 2},
-		{Name: "indexed_subset_quick", Config: "indexed", Order: "desc", OrderStrategy: "quick", Limit: 100, Repetitions: 2},
-		{Name: "linear_subset_heap", Config: "linear", Order: "desc", OrderStrategy: "heap", Limit: 100, Repetitions: 2},
-	}
+	root := utils.Resolve(".")
+	binary := filepath.Join(root, "bin", "search")
+	check(build(root, binary))
 
-	resultsPath := filepath.Join(repoRoot, "artefatos", "benchmark_results.txt")
-	if err := os.MkdirAll(filepath.Dir(resultsPath), 0o755); err != nil {
-		panic(err)
-	}
+	all := scenarios.All()
+	var log, csv strings.Builder
+	writeHeader(&log, all)
+	csv.WriteString(report.CSVHeader() + "\n")
 
-	var out strings.Builder
-	out.WriteString("=== Benchmark de busca ===\n")
-	out.WriteString(fmt.Sprintf("timestamp: %s\n", time.Now().Format(time.RFC3339)))
-	out.WriteString(fmt.Sprintf("os: %s/%s\n", runtime.GOOS, runtime.GOARCH))
-	out.WriteString(fmt.Sprintf("go_version: %s\n", runtime.Version()))
-	out.WriteString(fmt.Sprintf("query: %s\n", queryText))
-	out.WriteString(fmt.Sprintf("k: %d\n\n", defaultK))
-
-	totalRuns := 0
-	for _, scenario := range scenarios {
-		totalRuns += scenario.Repetitions
-	}
-	out.WriteString(fmt.Sprintf("total_de_execucoes: %d\n\n", totalRuns))
-
-	for _, scenario := range scenarios {
+	for _, scenario := range all {
 		for rep := 1; rep <= scenario.Repetitions; rep++ {
-			args := []string{
-				"run",
-				"./searchEngine",
-				"-query",
-				queryText,
-				"-k",
-				fmt.Sprintf("%d", defaultK),
-				"-config",
-				scenario.Config,
-				"-order",
-				scenario.Order,
-				"-order_strategy",
-				scenario.OrderStrategy,
+			args := scenario.Args(queryText)
+			output, elapsed, err := execute(root, binary, args)
+			writeExecution(&log, scenario.Name, rep, elapsed, args, output, err)
+			run, parseErr := report.Parse(output)
+			if err != nil || parseErr != nil {
+				continue
 			}
-			if scenario.Limit > 0 {
-				args = append(args, "-limit", fmt.Sprintf("%d", scenario.Limit))
-			}
-
-			start := time.Now()
-			cmd := exec.Command("go", args...)
-			cmd.Dir = repoRoot
-			var buf bytes.Buffer
-			cmd.Stdout = &buf
-			cmd.Stderr = &buf
-
-			err := cmd.Run()
-			elapsed := time.Since(start)
-
-			out.WriteString(fmt.Sprintf("=== %s | repeticao %d | duracao=%s ===\n", scenario.Name, rep, elapsed.Round(time.Millisecond)))
-			out.WriteString(fmt.Sprintf("comando: go %s\n", strings.Join(args, " ")))
-			if err != nil {
-				out.WriteString(fmt.Sprintf("erro: %v\n", err))
-			}
-			out.WriteString(buf.String())
-			out.WriteString("\n\n")
+			run.Scenario, run.Preset, run.K, run.Repetition = scenario.Name, scenario.Preset, scenario.K, rep
+			csv.WriteString(run.CSVLine() + "\n")
 		}
 	}
 
-	if err := os.WriteFile(resultsPath, []byte(out.String()), 0o644); err != nil {
-		panic(err)
-	}
+	outDir := filepath.Join(root, "artefatos")
+	check(os.MkdirAll(outDir, 0o755))
+	check(os.WriteFile(filepath.Join(outDir, "benchmark_results.txt"), []byte(log.String()), 0o644))
+	check(os.WriteFile(filepath.Join(outDir, "benchmark_results.csv"), []byte(csv.String()), 0o644))
+	fmt.Printf("Cenários: %d   Execuções: %d\n", len(all), countRuns(all))
+	fmt.Printf("Resultados em: %s\n", outDir)
+}
 
-	fmt.Printf("Resultados salvos em: %s\n", resultsPath)
-	fmt.Printf("Total de execucoes: %d\n", totalRuns)
+func build(root, binary string) error {
+	cmd := exec.Command("go", "build", "-o", binary, "./searchEngine")
+	cmd.Dir = root
+	cmd.Stderr = os.Stderr
+	return cmd.Run()
+}
+
+func execute(root, binary string, args []string) (string, time.Duration, error) {
+	var buf bytes.Buffer
+	cmd := exec.Command(binary, args...)
+	cmd.Dir = root
+	cmd.Stdout = &buf
+	cmd.Stderr = &buf
+	start := time.Now()
+	err := cmd.Run()
+	return buf.String(), time.Since(start), err
+}
+
+func writeHeader(log *strings.Builder, all []scenarios.Scenario) {
+	hw := hardware.Detect()
+	fmt.Fprintf(log, "=== Benchmark de busca ===\n")
+	fmt.Fprintf(log, "timestamp: %s\n", time.Now().Format(time.RFC3339))
+	fmt.Fprintf(log, "os: %s/%s\n", hw.OS, hw.Arch)
+	fmt.Fprintf(log, "go_version: %s\n", hw.Go)
+	fmt.Fprintf(log, "cpu: %s\n", hw.CPU)
+	fmt.Fprintf(log, "cores: %d\n", hw.Cores)
+	fmt.Fprintf(log, "ram: %s\n", hw.RAMGiB)
+	fmt.Fprintf(log, "query: %s\n", queryText)
+	fmt.Fprintf(log, "cenarios: %d\n", len(all))
+	fmt.Fprintf(log, "total_de_execucoes: %d\n\n", countRuns(all))
+}
+
+func writeExecution(log *strings.Builder, name string, rep int, elapsed time.Duration, args []string, output string, err error) {
+	fmt.Fprintf(log, "=== %s | repeticao %d | processo=%s ===\n", name, rep, elapsed.Round(time.Millisecond))
+	fmt.Fprintf(log, "comando: bin/search %s\n", strings.Join(quote(args), " "))
+	if err != nil {
+		fmt.Fprintf(log, "erro: %v\n", err)
+	}
+	log.WriteString(output)
+	log.WriteString("\n\n")
+}
+
+func quote(args []string) []string {
+	out := make([]string, len(args))
+	for i, arg := range args {
+		if strings.Contains(arg, " ") {
+			arg = fmt.Sprintf("%q", arg)
+		}
+		out[i] = arg
+	}
+	return out
+}
+
+func countRuns(all []scenarios.Scenario) int {
+	total := 0
+	for _, s := range all {
+		total += s.Repetitions
+	}
+	return total
+}
+
+func check(err error) {
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
+	}
 }
