@@ -20,22 +20,21 @@ func Search(corpus *types.Corpus, query string, k int) ([]types.Hit, types.Stats
 		return nil, stats
 	}
 
-	candidates := make(map[int]bool)
+	seen := make(map[int]bool)
+	var candidates []int
 
-	// Retrieve candidates from the inverted index for each term in the query
 	for _, term := range terms {
-		postings, ok := corpus.InverseIndex[term]
-		if !ok {
-			continue
-		}
-
-		for _, docID := range postings {
-			candidates[docID] = true
+		for _, docID := range corpus.InverseIndex[term] {
+			if seen[docID] {
+				continue
+			}
+			seen[docID] = true
+			candidates = append(candidates, docID)
 		}
 	}
 
 	var top []types.Hit
-	for docID := range candidates {
+	for _, docID := range candidates {
 		doc := &corpus.Docs[docID]
 		score := ranking.Score(corpus, doc, terms)
 
