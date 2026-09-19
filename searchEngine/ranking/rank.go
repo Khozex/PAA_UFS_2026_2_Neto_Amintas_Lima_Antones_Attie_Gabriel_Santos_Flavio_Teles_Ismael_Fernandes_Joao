@@ -1,18 +1,15 @@
 package ranking
 
-import "paa/searchEngine/types"
+import (
+	"paa/searchEngine/types"
+	"paa/searchEngine/utils"
+)
 
 var Comparisons int
 
 func Better(a, b types.Hit) bool {
 	Comparisons++
-	if a.Score != b.Score {
-		return a.Score > b.Score
-	}
-	if a.Doc.Len != b.Doc.Len {
-		return a.Doc.Len < b.Doc.Len
-	}
-	return a.Doc.ID < b.Doc.ID
+	return utils.MoreRelevant(a, b)
 }
 
 func InsertTopK(top []types.Hit, hit types.Hit, k int) []types.Hit {
