@@ -57,9 +57,5 @@ type Stats struct {
 	Comparisons int
 	EmptyQuery  bool
 	QueryTime   time.Duration
-
-	SortStrategy    string
-	SortOrder       string
-	SortComparisons int
-	SortTime        time.Duration
+	Selection   string
 }
