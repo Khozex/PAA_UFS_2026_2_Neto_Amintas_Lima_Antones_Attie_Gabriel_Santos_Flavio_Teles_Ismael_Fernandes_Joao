@@ -89,11 +89,14 @@ func main() {
 
 	var hits []types.Hit
 	var stats types.Stats
+	var indexTime time.Duration
 	switch *config {
 	case "linear":
 		hits, stats = linearsearch.Search(c, *query, sel)
 	case "indexed":
+		indexStart := time.Now()
 		indexedsearch.BuildIndex(c)
+		indexTime = time.Since(indexStart)
 		hits, stats = indexedsearch.Search(c, *query, sel)
 	default:
 		fmt.Fprintf(os.Stderr, "config desconhecida: %s\n", *config)
@@ -119,9 +122,9 @@ func main() {
 		printContext(hits)
 	}
 
-	fmt.Printf("\nN=%d  candidatos=%d  comparações=%d  seleção=%s  carga=%s  consulta=%s\n",
+	fmt.Printf("\nN=%d  candidatos=%d  comparações=%d  seleção=%s  carga=%s  índice=%s  consulta=%s\n",
 		stats.N, stats.Candidates, stats.Comparisons, stats.Selection,
-		loadTime.Round(time.Millisecond), stats.QueryTime.Round(time.Microsecond))
+		loadTime.Round(time.Millisecond), indexTime.Round(time.Microsecond), stats.QueryTime.Round(time.Microsecond))
 }
 
 func selectionLabel(mode, strategy string) string {
