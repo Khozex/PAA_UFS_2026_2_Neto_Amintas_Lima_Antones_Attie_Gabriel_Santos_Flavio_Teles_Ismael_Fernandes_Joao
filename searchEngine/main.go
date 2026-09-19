@@ -34,6 +34,10 @@ func main() {
 		fmt.Fprintln(os.Stderr, `uso: go run ./searchEngine -query "..." [-k 5] [-limit N] [-config linear]`)
 		os.Exit(2)
 	}
+	if *k < 0 {
+		fmt.Fprintf(os.Stderr, "k deve ser >= 0, recebido: %d\n", *k)
+		os.Exit(2)
+	}
 
 	start := time.Now()
 	raws, err := utils.ReadJSONL(utils.Resolve(*corpusPath))

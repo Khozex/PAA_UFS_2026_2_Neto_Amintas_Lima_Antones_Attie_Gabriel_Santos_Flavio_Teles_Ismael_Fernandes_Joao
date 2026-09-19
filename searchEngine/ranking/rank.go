@@ -16,6 +16,9 @@ func Better(a, b types.Hit) bool {
 }
 
 func InsertTopK(top []types.Hit, hit types.Hit, k int) []types.Hit {
+	if k <= 0 {
+		return top
+	}
 	if len(top) == k {
 		if !Better(hit, top[k-1]) {
 			return top
