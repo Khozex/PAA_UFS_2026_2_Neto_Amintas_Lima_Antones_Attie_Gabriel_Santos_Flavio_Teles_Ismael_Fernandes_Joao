@@ -1,39 +1,541 @@
-cenario,preset,config,selecao,k,N,repeticao,candidatos,comparacoes,carga_ms,indice_us,consulta_us
-preset1_full_k5,1,linear,topk,5,1224,1,1022,1088,63.000,0.000,631.000
-preset1_full_k5,1,linear,topk,5,1224,2,1022,1088,62.000,0.000,539.000
-preset1_n612_k5,1,linear,topk,5,612,1,529,582,38.000,0.000,274.000
-preset1_n612_k5,1,linear,topk,5,612,2,529,582,38.000,0.000,385.000
-preset2_full_k5,2,indexed,topk,5,1224,1,1022,1073,56.000,6437.000,537.000
-preset2_full_k5,2,indexed,topk,5,1224,2,1022,1073,57.000,6490.000,503.000
-preset2_n612_k5,2,indexed,topk,5,612,1,529,572,36.000,3271.000,274.000
-preset2_n612_k5,2,indexed,topk,5,612,2,529,572,37.000,3260.000,289.000
-preset3_full_k5,3,linear,sort/merge,5,1224,1,1022,8659,58.000,0.000,601.000
-preset3_full_k5,3,linear,sort/merge,5,1224,2,1022,8659,58.000,0.000,584.000
-preset3_n612_k5,3,linear,sort/merge,5,612,1,529,3984,36.000,0.000,310.000
-preset3_n612_k5,3,linear,sort/merge,5,612,2,529,3984,36.000,0.000,314.000
-heap_full_k5,,linear,heap,5,1224,1,1022,1104,57.000,0.000,485.000
-heap_full_k5,,linear,heap,5,1224,2,1022,1104,59.000,0.000,619.000
-preset1_full_k50,1,linear,topk,50,1224,1,1022,6011,57.000,0.000,511.000
-preset1_full_k50,1,linear,topk,50,1224,2,1022,6011,60.000,0.000,514.000
-preset2_full_k50,2,indexed,topk,50,1224,1,1022,3237,57.000,6257.000,518.000
-preset2_full_k50,2,indexed,topk,50,1224,2,1022,3237,58.000,6287.000,530.000
-preset3_full_k50,3,linear,sort/merge,50,1224,1,1022,8659,56.000,0.000,585.000
-preset3_full_k50,3,linear,sort/merge,50,1224,2,1022,8659,57.000,0.000,562.000
-heap_full_k50,,linear,heap,50,1224,1,1022,2846,55.000,0.000,500.000
-heap_full_k50,,linear,heap,50,1224,2,1022,2846,58.000,0.000,501.000
-preset1_full_k500,1,linear,topk,500,1224,1,1022,100797,57.000,0.000,781.000
-preset1_full_k500,1,linear,topk,500,1224,2,1022,100797,58.000,0.000,763.000
-preset2_full_k500,2,indexed,topk,500,1224,1,1022,85218,59.000,5983.000,1112.000
-preset2_full_k500,2,indexed,topk,500,1224,2,1022,85218,59.000,5779.000,748.000
-preset3_full_k500,3,linear,sort/merge,500,1224,1,1022,8659,56.000,0.000,605.000
-preset3_full_k500,3,linear,sort/merge,500,1224,2,1022,8659,57.000,0.000,561.000
-heap_full_k500,,linear,heap,500,1224,1,1022,11133,57.000,0.000,774.000
-heap_full_k500,,linear,heap,500,1224,2,1022,11133,58.000,0.000,554.000
-preset1_full_k1224,1,linear,topk,1224,1224,1,1022,187702,57.000,0.000,1271.000
-preset1_full_k1224,1,linear,topk,1224,1224,2,1022,187702,56.000,0.000,980.000
-preset2_full_k1224,2,indexed,topk,1224,1224,1,1022,202268,57.000,6063.000,1278.000
-preset2_full_k1224,2,indexed,topk,1224,1224,2,1022,202268,57.000,6782.000,1059.000
-preset3_full_k1224,3,linear,sort/merge,1224,1224,1,1022,8659,58.000,0.000,578.000
-preset3_full_k1224,3,linear,sort/merge,1224,1224,2,1022,8659,58.000,0.000,559.000
-heap_full_k1224,,linear,heap,1224,1224,1,1022,18026,59.000,0.000,735.000
-heap_full_k1224,,linear,heap,1224,1224,2,1022,18026,57.000,0.000,584.000
+cenario,preset,config,selecao,k,N,query,repeticao,candidatos,comparacoes,carga_ms,indice_us,mem_kb,consulta_us,posicao,p_at_k
+preset1_full_k5,1,linear,topk,5,1224,"create a repository in an organization",1,1022,1088,57.000,0.000,6645,588.000,1,0.20
+preset1_full_k5,1,linear,topk,5,1224,"create a repository in an organization",2,1022,1088,58.000,0.000,6751,607.000,1,0.20
+preset1_full_k5,1,linear,topk,5,1224,"list dependabot alerts for a repository",1,927,984,61.000,0.000,6725,624.000,3,0.20
+preset1_full_k5,1,linear,topk,5,1224,"list dependabot alerts for a repository",2,927,984,61.000,0.000,6720,719.000,3,0.20
+preset1_full_k5,1,linear,topk,5,1224,"create or update a repository secret",1,820,892,60.000,0.000,6751,801.000,3,0.20
+preset1_full_k5,1,linear,topk,5,1224,"create or update a repository secret",2,820,892,58.000,0.000,6635,658.000,3,0.20
+preset1_full_k5,1,linear,topk,5,1224,"delete a repository webhook",1,801,850,57.000,0.000,6751,544.000,1,0.20
+preset1_full_k5,1,linear,topk,5,1224,"delete a repository webhook",2,801,850,58.000,0.000,6715,443.000,1,0.20
+preset1_full_k5,1,linear,topk,5,1224,"list branches",1,470,535,59.000,0.000,6756,392.000,1,0.20
+preset1_full_k5,1,linear,topk,5,1224,"list branches",2,470,535,63.000,0.000,6651,315.000,1,0.20
+preset1_full_k5,1,linear,topk,5,1224,"create a team",1,334,366,61.000,0.000,6679,405.000,1,0.20
+preset1_full_k5,1,linear,topk,5,1224,"create a team",2,334,366,60.000,0.000,6674,372.000,1,0.20
+preset1_full_k5,1,linear,topk,5,1224,"create an issue",1,289,361,62.000,0.000,6762,309.000,0,0.00
+preset1_full_k5,1,linear,topk,5,1224,"create an issue",2,289,361,61.000,0.000,6720,314.000,0,0.00
+preset1_full_k5,1,linear,topk,5,1224,"create a release",1,244,341,60.000,0.000,6715,345.000,2,0.20
+preset1_full_k5,1,linear,topk,5,1224,"create a release",2,244,341,60.000,0.000,6751,363.000,2,0.20
+preset1_full_k5,1,linear,topk,5,1224,"merge a pull request",1,192,272,61.000,0.000,6751,417.000,1,0.40
+preset1_full_k5,1,linear,topk,5,1224,"merge a pull request",2,192,272,58.000,0.000,6751,525.000,1,0.40
+preset1_full_k5,1,linear,topk,5,1224,"cancel a workflow run",1,94,164,58.000,0.000,6756,582.000,1,0.40
+preset1_full_k5,1,linear,topk,5,1224,"cancel a workflow run",2,94,164,58.000,0.000,6756,500.000,1,0.40
+preset1_n612_k5,1,linear,topk,5,612,"create a repository in an organization",1,529,582,36.000,0.000,3573,298.000,1,0.20
+preset1_n612_k5,1,linear,topk,5,612,"create a repository in an organization",2,529,582,37.000,0.000,3578,274.000,1,0.20
+preset1_n612_k5,1,linear,topk,5,612,"list dependabot alerts for a repository",1,393,445,36.000,0.000,3573,366.000,0,0.00
+preset1_n612_k5,1,linear,topk,5,612,"list dependabot alerts for a repository",2,393,445,36.000,0.000,3573,296.000,0,0.00
+preset1_n612_k5,1,linear,topk,5,612,"create or update a repository secret",1,335,402,38.000,0.000,3573,440.000,1,0.20
+preset1_n612_k5,1,linear,topk,5,612,"create or update a repository secret",2,335,402,37.000,0.000,3578,365.000,1,0.20
+preset1_n612_k5,1,linear,topk,5,612,"delete a repository webhook",1,312,349,37.000,0.000,3542,270.000,0,0.00
+preset1_n612_k5,1,linear,topk,5,612,"delete a repository webhook",2,312,349,38.000,0.000,3578,281.000,0,0.00
+preset1_n612_k5,1,linear,topk,5,612,"list branches",1,225,259,38.000,0.000,3609,194.000,0,0.00
+preset1_n612_k5,1,linear,topk,5,612,"list branches",2,225,259,38.000,0.000,3568,213.000,0,0.00
+preset1_n612_k5,1,linear,topk,5,612,"create a team",1,173,205,44.000,0.000,3542,197.000,1,0.20
+preset1_n612_k5,1,linear,topk,5,612,"create a team",2,173,205,38.000,0.000,3542,212.000,1,0.20
+preset1_n612_k5,1,linear,topk,5,612,"create an issue",1,136,193,38.000,0.000,3573,193.000,0,0.00
+preset1_n612_k5,1,linear,topk,5,612,"create an issue",2,136,193,38.000,0.000,3578,200.000,0,0.00
+preset1_n612_k5,1,linear,topk,5,612,"create a release",1,127,172,37.000,0.000,3573,208.000,0,0.00
+preset1_n612_k5,1,linear,topk,5,612,"create a release",2,127,172,37.000,0.000,3609,158.000,0,0.00
+preset1_n612_k5,1,linear,topk,5,612,"merge a pull request",1,65,110,37.000,0.000,3568,255.000,0,0.00
+preset1_n612_k5,1,linear,topk,5,612,"merge a pull request",2,65,110,35.000,0.000,3614,199.000,0,0.00
+preset1_n612_k5,1,linear,topk,5,612,"cancel a workflow run",1,61,132,35.000,0.000,3573,220.000,1,0.40
+preset1_n612_k5,1,linear,topk,5,612,"cancel a workflow run",2,61,132,39.000,0.000,3573,266.000,1,0.40
+preset2_full_k5,2,indexed,topk,5,1224,"create a repository in an organization",1,1022,1073,58.000,6192.000,7432,565.000,1,0.20
+preset2_full_k5,2,indexed,topk,5,1224,"create a repository in an organization",2,1022,1073,59.000,6038.000,7506,641.000,1,0.20
+preset2_full_k5,2,indexed,topk,5,1224,"list dependabot alerts for a repository",1,927,971,61.000,6748.000,7437,528.000,3,0.20
+preset2_full_k5,2,indexed,topk,5,1224,"list dependabot alerts for a repository",2,927,971,59.000,5930.000,7511,651.000,3,0.20
+preset2_full_k5,2,indexed,topk,5,1224,"create or update a repository secret",1,820,881,59.000,6332.000,7436,460.000,3,0.20
+preset2_full_k5,2,indexed,topk,5,1224,"create or update a repository secret",2,820,881,59.000,6286.000,7437,567.000,3,0.20
+preset2_full_k5,2,indexed,topk,5,1224,"delete a repository webhook",1,801,879,58.000,6437.000,7432,449.000,1,0.20
+preset2_full_k5,2,indexed,topk,5,1224,"delete a repository webhook",2,801,879,58.000,6652.000,7432,511.000,1,0.20
+preset2_full_k5,2,indexed,topk,5,1224,"list branches",1,470,527,60.000,6492.000,7437,178.000,1,0.20
+preset2_full_k5,2,indexed,topk,5,1224,"list branches",2,470,527,59.000,6655.000,7437,191.000,1,0.20
+preset2_full_k5,2,indexed,topk,5,1224,"create a team",1,334,383,59.000,6307.000,7431,180.000,1,0.20
+preset2_full_k5,2,indexed,topk,5,1224,"create a team",2,334,383,58.000,6621.000,7437,166.000,1,0.20
+preset2_full_k5,2,indexed,topk,5,1224,"create an issue",1,289,367,58.000,6446.000,7442,123.000,0,0.00
+preset2_full_k5,2,indexed,topk,5,1224,"create an issue",2,289,367,57.000,6310.000,7431,125.000,0,0.00
+preset2_full_k5,2,indexed,topk,5,1224,"create a release",1,244,329,60.000,6127.000,7442,126.000,2,0.20
+preset2_full_k5,2,indexed,topk,5,1224,"create a release",2,244,329,57.000,6583.000,7432,102.000,2,0.20
+preset2_full_k5,2,indexed,topk,5,1224,"merge a pull request",1,192,231,59.000,6609.000,7442,127.000,1,0.40
+preset2_full_k5,2,indexed,topk,5,1224,"merge a pull request",2,192,231,58.000,6293.000,7436,106.000,1,0.40
+preset2_full_k5,2,indexed,topk,5,1224,"cancel a workflow run",1,94,137,60.000,6485.000,7437,71.000,1,0.40
+preset2_full_k5,2,indexed,topk,5,1224,"cancel a workflow run",2,94,137,61.000,6504.000,7432,71.000,1,0.40
+preset2_n612_k5,2,indexed,topk,5,612,"create a repository in an organization",1,529,572,36.000,3030.000,3984,387.000,1,0.20
+preset2_n612_k5,2,indexed,topk,5,612,"create a repository in an organization",2,529,572,38.000,3422.000,3973,277.000,1,0.20
+preset2_n612_k5,2,indexed,topk,5,612,"list dependabot alerts for a repository",1,393,438,35.000,3236.000,3979,278.000,0,0.00
+preset2_n612_k5,2,indexed,topk,5,612,"list dependabot alerts for a repository",2,393,438,36.000,3290.000,3973,226.000,0,0.00
+preset2_n612_k5,2,indexed,topk,5,612,"create or update a repository secret",1,335,391,36.000,3273.000,3973,248.000,1,0.20
+preset2_n612_k5,2,indexed,topk,5,612,"create or update a repository secret",2,335,391,36.000,3245.000,3978,209.000,1,0.20
+preset2_n612_k5,2,indexed,topk,5,612,"delete a repository webhook",1,312,399,36.000,4272.000,3979,179.000,0,0.00
+preset2_n612_k5,2,indexed,topk,5,612,"delete a repository webhook",2,312,399,36.000,3173.000,3984,156.000,0,0.00
+preset2_n612_k5,2,indexed,topk,5,612,"list branches",1,225,259,36.000,3174.000,3968,104.000,0,0.00
+preset2_n612_k5,2,indexed,topk,5,612,"list branches",2,225,259,37.000,3338.000,3973,104.000,0,0.00
+preset2_n612_k5,2,indexed,topk,5,612,"create a team",1,173,222,36.000,3303.000,3973,94.000,1,0.20
+preset2_n612_k5,2,indexed,topk,5,612,"create a team",2,173,222,36.000,3242.000,3979,75.000,1,0.20
+preset2_n612_k5,2,indexed,topk,5,612,"create an issue",1,136,195,36.000,3044.000,3968,69.000,0,0.00
+preset2_n612_k5,2,indexed,topk,5,612,"create an issue",2,136,195,36.000,3247.000,3973,71.000,0,0.00
+preset2_n612_k5,2,indexed,topk,5,612,"create a release",1,127,172,36.000,3220.000,3968,68.000,0,0.00
+preset2_n612_k5,2,indexed,topk,5,612,"create a release",2,127,172,36.000,3490.000,3974,73.000,0,0.00
+preset2_n612_k5,2,indexed,topk,5,612,"merge a pull request",1,65,84,37.000,3304.000,3979,41.000,0,0.00
+preset2_n612_k5,2,indexed,topk,5,612,"merge a pull request",2,65,84,38.000,3025.000,3968,42.000,0,0.00
+preset2_n612_k5,2,indexed,topk,5,612,"cancel a workflow run",1,61,104,37.000,3347.000,3979,54.000,1,0.40
+preset2_n612_k5,2,indexed,topk,5,612,"cancel a workflow run",2,61,104,36.000,3235.000,3973,67.000,1,0.40
+preset3_full_k5,3,linear,sort/merge,5,1224,"create a repository in an organization",1,1022,8659,59.000,0.000,6793,568.000,1,0.20
+preset3_full_k5,3,linear,sort/merge,5,1224,"create a repository in an organization",2,1022,8659,57.000,0.000,6715,691.000,1,0.20
+preset3_full_k5,3,linear,sort/merge,5,1224,"list dependabot alerts for a repository",1,927,7750,59.000,0.000,6646,876.000,3,0.20
+preset3_full_k5,3,linear,sort/merge,5,1224,"list dependabot alerts for a repository",2,927,7750,60.000,0.000,6818,831.000,3,0.20
+preset3_full_k5,3,linear,sort/merge,5,1224,"create or update a repository secret",1,820,6710,61.000,0.000,6710,674.000,3,0.20
+preset3_full_k5,3,linear,sort/merge,5,1224,"create or update a repository secret",2,820,6710,58.000,0.000,6756,821.000,3,0.20
+preset3_full_k5,3,linear,sort/merge,5,1224,"delete a repository webhook",1,801,6550,57.000,0.000,6720,570.000,1,0.20
+preset3_full_k5,3,linear,sort/merge,5,1224,"delete a repository webhook",2,801,6550,57.000,0.000,6715,629.000,1,0.20
+preset3_full_k5,3,linear,sort/merge,5,1224,"list branches",1,470,3514,58.000,0.000,6756,424.000,1,0.20
+preset3_full_k5,3,linear,sort/merge,5,1224,"list branches",2,470,3514,60.000,0.000,6646,346.000,1,0.20
+preset3_full_k5,3,linear,sort/merge,5,1224,"create a team",1,334,2335,57.000,0.000,6715,399.000,1,0.20
+preset3_full_k5,3,linear,sort/merge,5,1224,"create a team",2,334,2335,58.000,0.000,6891,388.000,1,0.20
+preset3_full_k5,3,linear,sort/merge,5,1224,"create an issue",1,289,1956,59.000,0.000,6787,410.000,0,0.00
+preset3_full_k5,3,linear,sort/merge,5,1224,"create an issue",2,289,1956,59.000,0.000,6762,409.000,0,0.00
+preset3_full_k5,3,linear,sort/merge,5,1224,"create a release",1,244,1621,58.000,0.000,6793,377.000,2,0.20
+preset3_full_k5,3,linear,sort/merge,5,1224,"create a release",2,244,1621,58.000,0.000,6756,430.000,2,0.20
+preset3_full_k5,3,linear,sort/merge,5,1224,"merge a pull request",1,192,1194,58.000,0.000,6824,456.000,1,0.40
+preset3_full_k5,3,linear,sort/merge,5,1224,"merge a pull request",2,192,1194,58.000,0.000,6679,512.000,1,0.40
+preset3_full_k5,3,linear,sort/merge,5,1224,"cancel a workflow run",1,94,484,59.000,0.000,6715,548.000,1,0.40
+preset3_full_k5,3,linear,sort/merge,5,1224,"cancel a workflow run",2,94,484,59.000,0.000,6746,417.000,1,0.40
+preset3_n612_k5,3,linear,sort/merge,5,612,"create a repository in an organization",1,529,3984,35.000,0.000,3573,309.000,1,0.20
+preset3_n612_k5,3,linear,sort/merge,5,612,"create a repository in an organization",2,529,3984,35.000,0.000,3645,370.000,1,0.20
+preset3_n612_k5,3,linear,sort/merge,5,612,"list dependabot alerts for a repository",1,393,2788,36.000,0.000,3537,406.000,0,0.00
+preset3_n612_k5,3,linear,sort/merge,5,612,"list dependabot alerts for a repository",2,393,2788,36.000,0.000,3568,388.000,0,0.00
+preset3_n612_k5,3,linear,sort/merge,5,612,"create or update a repository secret",1,335,2338,36.000,0.000,3573,478.000,1,0.20
+preset3_n612_k5,3,linear,sort/merge,5,612,"create or update a repository secret",2,335,2338,37.000,0.000,3646,494.000,1,0.20
+preset3_n612_k5,3,linear,sort/merge,5,612,"delete a repository webhook",1,312,2145,35.000,0.000,3610,264.000,0,0.00
+preset3_n612_k5,3,linear,sort/merge,5,612,"delete a repository webhook",2,312,2145,36.000,0.000,3537,313.000,0,0.00
+preset3_n612_k5,3,linear,sort/merge,5,612,"list branches",1,225,1467,35.000,0.000,3573,182.000,0,0.00
+preset3_n612_k5,3,linear,sort/merge,5,612,"list branches",2,225,1467,37.000,0.000,3573,216.000,0,0.00
+preset3_n612_k5,3,linear,sort/merge,5,612,"create a team",1,173,1026,40.000,0.000,3609,181.000,1,0.20
+preset3_n612_k5,3,linear,sort/merge,5,612,"create a team",2,173,1026,38.000,0.000,3537,188.000,1,0.20
+preset3_n612_k5,3,linear,sort/merge,5,612,"create an issue",1,136,788,36.000,0.000,3599,208.000,0,0.00
+preset3_n612_k5,3,linear,sort/merge,5,612,"create an issue",2,136,788,36.000,0.000,3573,282.000,0,0.00
+preset3_n612_k5,3,linear,sort/merge,5,612,"create a release",1,127,725,37.000,0.000,3573,233.000,0,0.00
+preset3_n612_k5,3,linear,sort/merge,5,612,"create a release",2,127,725,39.000,0.000,3609,205.000,0,0.00
+preset3_n612_k5,3,linear,sort/merge,5,612,"merge a pull request",1,65,297,36.000,0.000,3640,313.000,0,0.00
+preset3_n612_k5,3,linear,sort/merge,5,612,"merge a pull request",2,65,297,35.000,0.000,3578,228.000,0,0.00
+preset3_n612_k5,3,linear,sort/merge,5,612,"cancel a workflow run",1,61,278,37.000,0.000,3542,218.000,1,0.40
+preset3_n612_k5,3,linear,sort/merge,5,612,"cancel a workflow run",2,61,278,35.000,0.000,3537,236.000,1,0.40
+heap_full_k5,,linear,heap,5,1224,"create a repository in an organization",1,1022,1104,58.000,0.000,6751,669.000,1,0.20
+heap_full_k5,,linear,heap,5,1224,"create a repository in an organization",2,1022,1104,59.000,0.000,6726,579.000,1,0.20
+heap_full_k5,,linear,heap,5,1224,"list dependabot alerts for a repository",1,927,995,57.000,0.000,6725,703.000,3,0.20
+heap_full_k5,,linear,heap,5,1224,"list dependabot alerts for a repository",2,927,995,57.000,0.000,6684,710.000,3,0.20
+heap_full_k5,,linear,heap,5,1224,"create or update a repository secret",1,820,903,61.000,0.000,6715,600.000,3,0.20
+heap_full_k5,,linear,heap,5,1224,"create or update a repository secret",2,820,903,60.000,0.000,6705,805.000,3,0.20
+heap_full_k5,,linear,heap,5,1224,"delete a repository webhook",1,801,856,59.000,0.000,6684,560.000,1,0.20
+heap_full_k5,,linear,heap,5,1224,"delete a repository webhook",2,801,856,56.000,0.000,6684,579.000,1,0.20
+heap_full_k5,,linear,heap,5,1224,"list branches",1,470,550,57.000,0.000,6710,374.000,1,0.20
+heap_full_k5,,linear,heap,5,1224,"list branches",2,470,550,59.000,0.000,6793,372.000,1,0.20
+heap_full_k5,,linear,heap,5,1224,"create a team",1,334,375,59.000,0.000,6824,296.000,1,0.20
+heap_full_k5,,linear,heap,5,1224,"create a team",2,334,375,59.000,0.000,6710,329.000,1,0.20
+heap_full_k5,,linear,heap,5,1224,"create an issue",1,289,371,62.000,0.000,6746,327.000,0,0.00
+heap_full_k5,,linear,heap,5,1224,"create an issue",2,289,371,60.000,0.000,6674,318.000,0,0.00
+heap_full_k5,,linear,heap,5,1224,"create a release",1,244,346,67.000,0.000,6778,315.000,2,0.20
+heap_full_k5,,linear,heap,5,1224,"create a release",2,244,346,60.000,0.000,6715,363.000,2,0.20
+heap_full_k5,,linear,heap,5,1224,"merge a pull request",1,192,289,60.000,0.000,6756,490.000,1,0.40
+heap_full_k5,,linear,heap,5,1224,"merge a pull request",2,192,289,59.000,0.000,6725,596.000,1,0.40
+heap_full_k5,,linear,heap,5,1224,"cancel a workflow run",1,94,166,58.000,0.000,6679,465.000,1,0.40
+heap_full_k5,,linear,heap,5,1224,"cancel a workflow run",2,94,166,58.000,0.000,6720,491.000,1,0.40
+sort_quick_full_k5,,linear,sort/quick,5,1224,"create a repository in an organization",1,1022,10833,63.000,0.000,6715,652.000,1,0.20
+sort_quick_full_k5,,linear,sort/quick,5,1224,"create a repository in an organization",2,1022,10833,60.000,0.000,6720,668.000,1,0.20
+sort_quick_full_k5,,linear,sort/quick,5,1224,"list dependabot alerts for a repository",1,927,9691,59.000,0.000,6757,780.000,3,0.20
+sort_quick_full_k5,,linear,sort/quick,5,1224,"list dependabot alerts for a repository",2,927,9691,57.000,0.000,6679,815.000,3,0.20
+sort_quick_full_k5,,linear,sort/quick,5,1224,"create or update a repository secret",1,820,8370,59.000,0.000,6710,925.000,3,0.20
+sort_quick_full_k5,,linear,sort/quick,5,1224,"create or update a repository secret",2,820,8370,56.000,0.000,6715,672.000,3,0.20
+sort_quick_full_k5,,linear,sort/quick,5,1224,"delete a repository webhook",1,801,8610,58.000,0.000,6715,716.000,1,0.20
+sort_quick_full_k5,,linear,sort/quick,5,1224,"delete a repository webhook",2,801,8610,58.000,0.000,6757,562.000,1,0.20
+sort_quick_full_k5,,linear,sort/quick,5,1224,"list branches",1,470,4526,60.000,0.000,6746,458.000,1,0.20
+sort_quick_full_k5,,linear,sort/quick,5,1224,"list branches",2,470,4526,64.000,0.000,6705,368.000,1,0.20
+sort_quick_full_k5,,linear,sort/quick,5,1224,"create a team",1,334,2803,58.000,0.000,6788,396.000,1,0.20
+sort_quick_full_k5,,linear,sort/quick,5,1224,"create a team",2,334,2803,58.000,0.000,6788,359.000,1,0.20
+sort_quick_full_k5,,linear,sort/quick,5,1224,"create an issue",1,289,2397,59.000,0.000,6720,322.000,0,0.00
+sort_quick_full_k5,,linear,sort/quick,5,1224,"create an issue",2,289,2397,60.000,0.000,6710,399.000,0,0.00
+sort_quick_full_k5,,linear,sort/quick,5,1224,"create a release",1,244,1921,60.000,0.000,6757,311.000,2,0.20
+sort_quick_full_k5,,linear,sort/quick,5,1224,"create a release",2,244,1921,61.000,0.000,6782,419.000,2,0.20
+sort_quick_full_k5,,linear,sort/quick,5,1224,"merge a pull request",1,192,1464,61.000,0.000,6668,484.000,1,0.40
+sort_quick_full_k5,,linear,sort/quick,5,1224,"merge a pull request",2,192,1464,63.000,0.000,6788,523.000,1,0.40
+sort_quick_full_k5,,linear,sort/quick,5,1224,"cancel a workflow run",1,94,609,59.000,0.000,6710,504.000,1,0.40
+sort_quick_full_k5,,linear,sort/quick,5,1224,"cancel a workflow run",2,94,609,61.000,0.000,6720,577.000,1,0.40
+sort_std_full_k5,,linear,sort/std,5,1224,"create a repository in an organization",1,1022,10597,58.000,0.000,6757,693.000,1,0.20
+sort_std_full_k5,,linear,sort/std,5,1224,"create a repository in an organization",2,1022,10597,57.000,0.000,6689,725.000,1,0.20
+sort_std_full_k5,,linear,sort/std,5,1224,"list dependabot alerts for a repository",1,927,9363,59.000,0.000,6788,776.000,3,0.20
+sort_std_full_k5,,linear,sort/std,5,1224,"list dependabot alerts for a repository",2,927,9363,57.000,0.000,6720,796.000,3,0.20
+sort_std_full_k5,,linear,sort/std,5,1224,"create or update a repository secret",1,820,8272,60.000,0.000,6715,823.000,3,0.20
+sort_std_full_k5,,linear,sort/std,5,1224,"create or update a repository secret",2,820,8272,59.000,0.000,6710,800.000,3,0.20
+sort_std_full_k5,,linear,sort/std,5,1224,"delete a repository webhook",1,801,7949,58.000,0.000,6710,587.000,1,0.20
+sort_std_full_k5,,linear,sort/std,5,1224,"delete a repository webhook",2,801,7949,59.000,0.000,6793,569.000,1,0.20
+sort_std_full_k5,,linear,sort/std,5,1224,"list branches",1,470,4285,57.000,0.000,6819,425.000,1,0.20
+sort_std_full_k5,,linear,sort/std,5,1224,"list branches",2,470,4285,57.000,0.000,6751,435.000,1,0.20
+sort_std_full_k5,,linear,sort/std,5,1224,"create a team",1,334,2953,59.000,0.000,6710,405.000,1,0.20
+sort_std_full_k5,,linear,sort/std,5,1224,"create a team",2,334,2953,57.000,0.000,6860,334.000,1,0.20
+sort_std_full_k5,,linear,sort/std,5,1224,"create an issue",1,289,2415,59.000,0.000,6788,468.000,0,0.00
+sort_std_full_k5,,linear,sort/std,5,1224,"create an issue",2,289,2415,57.000,0.000,6721,393.000,0,0.00
+sort_std_full_k5,,linear,sort/std,5,1224,"create a release",1,244,2061,57.000,0.000,6674,391.000,2,0.20
+sort_std_full_k5,,linear,sort/std,5,1224,"create a release",2,244,2061,59.000,0.000,6757,423.000,2,0.20
+sort_std_full_k5,,linear,sort/std,5,1224,"merge a pull request",1,192,1430,57.000,0.000,6756,418.000,1,0.40
+sort_std_full_k5,,linear,sort/std,5,1224,"merge a pull request",2,192,1430,58.000,0.000,6715,531.000,1,0.40
+sort_std_full_k5,,linear,sort/std,5,1224,"cancel a workflow run",1,94,636,58.000,0.000,6865,518.000,1,0.40
+sort_std_full_k5,,linear,sort/std,5,1224,"cancel a workflow run",2,94,636,59.000,0.000,6640,484.000,1,0.40
+preset1_full_k50,1,linear,topk,50,1224,"create a repository in an organization",1,1022,6011,58.000,0.000,6782,610.000,1,0.02
+preset1_full_k50,1,linear,topk,50,1224,"create a repository in an organization",2,1022,6011,59.000,0.000,6640,534.000,1,0.02
+preset1_full_k50,1,linear,topk,50,1224,"list dependabot alerts for a repository",1,927,4939,59.000,0.000,6720,615.000,3,0.02
+preset1_full_k50,1,linear,topk,50,1224,"list dependabot alerts for a repository",2,927,4939,66.000,0.000,6720,658.000,3,0.02
+preset1_full_k50,1,linear,topk,50,1224,"create or update a repository secret",1,820,4660,58.000,0.000,6720,707.000,3,0.02
+preset1_full_k50,1,linear,topk,50,1224,"create or update a repository secret",2,820,4660,57.000,0.000,6720,729.000,3,0.02
+preset1_full_k50,1,linear,topk,50,1224,"delete a repository webhook",1,801,4359,58.000,0.000,6710,467.000,1,0.02
+preset1_full_k50,1,linear,topk,50,1224,"delete a repository webhook",2,801,4359,59.000,0.000,6787,586.000,1,0.02
+preset1_full_k50,1,linear,topk,50,1224,"list branches",1,470,4026,61.000,0.000,6762,388.000,1,0.02
+preset1_full_k50,1,linear,topk,50,1224,"list branches",2,470,4026,59.000,0.000,6715,332.000,1,0.02
+preset1_full_k50,1,linear,topk,50,1224,"create a team",1,334,2717,59.000,0.000,6756,375.000,1,0.02
+preset1_full_k50,1,linear,topk,50,1224,"create a team",2,334,2717,59.000,0.000,6818,338.000,1,0.02
+preset1_full_k50,1,linear,topk,50,1224,"create an issue",1,289,4288,70.000,0.000,6772,342.000,7,0.02
+preset1_full_k50,1,linear,topk,50,1224,"create an issue",2,289,4288,60.000,0.000,6720,377.000,7,0.02
+preset1_full_k50,1,linear,topk,50,1224,"create a release",1,244,3749,58.000,0.000,6679,306.000,2,0.02
+preset1_full_k50,1,linear,topk,50,1224,"create a release",2,244,3749,60.000,0.000,6751,308.000,2,0.02
+preset1_full_k50,1,linear,topk,50,1224,"merge a pull request",1,192,3780,59.000,0.000,6720,421.000,1,0.04
+preset1_full_k50,1,linear,topk,50,1224,"merge a pull request",2,192,3780,58.000,0.000,6757,658.000,1,0.04
+preset1_full_k50,1,linear,topk,50,1224,"cancel a workflow run",1,94,1476,69.000,0.000,6788,502.000,1,0.04
+preset1_full_k50,1,linear,topk,50,1224,"cancel a workflow run",2,94,1476,58.000,0.000,6715,426.000,1,0.04
+preset2_full_k50,2,indexed,topk,50,1224,"create a repository in an organization",1,1022,3237,59.000,6328.000,7437,502.000,1,0.02
+preset2_full_k50,2,indexed,topk,50,1224,"create a repository in an organization",2,1022,3237,63.000,6070.000,7548,642.000,1,0.02
+preset2_full_k50,2,indexed,topk,50,1224,"list dependabot alerts for a repository",1,927,5732,58.000,6478.000,7431,715.000,3,0.02
+preset2_full_k50,2,indexed,topk,50,1224,"list dependabot alerts for a repository",2,927,5732,59.000,6529.000,7436,663.000,3,0.02
+preset2_full_k50,2,indexed,topk,50,1224,"create or update a repository secret",1,820,3390,59.000,6415.000,7431,615.000,3,0.02
+preset2_full_k50,2,indexed,topk,50,1224,"create or update a repository secret",2,820,3390,61.000,7131.000,7436,599.000,3,0.02
+preset2_full_k50,2,indexed,topk,50,1224,"delete a repository webhook",1,801,4169,60.000,6863.000,7437,458.000,1,0.02
+preset2_full_k50,2,indexed,topk,50,1224,"delete a repository webhook",2,801,4169,62.000,6893.000,7437,463.000,1,0.02
+preset2_full_k50,2,indexed,topk,50,1224,"list branches",1,470,4241,57.000,6507.000,7437,192.000,1,0.02
+preset2_full_k50,2,indexed,topk,50,1224,"list branches",2,470,4241,58.000,5827.000,7437,211.000,1,0.02
+preset2_full_k50,2,indexed,topk,50,1224,"create a team",1,334,4481,58.000,6435.000,7437,174.000,1,0.02
+preset2_full_k50,2,indexed,topk,50,1224,"create a team",2,334,4481,58.000,6303.000,7437,179.000,1,0.02
+preset2_full_k50,2,indexed,topk,50,1224,"create an issue",1,289,4886,59.000,6454.000,7442,159.000,7,0.02
+preset2_full_k50,2,indexed,topk,50,1224,"create an issue",2,289,4886,57.000,6332.000,7426,139.000,7,0.02
+preset2_full_k50,2,indexed,topk,50,1224,"create a release",1,244,3774,57.000,6796.000,7437,147.000,2,0.02
+preset2_full_k50,2,indexed,topk,50,1224,"create a release",2,244,3774,58.000,6012.000,7442,137.000,2,0.02
+preset2_full_k50,2,indexed,topk,50,1224,"merge a pull request",1,192,2014,57.000,6354.000,7437,138.000,1,0.04
+preset2_full_k50,2,indexed,topk,50,1224,"merge a pull request",2,192,2014,57.000,6555.000,7442,119.000,1,0.04
+preset2_full_k50,2,indexed,topk,50,1224,"cancel a workflow run",1,94,1194,58.000,6049.000,7432,108.000,1,0.04
+preset2_full_k50,2,indexed,topk,50,1224,"cancel a workflow run",2,94,1194,60.000,6168.000,7437,88.000,1,0.04
+preset3_full_k50,3,linear,sort/merge,50,1224,"create a repository in an organization",1,1022,8659,60.000,0.000,6635,570.000,1,0.02
+preset3_full_k50,3,linear,sort/merge,50,1224,"create a repository in an organization",2,1022,8659,59.000,0.000,6793,718.000,1,0.02
+preset3_full_k50,3,linear,sort/merge,50,1224,"list dependabot alerts for a repository",1,927,7750,61.000,0.000,6782,734.000,3,0.02
+preset3_full_k50,3,linear,sort/merge,50,1224,"list dependabot alerts for a repository",2,927,7750,76.000,0.000,6669,780.000,3,0.02
+preset3_full_k50,3,linear,sort/merge,50,1224,"create or update a repository secret",1,820,6710,61.000,0.000,6705,765.000,3,0.02
+preset3_full_k50,3,linear,sort/merge,50,1224,"create or update a repository secret",2,820,6710,61.000,0.000,6715,727.000,3,0.02
+preset3_full_k50,3,linear,sort/merge,50,1224,"delete a repository webhook",1,801,6550,65.000,0.000,6860,595.000,1,0.02
+preset3_full_k50,3,linear,sort/merge,50,1224,"delete a repository webhook",2,801,6550,60.000,0.000,6793,537.000,1,0.02
+preset3_full_k50,3,linear,sort/merge,50,1224,"list branches",1,470,3514,60.000,0.000,6777,355.000,1,0.02
+preset3_full_k50,3,linear,sort/merge,50,1224,"list branches",2,470,3514,63.000,0.000,6751,579.000,1,0.02
+preset3_full_k50,3,linear,sort/merge,50,1224,"create a team",1,334,2335,59.000,0.000,6684,395.000,1,0.02
+preset3_full_k50,3,linear,sort/merge,50,1224,"create a team",2,334,2335,59.000,0.000,6787,334.000,1,0.02
+preset3_full_k50,3,linear,sort/merge,50,1224,"create an issue",1,289,1956,58.000,0.000,6684,338.000,7,0.02
+preset3_full_k50,3,linear,sort/merge,50,1224,"create an issue",2,289,1956,57.000,0.000,6684,473.000,7,0.02
+preset3_full_k50,3,linear,sort/merge,50,1224,"create a release",1,244,1621,58.000,0.000,6756,332.000,2,0.02
+preset3_full_k50,3,linear,sort/merge,50,1224,"create a release",2,244,1621,57.000,0.000,6720,330.000,2,0.02
+preset3_full_k50,3,linear,sort/merge,50,1224,"merge a pull request",1,192,1194,64.000,0.000,6787,418.000,1,0.04
+preset3_full_k50,3,linear,sort/merge,50,1224,"merge a pull request",2,192,1194,58.000,0.000,6710,430.000,1,0.04
+preset3_full_k50,3,linear,sort/merge,50,1224,"cancel a workflow run",1,94,484,58.000,0.000,6715,421.000,1,0.04
+preset3_full_k50,3,linear,sort/merge,50,1224,"cancel a workflow run",2,94,484,58.000,0.000,6720,409.000,1,0.04
+heap_full_k50,,linear,heap,50,1224,"create a repository in an organization",1,1022,2846,60.000,0.000,6710,647.000,1,0.02
+heap_full_k50,,linear,heap,50,1224,"create a repository in an organization",2,1022,2846,78.000,0.000,6720,753.000,1,0.02
+heap_full_k50,,linear,heap,50,1224,"list dependabot alerts for a repository",1,927,2576,62.000,0.000,6668,681.000,3,0.02
+heap_full_k50,,linear,heap,50,1224,"list dependabot alerts for a repository",2,927,2576,65.000,0.000,6710,675.000,3,0.02
+heap_full_k50,,linear,heap,50,1224,"create or update a repository secret",1,820,2332,61.000,0.000,6715,769.000,3,0.02
+heap_full_k50,,linear,heap,50,1224,"create or update a repository secret",2,820,2332,90.000,0.000,6741,774.000,3,0.02
+heap_full_k50,,linear,heap,50,1224,"delete a repository webhook",1,801,2344,63.000,0.000,6715,513.000,1,0.02
+heap_full_k50,,linear,heap,50,1224,"delete a repository webhook",2,801,2344,60.000,0.000,6788,575.000,1,0.02
+heap_full_k50,,linear,heap,50,1224,"list branches",1,470,1851,61.000,0.000,6705,334.000,1,0.02
+heap_full_k50,,linear,heap,50,1224,"list branches",2,470,1851,61.000,0.000,6715,371.000,1,0.02
+heap_full_k50,,linear,heap,50,1224,"create a team",1,334,1495,79.000,0.000,6730,381.000,1,0.02
+heap_full_k50,,linear,heap,50,1224,"create a team",2,334,1495,63.000,0.000,6746,434.000,1,0.02
+heap_full_k50,,linear,heap,50,1224,"create an issue",1,289,1787,62.000,0.000,6860,434.000,7,0.02
+heap_full_k50,,linear,heap,50,1224,"create an issue",2,289,1787,59.000,0.000,6674,482.000,7,0.02
+heap_full_k50,,linear,heap,50,1224,"create a release",1,244,1585,74.000,0.000,6653,540.000,2,0.02
+heap_full_k50,,linear,heap,50,1224,"create a release",2,244,1585,72.000,0.000,6710,331.000,2,0.02
+heap_full_k50,,linear,heap,50,1224,"merge a pull request",1,192,1405,59.000,0.000,6824,436.000,1,0.04
+heap_full_k50,,linear,heap,50,1224,"merge a pull request",2,192,1405,58.000,0.000,6793,509.000,1,0.04
+heap_full_k50,,linear,heap,50,1224,"cancel a workflow run",1,94,622,61.000,0.000,6829,415.000,1,0.04
+heap_full_k50,,linear,heap,50,1224,"cancel a workflow run",2,94,622,61.000,0.000,6710,497.000,1,0.04
+sort_quick_full_k50,,linear,sort/quick,50,1224,"create a repository in an organization",1,1022,10833,60.000,0.000,6788,783.000,1,0.02
+sort_quick_full_k50,,linear,sort/quick,50,1224,"create a repository in an organization",2,1022,10833,59.000,0.000,6788,750.000,1,0.02
+sort_quick_full_k50,,linear,sort/quick,50,1224,"list dependabot alerts for a repository",1,927,9691,65.000,0.000,6679,816.000,3,0.02
+sort_quick_full_k50,,linear,sort/quick,50,1224,"list dependabot alerts for a repository",2,927,9691,59.000,0.000,6746,668.000,3,0.02
+sort_quick_full_k50,,linear,sort/quick,50,1224,"create or update a repository secret",1,820,8370,59.000,0.000,6720,675.000,3,0.02
+sort_quick_full_k50,,linear,sort/quick,50,1224,"create or update a repository secret",2,820,8370,57.000,0.000,6783,741.000,3,0.02
+sort_quick_full_k50,,linear,sort/quick,50,1224,"delete a repository webhook",1,801,8610,63.000,0.000,6710,667.000,1,0.02
+sort_quick_full_k50,,linear,sort/quick,50,1224,"delete a repository webhook",2,801,8610,64.000,0.000,6731,914.000,1,0.02
+sort_quick_full_k50,,linear,sort/quick,50,1224,"list branches",1,470,4526,67.000,0.000,6720,435.000,1,0.02
+sort_quick_full_k50,,linear,sort/quick,50,1224,"list branches",2,470,4526,60.000,0.000,6782,431.000,1,0.02
+sort_quick_full_k50,,linear,sort/quick,50,1224,"create a team",1,334,2803,63.000,0.000,6715,413.000,1,0.02
+sort_quick_full_k50,,linear,sort/quick,50,1224,"create a team",2,334,2803,61.000,0.000,6715,400.000,1,0.02
+sort_quick_full_k50,,linear,sort/quick,50,1224,"create an issue",1,289,2397,68.000,0.000,6705,427.000,7,0.02
+sort_quick_full_k50,,linear,sort/quick,50,1224,"create an issue",2,289,2397,62.000,0.000,6752,327.000,7,0.02
+sort_quick_full_k50,,linear,sort/quick,50,1224,"create a release",1,244,1921,60.000,0.000,6668,388.000,2,0.02
+sort_quick_full_k50,,linear,sort/quick,50,1224,"create a release",2,244,1921,60.000,0.000,6715,322.000,2,0.02
+sort_quick_full_k50,,linear,sort/quick,50,1224,"merge a pull request",1,192,1464,75.000,0.000,6694,734.000,1,0.04
+sort_quick_full_k50,,linear,sort/quick,50,1224,"merge a pull request",2,192,1464,61.000,0.000,6710,443.000,1,0.04
+sort_quick_full_k50,,linear,sort/quick,50,1224,"cancel a workflow run",1,94,609,61.000,0.000,6684,460.000,1,0.04
+sort_quick_full_k50,,linear,sort/quick,50,1224,"cancel a workflow run",2,94,609,58.000,0.000,6824,501.000,1,0.04
+sort_std_full_k50,,linear,sort/std,50,1224,"create a repository in an organization",1,1022,10597,74.000,0.000,6783,646.000,1,0.02
+sort_std_full_k50,,linear,sort/std,50,1224,"create a repository in an organization",2,1022,10597,63.000,0.000,6720,625.000,1,0.02
+sort_std_full_k50,,linear,sort/std,50,1224,"list dependabot alerts for a repository",1,927,9363,58.000,0.000,6777,669.000,3,0.02
+sort_std_full_k50,,linear,sort/std,50,1224,"list dependabot alerts for a repository",2,927,9363,60.000,0.000,6788,675.000,3,0.02
+sort_std_full_k50,,linear,sort/std,50,1224,"create or update a repository secret",1,820,8272,59.000,0.000,6746,762.000,3,0.02
+sort_std_full_k50,,linear,sort/std,50,1224,"create or update a repository secret",2,820,8272,59.000,0.000,6751,734.000,3,0.02
+sort_std_full_k50,,linear,sort/std,50,1224,"delete a repository webhook",1,801,7949,60.000,0.000,6684,622.000,1,0.02
+sort_std_full_k50,,linear,sort/std,50,1224,"delete a repository webhook",2,801,7949,59.000,0.000,6824,762.000,1,0.02
+sort_std_full_k50,,linear,sort/std,50,1224,"list branches",1,470,4285,72.000,0.000,6705,404.000,1,0.02
+sort_std_full_k50,,linear,sort/std,50,1224,"list branches",2,470,4285,61.000,0.000,6715,419.000,1,0.02
+sort_std_full_k50,,linear,sort/std,50,1224,"create a team",1,334,2953,59.000,0.000,6715,329.000,1,0.02
+sort_std_full_k50,,linear,sort/std,50,1224,"create a team",2,334,2953,59.000,0.000,6824,400.000,1,0.02
+sort_std_full_k50,,linear,sort/std,50,1224,"create an issue",1,289,2415,57.000,0.000,6751,386.000,7,0.02
+sort_std_full_k50,,linear,sort/std,50,1224,"create an issue",2,289,2415,60.000,0.000,6757,383.000,7,0.02
+sort_std_full_k50,,linear,sort/std,50,1224,"create a release",1,244,2061,58.000,0.000,6787,386.000,2,0.02
+sort_std_full_k50,,linear,sort/std,50,1224,"create a release",2,244,2061,59.000,0.000,6783,383.000,2,0.02
+sort_std_full_k50,,linear,sort/std,50,1224,"merge a pull request",1,192,1430,62.000,0.000,6746,420.000,1,0.04
+sort_std_full_k50,,linear,sort/std,50,1224,"merge a pull request",2,192,1430,59.000,0.000,6720,427.000,1,0.04
+sort_std_full_k50,,linear,sort/std,50,1224,"cancel a workflow run",1,94,636,58.000,0.000,6720,503.000,1,0.04
+sort_std_full_k50,,linear,sort/std,50,1224,"cancel a workflow run",2,94,636,59.000,0.000,6751,506.000,1,0.04
+preset1_full_k500,1,linear,topk,500,1224,"create a repository in an organization",1,1022,100797,58.000,0.000,6746,744.000,1,0.00
+preset1_full_k500,1,linear,topk,500,1224,"create a repository in an organization",2,1022,100797,60.000,0.000,6782,930.000,1,0.00
+preset1_full_k500,1,linear,topk,500,1224,"list dependabot alerts for a repository",1,927,135598,57.000,0.000,6787,1039.000,3,0.00
+preset1_full_k500,1,linear,topk,500,1224,"list dependabot alerts for a repository",2,927,135598,58.000,0.000,6782,949.000,3,0.00
+preset1_full_k500,1,linear,topk,500,1224,"create or update a repository secret",1,820,115787,64.000,0.000,6751,907.000,3,0.00
+preset1_full_k500,1,linear,topk,500,1224,"create or update a repository secret",2,820,115787,59.000,0.000,6635,953.000,3,0.00
+preset1_full_k500,1,linear,topk,500,1224,"delete a repository webhook",1,801,118257,59.000,0.000,6751,832.000,1,0.00
+preset1_full_k500,1,linear,topk,500,1224,"delete a repository webhook",2,801,118257,58.000,0.000,6824,830.000,1,0.00
+preset1_full_k500,1,linear,topk,500,1224,"list branches",1,470,59128,57.000,0.000,6679,576.000,1,0.00
+preset1_full_k500,1,linear,topk,500,1224,"list branches",2,470,59128,59.000,0.000,6674,593.000,1,0.00
+preset1_full_k500,1,linear,topk,500,1224,"create a team",1,334,30300,58.000,0.000,6751,392.000,1,0.00
+preset1_full_k500,1,linear,topk,500,1224,"create a team",2,334,30300,59.000,0.000,6793,385.000,1,0.00
+preset1_full_k500,1,linear,topk,500,1224,"create an issue",1,289,26317,58.000,0.000,6720,462.000,7,0.00
+preset1_full_k500,1,linear,topk,500,1224,"create an issue",2,289,26317,57.000,0.000,6715,379.000,7,0.00
+preset1_full_k500,1,linear,topk,500,1224,"create a release",1,244,18452,57.000,0.000,6798,346.000,2,0.00
+preset1_full_k500,1,linear,topk,500,1224,"create a release",2,244,18452,58.000,0.000,6679,417.000,2,0.00
+preset1_full_k500,1,linear,topk,500,1224,"merge a pull request",1,192,11661,61.000,0.000,6787,537.000,1,0.00
+preset1_full_k500,1,linear,topk,500,1224,"merge a pull request",2,192,11661,61.000,0.000,6635,457.000,1,0.00
+preset1_full_k500,1,linear,topk,500,1224,"cancel a workflow run",1,94,2109,57.000,0.000,6751,411.000,1,0.00
+preset1_full_k500,1,linear,topk,500,1224,"cancel a workflow run",2,94,2109,58.000,0.000,6720,509.000,1,0.00
+preset2_full_k500,2,indexed,topk,500,1224,"create a repository in an organization",1,1022,85218,60.000,6128.000,7442,889.000,1,0.00
+preset2_full_k500,2,indexed,topk,500,1224,"create a repository in an organization",2,1022,85218,58.000,6298.000,7442,861.000,1,0.00
+preset2_full_k500,2,indexed,topk,500,1224,"list dependabot alerts for a repository",1,927,90248,59.000,6438.000,7437,915.000,3,0.00
+preset2_full_k500,2,indexed,topk,500,1224,"list dependabot alerts for a repository",2,927,90248,59.000,6441.000,7442,943.000,3,0.00
+preset2_full_k500,2,indexed,topk,500,1224,"create or update a repository secret",1,820,68221,58.000,5813.000,7506,801.000,3,0.00
+preset2_full_k500,2,indexed,topk,500,1224,"create or update a repository secret",2,820,68221,59.000,5671.000,7579,832.000,3,0.00
+preset2_full_k500,2,indexed,topk,500,1224,"delete a repository webhook",1,801,90659,59.000,6335.000,7442,616.000,1,0.00
+preset2_full_k500,2,indexed,topk,500,1224,"delete a repository webhook",2,801,90659,59.000,6582.000,7442,586.000,1,0.00
+preset2_full_k500,2,indexed,topk,500,1224,"list branches",1,470,64547,59.000,6588.000,7436,454.000,1,0.00
+preset2_full_k500,2,indexed,topk,500,1224,"list branches",2,470,64547,59.000,6469.000,7437,460.000,1,0.00
+preset2_full_k500,2,indexed,topk,500,1224,"create a team",1,334,33184,58.000,6190.000,7437,294.000,1,0.00
+preset2_full_k500,2,indexed,topk,500,1224,"create a team",2,334,33184,60.000,6206.000,7442,281.000,1,0.00
+preset2_full_k500,2,indexed,topk,500,1224,"create an issue",1,289,28734,57.000,5817.000,7437,253.000,7,0.00
+preset2_full_k500,2,indexed,topk,500,1224,"create an issue",2,289,28734,59.000,7129.000,7437,233.000,7,0.00
+preset2_full_k500,2,indexed,topk,500,1224,"create a release",1,244,18560,58.000,6079.000,7431,199.000,2,0.00
+preset2_full_k500,2,indexed,topk,500,1224,"create a release",2,244,18560,58.000,6141.000,7426,182.000,2,0.00
+preset2_full_k500,2,indexed,topk,500,1224,"merge a pull request",1,192,6361,59.000,6545.000,7437,181.000,1,0.00
+preset2_full_k500,2,indexed,topk,500,1224,"merge a pull request",2,192,6361,60.000,6363.000,7442,150.000,1,0.00
+preset2_full_k500,2,indexed,topk,500,1224,"cancel a workflow run",1,94,1874,59.000,6223.000,7437,81.000,1,0.00
+preset2_full_k500,2,indexed,topk,500,1224,"cancel a workflow run",2,94,1874,58.000,5612.000,7516,86.000,1,0.00
+preset3_full_k500,3,linear,sort/merge,500,1224,"create a repository in an organization",1,1022,8659,59.000,0.000,6715,707.000,1,0.00
+preset3_full_k500,3,linear,sort/merge,500,1224,"create a repository in an organization",2,1022,8659,59.000,0.000,6756,747.000,1,0.00
+preset3_full_k500,3,linear,sort/merge,500,1224,"list dependabot alerts for a repository",1,927,7750,58.000,0.000,6787,861.000,3,0.00
+preset3_full_k500,3,linear,sort/merge,500,1224,"list dependabot alerts for a repository",2,927,7750,58.000,0.000,6725,673.000,3,0.00
+preset3_full_k500,3,linear,sort/merge,500,1224,"create or update a repository secret",1,820,6710,57.000,0.000,6756,792.000,3,0.00
+preset3_full_k500,3,linear,sort/merge,500,1224,"create or update a repository secret",2,820,6710,58.000,0.000,6788,853.000,3,0.00
+preset3_full_k500,3,linear,sort/merge,500,1224,"delete a repository webhook",1,801,6550,59.000,0.000,6757,521.000,1,0.00
+preset3_full_k500,3,linear,sort/merge,500,1224,"delete a repository webhook",2,801,6550,58.000,0.000,6725,533.000,1,0.00
+preset3_full_k500,3,linear,sort/merge,500,1224,"list branches",1,470,3514,59.000,0.000,6715,369.000,1,0.00
+preset3_full_k500,3,linear,sort/merge,500,1224,"list branches",2,470,3514,59.000,0.000,6715,349.000,1,0.00
+preset3_full_k500,3,linear,sort/merge,500,1224,"create a team",1,334,2335,59.000,0.000,6751,418.000,1,0.00
+preset3_full_k500,3,linear,sort/merge,500,1224,"create a team",2,334,2335,75.000,0.000,6640,365.000,1,0.00
+preset3_full_k500,3,linear,sort/merge,500,1224,"create an issue",1,289,1956,58.000,0.000,6751,428.000,7,0.00
+preset3_full_k500,3,linear,sort/merge,500,1224,"create an issue",2,289,1956,60.000,0.000,6793,350.000,7,0.00
+preset3_full_k500,3,linear,sort/merge,500,1224,"create a release",1,244,1621,58.000,0.000,6756,312.000,2,0.00
+preset3_full_k500,3,linear,sort/merge,500,1224,"create a release",2,244,1621,57.000,0.000,6762,441.000,2,0.00
+preset3_full_k500,3,linear,sort/merge,500,1224,"merge a pull request",1,192,1194,60.000,0.000,6720,509.000,1,0.00
+preset3_full_k500,3,linear,sort/merge,500,1224,"merge a pull request",2,192,1194,60.000,0.000,6640,541.000,1,0.00
+preset3_full_k500,3,linear,sort/merge,500,1224,"cancel a workflow run",1,94,484,61.000,0.000,6751,428.000,1,0.00
+preset3_full_k500,3,linear,sort/merge,500,1224,"cancel a workflow run",2,94,484,60.000,0.000,6684,511.000,1,0.00
+heap_full_k500,,linear,heap,500,1224,"create a repository in an organization",1,1022,11133,57.000,0.000,6756,637.000,1,0.00
+heap_full_k500,,linear,heap,500,1224,"create a repository in an organization",2,1022,11133,58.000,0.000,6715,636.000,1,0.00
+heap_full_k500,,linear,heap,500,1224,"list dependabot alerts for a repository",1,927,12503,59.000,0.000,6756,827.000,3,0.00
+heap_full_k500,,linear,heap,500,1224,"list dependabot alerts for a repository",2,927,12503,59.000,0.000,6787,830.000,3,0.00
+heap_full_k500,,linear,heap,500,1224,"create or update a repository secret",1,820,11438,60.000,0.000,6793,658.000,3,0.00
+heap_full_k500,,linear,heap,500,1224,"create or update a repository secret",2,820,11438,56.000,0.000,6741,817.000,3,0.00
+heap_full_k500,,linear,heap,500,1224,"delete a repository webhook",1,801,11389,58.000,0.000,6762,639.000,1,0.00
+heap_full_k500,,linear,heap,500,1224,"delete a repository webhook",2,801,11389,58.000,0.000,6787,508.000,1,0.00
+heap_full_k500,,linear,heap,500,1224,"list branches",1,470,7048,58.000,0.000,6741,433.000,1,0.00
+heap_full_k500,,linear,heap,500,1224,"list branches",2,470,7048,60.000,0.000,6751,424.000,1,0.00
+heap_full_k500,,linear,heap,500,1224,"create a team",1,334,4716,60.000,0.000,6751,373.000,1,0.00
+heap_full_k500,,linear,heap,500,1224,"create a team",2,334,4716,60.000,0.000,6746,333.000,1,0.00
+heap_full_k500,,linear,heap,500,1224,"create an issue",1,289,3886,58.000,0.000,6746,385.000,7,0.00
+heap_full_k500,,linear,heap,500,1224,"create an issue",2,289,3886,58.000,0.000,6684,435.000,7,0.00
+heap_full_k500,,linear,heap,500,1224,"create a release",1,244,3186,60.000,0.000,6715,384.000,2,0.00
+heap_full_k500,,linear,heap,500,1224,"create a release",2,244,3186,58.000,0.000,6757,535.000,2,0.00
+heap_full_k500,,linear,heap,500,1224,"merge a pull request",1,192,2294,60.000,0.000,6756,487.000,1,0.00
+heap_full_k500,,linear,heap,500,1224,"merge a pull request",2,192,2294,60.000,0.000,6720,426.000,1,0.00
+heap_full_k500,,linear,heap,500,1224,"cancel a workflow run",1,94,966,61.000,0.000,6746,422.000,1,0.00
+heap_full_k500,,linear,heap,500,1224,"cancel a workflow run",2,94,966,60.000,0.000,6751,496.000,1,0.00
+sort_quick_full_k500,,linear,sort/quick,500,1224,"create a repository in an organization",1,1022,10833,59.000,0.000,6725,718.000,1,0.00
+sort_quick_full_k500,,linear,sort/quick,500,1224,"create a repository in an organization",2,1022,10833,61.000,0.000,6788,697.000,1,0.00
+sort_quick_full_k500,,linear,sort/quick,500,1224,"list dependabot alerts for a repository",1,927,9691,58.000,0.000,6751,732.000,3,0.00
+sort_quick_full_k500,,linear,sort/quick,500,1224,"list dependabot alerts for a repository",2,927,9691,58.000,0.000,6829,870.000,3,0.00
+sort_quick_full_k500,,linear,sort/quick,500,1224,"create or update a repository secret",1,820,8370,58.000,0.000,6782,644.000,3,0.00
+sort_quick_full_k500,,linear,sort/quick,500,1224,"create or update a repository secret",2,820,8370,61.000,0.000,6787,785.000,3,0.00
+sort_quick_full_k500,,linear,sort/quick,500,1224,"delete a repository webhook",1,801,8610,59.000,0.000,6710,618.000,1,0.00
+sort_quick_full_k500,,linear,sort/quick,500,1224,"delete a repository webhook",2,801,8610,60.000,0.000,6788,644.000,1,0.00
+sort_quick_full_k500,,linear,sort/quick,500,1224,"list branches",1,470,4526,60.000,0.000,6646,436.000,1,0.00
+sort_quick_full_k500,,linear,sort/quick,500,1224,"list branches",2,470,4526,59.000,0.000,6710,411.000,1,0.00
+sort_quick_full_k500,,linear,sort/quick,500,1224,"create a team",1,334,2803,60.000,0.000,6793,389.000,1,0.00
+sort_quick_full_k500,,linear,sort/quick,500,1224,"create a team",2,334,2803,58.000,0.000,6746,471.000,1,0.00
+sort_quick_full_k500,,linear,sort/quick,500,1224,"create an issue",1,289,2397,58.000,0.000,6824,401.000,7,0.00
+sort_quick_full_k500,,linear,sort/quick,500,1224,"create an issue",2,289,2397,59.000,0.000,6891,379.000,7,0.00
+sort_quick_full_k500,,linear,sort/quick,500,1224,"create a release",1,244,1921,60.000,0.000,6720,391.000,2,0.00
+sort_quick_full_k500,,linear,sort/quick,500,1224,"create a release",2,244,1921,60.000,0.000,6715,324.000,2,0.00
+sort_quick_full_k500,,linear,sort/quick,500,1224,"merge a pull request",1,192,1464,61.000,0.000,6756,453.000,1,0.00
+sort_quick_full_k500,,linear,sort/quick,500,1224,"merge a pull request",2,192,1464,59.000,0.000,6635,546.000,1,0.00
+sort_quick_full_k500,,linear,sort/quick,500,1224,"cancel a workflow run",1,94,609,59.000,0.000,6787,467.000,1,0.00
+sort_quick_full_k500,,linear,sort/quick,500,1224,"cancel a workflow run",2,94,609,59.000,0.000,6752,446.000,1,0.00
+sort_std_full_k500,,linear,sort/std,500,1224,"create a repository in an organization",1,1022,10597,58.000,0.000,6751,681.000,1,0.00
+sort_std_full_k500,,linear,sort/std,500,1224,"create a repository in an organization",2,1022,10597,59.000,0.000,6751,654.000,1,0.00
+sort_std_full_k500,,linear,sort/std,500,1224,"list dependabot alerts for a repository",1,927,9363,59.000,0.000,6829,952.000,3,0.00
+sort_std_full_k500,,linear,sort/std,500,1224,"list dependabot alerts for a repository",2,927,9363,57.000,0.000,6757,791.000,3,0.00
+sort_std_full_k500,,linear,sort/std,500,1224,"create or update a repository secret",1,820,8272,60.000,0.000,6720,680.000,3,0.00
+sort_std_full_k500,,linear,sort/std,500,1224,"create or update a repository secret",2,820,8272,59.000,0.000,6788,792.000,3,0.00
+sort_std_full_k500,,linear,sort/std,500,1224,"delete a repository webhook",1,801,7949,60.000,0.000,6751,548.000,1,0.00
+sort_std_full_k500,,linear,sort/std,500,1224,"delete a repository webhook",2,801,7949,60.000,0.000,6746,718.000,1,0.00
+sort_std_full_k500,,linear,sort/std,500,1224,"list branches",1,470,4285,62.000,0.000,6782,357.000,1,0.00
+sort_std_full_k500,,linear,sort/std,500,1224,"list branches",2,470,4285,59.000,0.000,6746,359.000,1,0.00
+sort_std_full_k500,,linear,sort/std,500,1224,"create a team",1,334,2953,60.000,0.000,6757,409.000,1,0.00
+sort_std_full_k500,,linear,sort/std,500,1224,"create a team",2,334,2953,58.000,0.000,6715,472.000,1,0.00
+sort_std_full_k500,,linear,sort/std,500,1224,"create an issue",1,289,2415,60.000,0.000,6720,386.000,7,0.00
+sort_std_full_k500,,linear,sort/std,500,1224,"create an issue",2,289,2415,59.000,0.000,6762,319.000,7,0.00
+sort_std_full_k500,,linear,sort/std,500,1224,"create a release",1,244,2061,59.000,0.000,6746,375.000,2,0.00
+sort_std_full_k500,,linear,sort/std,500,1224,"create a release",2,244,2061,59.000,0.000,6720,376.000,2,0.00
+sort_std_full_k500,,linear,sort/std,500,1224,"merge a pull request",1,192,1430,58.000,0.000,6793,494.000,1,0.00
+sort_std_full_k500,,linear,sort/std,500,1224,"merge a pull request",2,192,1430,60.000,0.000,6782,417.000,1,0.00
+sort_std_full_k500,,linear,sort/std,500,1224,"cancel a workflow run",1,94,636,57.000,0.000,6746,545.000,1,0.00
+sort_std_full_k500,,linear,sort/std,500,1224,"cancel a workflow run",2,94,636,59.000,0.000,6793,411.000,1,0.00
+preset1_full_k1224,1,linear,topk,1224,1224,"create a repository in an organization",1,1022,187702,60.000,0.000,6751,1002.000,1,0.00
+preset1_full_k1224,1,linear,topk,1224,1224,"create a repository in an organization",2,1022,187702,58.000,0.000,6793,1120.000,1,0.00
+preset1_full_k1224,1,linear,topk,1224,1224,"list dependabot alerts for a repository",1,927,213524,59.000,0.000,6757,1140.000,3,0.00
+preset1_full_k1224,1,linear,topk,1224,1224,"list dependabot alerts for a repository",2,927,213524,59.000,0.000,6829,1360.000,3,0.00
+preset1_full_k1224,1,linear,topk,1224,1224,"create or update a repository secret",1,820,159441,59.000,0.000,6751,1100.000,3,0.00
+preset1_full_k1224,1,linear,topk,1224,1224,"create or update a repository secret",2,820,159441,59.000,0.000,6646,1026.000,3,0.00
+preset1_full_k1224,1,linear,topk,1224,1224,"delete a repository webhook",1,801,158031,59.000,0.000,6720,1041.000,1,0.00
+preset1_full_k1224,1,linear,topk,1224,1224,"delete a repository webhook",2,801,158031,57.000,0.000,6720,856.000,1,0.00
+preset1_full_k1224,1,linear,topk,1224,1224,"list branches",1,470,59128,57.000,0.000,6689,569.000,1,0.00
+preset1_full_k1224,1,linear,topk,1224,1224,"list branches",2,470,59128,59.000,0.000,6829,553.000,1,0.00
+preset1_full_k1224,1,linear,topk,1224,1224,"create a team",1,334,30300,60.000,0.000,6793,457.000,1,0.00
+preset1_full_k1224,1,linear,topk,1224,1224,"create a team",2,334,30300,59.000,0.000,6788,381.000,1,0.00
+preset1_full_k1224,1,linear,topk,1224,1224,"create an issue",1,289,26317,59.000,0.000,6762,373.000,7,0.00
+preset1_full_k1224,1,linear,topk,1224,1224,"create an issue",2,289,26317,57.000,0.000,6757,490.000,7,0.00
+preset1_full_k1224,1,linear,topk,1224,1224,"create a release",1,244,18452,57.000,0.000,6756,428.000,2,0.00
+preset1_full_k1224,1,linear,topk,1224,1224,"create a release",2,244,18452,60.000,0.000,6684,498.000,2,0.00
+preset1_full_k1224,1,linear,topk,1224,1224,"merge a pull request",1,192,11661,58.000,0.000,6720,547.000,1,0.00
+preset1_full_k1224,1,linear,topk,1224,1224,"merge a pull request",2,192,11661,58.000,0.000,6684,544.000,1,0.00
+preset1_full_k1224,1,linear,topk,1224,1224,"cancel a workflow run",1,94,2109,59.000,0.000,6684,578.000,1,0.00
+preset1_full_k1224,1,linear,topk,1224,1224,"cancel a workflow run",2,94,2109,57.000,0.000,6751,497.000,1,0.00
+preset2_full_k1224,2,indexed,topk,1224,1224,"create a repository in an organization",1,1022,202268,59.000,6073.000,7480,1305.000,1,0.00
+preset2_full_k1224,2,indexed,topk,1224,1224,"create a repository in an organization",2,1022,202268,58.000,6136.000,7437,1129.000,1,0.00
+preset2_full_k1224,2,indexed,topk,1224,1224,"list dependabot alerts for a repository",1,927,149586,60.000,6626.000,7442,1128.000,3,0.00
+preset2_full_k1224,2,indexed,topk,1224,1224,"list dependabot alerts for a repository",2,927,149586,58.000,6673.000,7436,1165.000,3,0.00
+preset2_full_k1224,2,indexed,topk,1224,1224,"create or update a repository secret",1,820,109254,60.000,5943.000,7442,780.000,3,0.00
+preset2_full_k1224,2,indexed,topk,1224,1224,"create or update a repository secret",2,820,109254,57.000,6672.000,7442,742.000,3,0.00
+preset2_full_k1224,2,indexed,topk,1224,1224,"delete a repository webhook",1,801,129303,59.000,7304.000,7442,859.000,1,0.00
+preset2_full_k1224,2,indexed,topk,1224,1224,"delete a repository webhook",2,801,129303,57.000,6737.000,7436,750.000,1,0.00
+preset2_full_k1224,2,indexed,topk,1224,1224,"list branches",1,470,64547,60.000,6510.000,7442,431.000,1,0.00
+preset2_full_k1224,2,indexed,topk,1224,1224,"list branches",2,470,64547,57.000,6234.000,7431,497.000,1,0.00
+preset2_full_k1224,2,indexed,topk,1224,1224,"create a team",1,334,33184,57.000,5990.000,7437,275.000,1,0.00
+preset2_full_k1224,2,indexed,topk,1224,1224,"create a team",2,334,33184,58.000,6466.000,7442,265.000,1,0.00
+preset2_full_k1224,2,indexed,topk,1224,1224,"create an issue",1,289,28734,58.000,6429.000,7436,261.000,7,0.00
+preset2_full_k1224,2,indexed,topk,1224,1224,"create an issue",2,289,28734,59.000,5805.000,7573,229.000,7,0.00
+preset2_full_k1224,2,indexed,topk,1224,1224,"create a release",1,244,18560,58.000,5848.000,7426,176.000,2,0.00
+preset2_full_k1224,2,indexed,topk,1224,1224,"create a release",2,244,18560,60.000,6094.000,7442,144.000,2,0.00
+preset2_full_k1224,2,indexed,topk,1224,1224,"merge a pull request",1,192,6361,60.000,5737.000,7516,142.000,1,0.00
+preset2_full_k1224,2,indexed,topk,1224,1224,"merge a pull request",2,192,6361,60.000,6732.000,7437,161.000,1,0.00
+preset2_full_k1224,2,indexed,topk,1224,1224,"cancel a workflow run",1,94,1874,58.000,7050.000,7426,75.000,1,0.00
+preset2_full_k1224,2,indexed,topk,1224,1224,"cancel a workflow run",2,94,1874,60.000,5752.000,7579,81.000,1,0.00
+preset3_full_k1224,3,linear,sort/merge,1224,1224,"create a repository in an organization",1,1022,8659,59.000,0.000,6865,712.000,1,0.00
+preset3_full_k1224,3,linear,sort/merge,1224,1224,"create a repository in an organization",2,1022,8659,61.000,0.000,6726,575.000,1,0.00
+preset3_full_k1224,3,linear,sort/merge,1224,1224,"list dependabot alerts for a repository",1,927,7750,58.000,0.000,6818,815.000,3,0.00
+preset3_full_k1224,3,linear,sort/merge,1224,1224,"list dependabot alerts for a repository",2,927,7750,56.000,0.000,6715,805.000,3,0.00
+preset3_full_k1224,3,linear,sort/merge,1224,1224,"create or update a repository secret",1,820,6710,58.000,0.000,6757,779.000,3,0.00
+preset3_full_k1224,3,linear,sort/merge,1224,1224,"create or update a repository secret",2,820,6710,58.000,0.000,6715,761.000,3,0.00
+preset3_full_k1224,3,linear,sort/merge,1224,1224,"delete a repository webhook",1,801,6550,58.000,0.000,6782,657.000,1,0.00
+preset3_full_k1224,3,linear,sort/merge,1224,1224,"delete a repository webhook",2,801,6550,57.000,0.000,6751,627.000,1,0.00
+preset3_full_k1224,3,linear,sort/merge,1224,1224,"list branches",1,470,3514,58.000,0.000,6646,384.000,1,0.00
+preset3_full_k1224,3,linear,sort/merge,1224,1224,"list branches",2,470,3514,57.000,0.000,6751,457.000,1,0.00
+preset3_full_k1224,3,linear,sort/merge,1224,1224,"create a team",1,334,2335,59.000,0.000,6757,334.000,1,0.00
+preset3_full_k1224,3,linear,sort/merge,1224,1224,"create a team",2,334,2335,58.000,0.000,6798,389.000,1,0.00
+preset3_full_k1224,3,linear,sort/merge,1224,1224,"create an issue",1,289,1956,60.000,0.000,6720,346.000,7,0.00
+preset3_full_k1224,3,linear,sort/merge,1224,1224,"create an issue",2,289,1956,58.000,0.000,6720,468.000,7,0.00
+preset3_full_k1224,3,linear,sort/merge,1224,1224,"create a release",1,244,1621,58.000,0.000,6793,430.000,2,0.00
+preset3_full_k1224,3,linear,sort/merge,1224,1224,"create a release",2,244,1621,57.000,0.000,6793,442.000,2,0.00
+preset3_full_k1224,3,linear,sort/merge,1224,1224,"merge a pull request",1,192,1194,58.000,0.000,6782,430.000,1,0.00
+preset3_full_k1224,3,linear,sort/merge,1224,1224,"merge a pull request",2,192,1194,58.000,0.000,6787,586.000,1,0.00
+preset3_full_k1224,3,linear,sort/merge,1224,1224,"cancel a workflow run",1,94,484,57.000,0.000,6756,499.000,1,0.00
+preset3_full_k1224,3,linear,sort/merge,1224,1224,"cancel a workflow run",2,94,484,59.000,0.000,6715,489.000,1,0.00
+heap_full_k1224,,linear,heap,1224,1224,"create a repository in an organization",1,1022,18026,59.000,0.000,6746,704.000,1,0.00
+heap_full_k1224,,linear,heap,1224,1224,"create a repository in an organization",2,1022,18026,60.000,0.000,6679,594.000,1,0.00
+heap_full_k1224,,linear,heap,1224,1224,"list dependabot alerts for a repository",1,927,15770,57.000,0.000,6793,851.000,3,0.00
+heap_full_k1224,,linear,heap,1224,1224,"list dependabot alerts for a repository",2,927,15770,58.000,0.000,6756,835.000,3,0.00
+heap_full_k1224,,linear,heap,1224,1224,"create or update a repository secret",1,820,13679,58.000,0.000,6756,801.000,3,0.00
+heap_full_k1224,,linear,heap,1224,1224,"create or update a repository secret",2,820,13679,58.000,0.000,6824,655.000,3,0.00
+heap_full_k1224,,linear,heap,1224,1224,"delete a repository webhook",1,801,13242,62.000,0.000,6824,561.000,1,0.00
+heap_full_k1224,,linear,heap,1224,1224,"delete a repository webhook",2,801,13242,58.000,0.000,6710,658.000,1,0.00
+heap_full_k1224,,linear,heap,1224,1224,"list branches",1,470,7048,58.000,0.000,6640,372.000,1,0.00
+heap_full_k1224,,linear,heap,1224,1224,"list branches",2,470,7048,58.000,0.000,6751,431.000,1,0.00
+heap_full_k1224,,linear,heap,1224,1224,"create a team",1,334,4716,59.000,0.000,6684,415.000,1,0.00
+heap_full_k1224,,linear,heap,1224,1224,"create a team",2,334,4716,59.000,0.000,6756,396.000,1,0.00
+heap_full_k1224,,linear,heap,1224,1224,"create an issue",1,289,3886,59.000,0.000,6679,322.000,7,0.00
+heap_full_k1224,,linear,heap,1224,1224,"create an issue",2,289,3886,58.000,0.000,6752,383.000,7,0.00
+heap_full_k1224,,linear,heap,1224,1224,"create a release",1,244,3186,57.000,0.000,6725,424.000,2,0.00
+heap_full_k1224,,linear,heap,1224,1224,"create a release",2,244,3186,58.000,0.000,6751,364.000,2,0.00
+heap_full_k1224,,linear,heap,1224,1224,"merge a pull request",1,192,2294,57.000,0.000,6756,436.000,1,0.00
+heap_full_k1224,,linear,heap,1224,1224,"merge a pull request",2,192,2294,59.000,0.000,6715,528.000,1,0.00
+heap_full_k1224,,linear,heap,1224,1224,"cancel a workflow run",1,94,966,60.000,0.000,6746,528.000,1,0.00
+heap_full_k1224,,linear,heap,1224,1224,"cancel a workflow run",2,94,966,59.000,0.000,6710,508.000,1,0.00
+sort_quick_full_k1224,,linear,sort/quick,1224,1224,"create a repository in an organization",1,1022,10833,58.000,0.000,6715,690.000,1,0.00
+sort_quick_full_k1224,,linear,sort/quick,1224,1224,"create a repository in an organization",2,1022,10833,59.000,0.000,6720,705.000,1,0.00
+sort_quick_full_k1224,,linear,sort/quick,1224,1224,"list dependabot alerts for a repository",1,927,9691,58.000,0.000,6751,672.000,3,0.00
+sort_quick_full_k1224,,linear,sort/quick,1224,1224,"list dependabot alerts for a repository",2,927,9691,58.000,0.000,6684,692.000,3,0.00
+sort_quick_full_k1224,,linear,sort/quick,1224,1224,"create or update a repository secret",1,820,8370,57.000,0.000,6720,653.000,3,0.00
+sort_quick_full_k1224,,linear,sort/quick,1224,1224,"create or update a repository secret",2,820,8370,60.000,0.000,6757,637.000,3,0.00
+sort_quick_full_k1224,,linear,sort/quick,1224,1224,"delete a repository webhook",1,801,8610,58.000,0.000,6715,622.000,1,0.00
+sort_quick_full_k1224,,linear,sort/quick,1224,1224,"delete a repository webhook",2,801,8610,58.000,0.000,6762,628.000,1,0.00
+sort_quick_full_k1224,,linear,sort/quick,1224,1224,"list branches",1,470,4526,58.000,0.000,6751,348.000,1,0.00
+sort_quick_full_k1224,,linear,sort/quick,1224,1224,"list branches",2,470,4526,58.000,0.000,6726,417.000,1,0.00
+sort_quick_full_k1224,,linear,sort/quick,1224,1224,"create a team",1,334,2803,59.000,0.000,6762,395.000,1,0.00
+sort_quick_full_k1224,,linear,sort/quick,1224,1224,"create a team",2,334,2803,60.000,0.000,6762,330.000,1,0.00
+sort_quick_full_k1224,,linear,sort/quick,1224,1224,"create an issue",1,289,2397,59.000,0.000,6757,380.000,7,0.00
+sort_quick_full_k1224,,linear,sort/quick,1224,1224,"create an issue",2,289,2397,57.000,0.000,6689,427.000,7,0.00
+sort_quick_full_k1224,,linear,sort/quick,1224,1224,"create a release",1,244,1921,58.000,0.000,6762,383.000,2,0.00
+sort_quick_full_k1224,,linear,sort/quick,1224,1224,"create a release",2,244,1921,57.000,0.000,6782,376.000,2,0.00
+sort_quick_full_k1224,,linear,sort/quick,1224,1224,"merge a pull request",1,192,1464,58.000,0.000,6715,539.000,1,0.00
+sort_quick_full_k1224,,linear,sort/quick,1224,1224,"merge a pull request",2,192,1464,58.000,0.000,6818,419.000,1,0.00
+sort_quick_full_k1224,,linear,sort/quick,1224,1224,"cancel a workflow run",1,94,609,58.000,0.000,6818,415.000,1,0.00
+sort_quick_full_k1224,,linear,sort/quick,1224,1224,"cancel a workflow run",2,94,609,59.000,0.000,6752,472.000,1,0.00
+sort_std_full_k1224,,linear,sort/std,1224,1224,"create a repository in an organization",1,1022,10597,58.000,0.000,6720,676.000,1,0.00
+sort_std_full_k1224,,linear,sort/std,1224,1224,"create a repository in an organization",2,1022,10597,58.000,0.000,6861,646.000,1,0.00
+sort_std_full_k1224,,linear,sort/std,1224,1224,"list dependabot alerts for a repository",1,927,9363,58.000,0.000,6720,727.000,3,0.00
+sort_std_full_k1224,,linear,sort/std,1224,1224,"list dependabot alerts for a repository",2,927,9363,57.000,0.000,6720,814.000,3,0.00
+sort_std_full_k1224,,linear,sort/std,1224,1224,"create or update a repository secret",1,820,8272,59.000,0.000,6751,663.000,3,0.00
+sort_std_full_k1224,,linear,sort/std,1224,1224,"create or update a repository secret",2,820,8272,57.000,0.000,6824,760.000,3,0.00
+sort_std_full_k1224,,linear,sort/std,1224,1224,"delete a repository webhook",1,801,7949,59.000,0.000,6684,616.000,1,0.00
+sort_std_full_k1224,,linear,sort/std,1224,1224,"delete a repository webhook",2,801,7949,60.000,0.000,6757,657.000,1,0.00
+sort_std_full_k1224,,linear,sort/std,1224,1224,"list branches",1,470,4285,57.000,0.000,6746,408.000,1,0.00
+sort_std_full_k1224,,linear,sort/std,1224,1224,"list branches",2,470,4285,58.000,0.000,6756,358.000,1,0.00
+sort_std_full_k1224,,linear,sort/std,1224,1224,"create a team",1,334,2953,61.000,0.000,6710,371.000,1,0.00
+sort_std_full_k1224,,linear,sort/std,1224,1224,"create a team",2,334,2953,60.000,0.000,6684,377.000,1,0.00
+sort_std_full_k1224,,linear,sort/std,1224,1224,"create an issue",1,289,2415,59.000,0.000,6855,385.000,7,0.00
+sort_std_full_k1224,,linear,sort/std,1224,1224,"create an issue",2,289,2415,59.000,0.000,6793,381.000,7,0.00
+sort_std_full_k1224,,linear,sort/std,1224,1224,"create a release",1,244,2061,58.000,0.000,6640,309.000,2,0.00
+sort_std_full_k1224,,linear,sort/std,1224,1224,"create a release",2,244,2061,58.000,0.000,6751,376.000,2,0.00
+sort_std_full_k1224,,linear,sort/std,1224,1224,"merge a pull request",1,192,1430,58.000,0.000,6762,517.000,1,0.00
+sort_std_full_k1224,,linear,sort/std,1224,1224,"merge a pull request",2,192,1430,57.000,0.000,6757,516.000,1,0.00
+sort_std_full_k1224,,linear,sort/std,1224,1224,"cancel a workflow run",1,94,636,59.000,0.000,6757,525.000,1,0.00
+sort_std_full_k1224,,linear,sort/std,1224,1224,"cancel a workflow run",2,94,636,58.000,0.000,6720,492.000,1,0.00

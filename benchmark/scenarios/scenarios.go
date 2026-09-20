@@ -3,12 +3,13 @@ package scenarios
 import "fmt"
 
 type Scenario struct {
-	Name        string
-	Preset      int
-	Select      string
-	K           int
-	Limit       int
-	Repetitions int
+	Name          string
+	Preset        int
+	Select        string
+	OrderStrategy string
+	K             int
+	Limit         int
+	Repetitions   int
 }
 
 const (
@@ -66,6 +67,16 @@ func ByK() []Scenario {
 			Limit:       FullCorpus,
 			Repetitions: Reps,
 		})
+		for _, strategy := range []string{"quick", "std"} {
+			out = append(out, Scenario{
+				Name:          fmt.Sprintf("sort_%s_full_k%d", strategy, k),
+				Select:        "sort",
+				OrderStrategy: strategy,
+				K:             k,
+				Limit:         FullCorpus,
+				Repetitions:   Reps,
+			})
+		}
 	}
 	return out
 }
@@ -77,6 +88,9 @@ func (s Scenario) Args(query string) []string {
 	}
 	if s.Select != "" {
 		args = append(args, "-select", s.Select)
+	}
+	if s.OrderStrategy != "" {
+		args = append(args, "-order_strategy", s.OrderStrategy)
 	}
 	if s.Limit > 0 {
 		args = append(args, "-limit", fmt.Sprint(s.Limit))
