@@ -4,14 +4,14 @@ import (
 	"time"
 
 	"paa/searchEngine/ranking"
+	"paa/searchEngine/selection"
 	"paa/searchEngine/types"
 	"paa/searchEngine/utils"
 )
 
-func Search(corpus *types.Corpus, query string, k int) ([]types.Hit, types.Stats) {
+func Search(corpus *types.Corpus, query string, sel selection.Selector) ([]types.Hit, types.Stats) {
 	start := time.Now()
 	stats := types.Stats{N: corpus.N()}
-	ranking.Comparisons = 0
 
 	terms := utils.Normalize(query)
 	if len(terms) == 0 {
@@ -20,7 +20,6 @@ func Search(corpus *types.Corpus, query string, k int) ([]types.Hit, types.Stats
 		return nil, stats
 	}
 
-	var top []types.Hit
 	for pos := range corpus.Docs {
 		doc := &corpus.Docs[pos]
 		score := ranking.Score(corpus, doc, terms)
@@ -28,10 +27,11 @@ func Search(corpus *types.Corpus, query string, k int) ([]types.Hit, types.Stats
 			continue
 		}
 		stats.Candidates++
-		top = ranking.InsertTopK(top, types.Hit{Doc: doc, Score: score}, k)
+		sel.Add(types.Hit{Doc: doc, Score: score})
 	}
 
-	stats.Comparisons = ranking.Comparisons
+	hits := sel.Result()
+	stats.Comparisons = sel.Comparisons()
 	stats.QueryTime = time.Since(start)
-	return top, stats
+	return hits, stats
 }

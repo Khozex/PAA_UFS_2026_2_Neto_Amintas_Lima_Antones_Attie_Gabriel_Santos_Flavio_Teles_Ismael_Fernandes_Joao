@@ -57,9 +57,10 @@ type Stats struct {
 	Comparisons int
 	EmptyQuery  bool
 	QueryTime   time.Duration
+	Selection   string
+}
 
-	SortStrategy    string
-	SortOrder       string
-	SortComparisons int
-	SortTime        time.Duration
+type Query struct {
+	Query    string   `json:"query"`
+	Relevant []string `json:"relevant"`
 }

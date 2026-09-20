@@ -1,0 +1,12 @@
+[
+  {"query": "create a repository in an organization", "relevant": ["repos/create-in-org"]},
+  {"query": "list dependabot alerts for a repository", "relevant": ["dependabot/list-alerts-for-repo"]},
+  {"query": "create or update a repository secret", "relevant": ["actions/create-or-update-repo-secret"]},
+  {"query": "delete a repository webhook", "relevant": ["repos/delete-webhook"]},
+  {"query": "list branches", "relevant": ["repos/list-branches"]},
+  {"query": "create a team", "relevant": ["teams/create"]},
+  {"query": "create an issue", "relevant": ["issues/create"]},
+  {"query": "create a release", "relevant": ["repos/create-release"]},
+  {"query": "merge a pull request", "relevant": ["pulls/merge", "pulls/merge-async"]},
+  {"query": "cancel a workflow run", "relevant": ["actions/cancel-workflow-run", "actions/force-cancel-workflow-run"]}
+]

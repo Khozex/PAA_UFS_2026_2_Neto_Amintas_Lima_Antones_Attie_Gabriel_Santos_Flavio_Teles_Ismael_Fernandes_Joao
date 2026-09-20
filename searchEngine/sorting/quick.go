@@ -4,8 +4,22 @@ import "paa/searchEngine/types"
 
 func QuickSort(hits []types.Hit, less Comparator) int {
 	comparisons := 0
-	var partition func(lo, hi int) int
-	partition = func(lo, hi int) int {
+	medianToEnd := func(lo, hi int) {
+		mid := lo + (hi-lo)/2
+		comparisons += 3
+		if less(hits[mid], hits[lo]) {
+			hits[mid], hits[lo] = hits[lo], hits[mid]
+		}
+		if less(hits[hi], hits[lo]) {
+			hits[hi], hits[lo] = hits[lo], hits[hi]
+		}
+		if less(hits[hi], hits[mid]) {
+			hits[hi], hits[mid] = hits[mid], hits[hi]
+		}
+		hits[mid], hits[hi] = hits[hi], hits[mid]
+	}
+	partition := func(lo, hi int) int {
+		medianToEnd(lo, hi)
 		pivot := hits[hi]
 		i := lo - 1
 		for j := lo; j < hi; j++ {
@@ -20,7 +34,13 @@ func QuickSort(hits []types.Hit, less Comparator) int {
 	}
 	var qs func(lo, hi int)
 	qs = func(lo, hi int) {
-		if lo >= hi {
+		if hi-lo < 2 {
+			if hi-lo == 1 {
+				comparisons++
+				if less(hits[hi], hits[lo]) {
+					hits[lo], hits[hi] = hits[hi], hits[lo]
+				}
+			}
 			return
 		}
 		p := partition(lo, hi)

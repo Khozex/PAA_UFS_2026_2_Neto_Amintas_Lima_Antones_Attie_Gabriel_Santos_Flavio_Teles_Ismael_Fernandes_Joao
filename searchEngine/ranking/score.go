@@ -6,11 +6,14 @@ import (
 	"paa/searchEngine/types"
 )
 
-var weights = map[string]float64{
-	"summary":     3,
-	"path":        2,
-	"description": 1,
-	"params":      1,
+var fields = []struct {
+	name   string
+	weight float64
+}{
+	{"summary", 3},
+	{"path", 2},
+	{"description", 1},
+	{"params", 1},
 }
 
 func Score(corpus *types.Corpus, doc *types.Document, query []string) float64 {
@@ -20,12 +23,12 @@ func Score(corpus *types.Corpus, doc *types.Document, query []string) float64 {
 		if idf == 0 {
 			continue
 		}
-		for field, termCounts := range doc.TF {
-			tf := termCounts[term]
+		for _, field := range fields {
+			tf := doc.TF[field.name][term]
 			if tf == 0 {
 				continue
 			}
-			score += weights[field] * (1 + math.Log(float64(tf))) * idf
+			score += field.weight * (1 + math.Log(float64(tf))) * idf
 		}
 	}
 	return score
