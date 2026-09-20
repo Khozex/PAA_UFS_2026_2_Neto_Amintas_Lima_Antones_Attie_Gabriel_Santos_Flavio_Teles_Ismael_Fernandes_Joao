@@ -59,3 +59,8 @@ type Stats struct {
 	QueryTime   time.Duration
 	Selection   string
 }
+
+type Query struct {
+	Query    string   `json:"query"`
+	Relevant []string `json:"relevant"`
+}
