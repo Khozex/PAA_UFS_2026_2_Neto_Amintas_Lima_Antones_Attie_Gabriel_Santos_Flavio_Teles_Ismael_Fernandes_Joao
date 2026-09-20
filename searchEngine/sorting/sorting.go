@@ -10,4 +10,5 @@ var Registry = map[string]Algorithm{
 	"quick": QuickSort,
 	"heap":  HeapSort,
 	"merge": MergeSort,
+	"std":   StdSort,
 }

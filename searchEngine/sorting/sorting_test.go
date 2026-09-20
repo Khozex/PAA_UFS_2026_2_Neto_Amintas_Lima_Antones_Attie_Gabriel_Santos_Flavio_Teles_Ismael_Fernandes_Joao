@@ -91,3 +91,19 @@ func TestAlgorithmsReportComparisons(t *testing.T) {
 		}
 	}
 }
+
+func TestQuickSortAvoidsQuadraticOnSortedAndTiedInput(t *testing.T) {
+	n := 1000
+	sorted := make([]types.Hit, n)
+	tied := make([]types.Hit, n)
+	for i := range sorted {
+		sorted[i] = types.Hit{Doc: &types.Document{ID: fmt.Sprintf("d%04d", i)}, Score: float64(n - i)}
+		tied[i] = types.Hit{Doc: &types.Document{ID: fmt.Sprintf("d%04d", i)}, Score: 1}
+	}
+	limit := n * n / 4
+	for name, in := range map[string][]types.Hit{"ordenada": sorted, "empatada": tied} {
+		if got := QuickSort(slices.Clone(in), utils.MoreRelevant); got >= limit {
+			t.Errorf("quick em entrada %s: %d comparações, esperado bem abaixo de %d", name, got, limit)
+		}
+	}
+}
