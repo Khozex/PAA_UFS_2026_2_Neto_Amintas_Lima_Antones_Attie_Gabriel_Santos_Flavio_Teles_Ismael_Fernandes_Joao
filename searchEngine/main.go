@@ -8,39 +8,23 @@ import (
 	"slices"
 	"time"
 
-	"paa/searchEngine/corpus"
+	"paa/searchEngine/engine"
 	"paa/searchEngine/eval"
-	indexedsearch "paa/searchEngine/indexedSearch"
-	linearsearch "paa/searchEngine/linearSearch"
-	"paa/searchEngine/selection"
-	"paa/searchEngine/sorting"
 	"paa/searchEngine/types"
 	"paa/searchEngine/utils"
 )
 
-var (
-	defaultQuery = "create a repository in an organization"
-	defaultK     = 5
-)
-
-type preset struct {
-	config, selectMode, orderStrategy string
-}
-
-var presets = map[int]preset{
-	1: {"linear", "topk", "merge"},
-	2: {"indexed", "topk", "merge"},
-	3: {"linear", "sort", "merge"},
-}
+var defaultQuery = "create a repository in an organization"
 
 func main() {
-	corpusPath := flag.String("corpus", "data/processed/docs.jsonl", "")
+	opts := engine.DefaultOptions()
+	flag.StringVar(&opts.CorpusPath, "corpus", opts.CorpusPath, "")
 	query := flag.String("query", defaultQuery, "pergunta")
-	k := flag.Int("k", defaultK, "quantos resultados")
-	limit := flag.Int("limit", 0, "usa só os N primeiros documentos")
-	config := flag.String("config", "linear", "linear|indexed")
-	selectMode := flag.String("select", "topk", "topk|sort|heap")
-	orderStrategy := flag.String("order_strategy", "merge", "quick|heap|merge|std, só com -select sort")
+	flag.IntVar(&opts.K, "k", opts.K, "quantos resultados")
+	flag.IntVar(&opts.Limit, "limit", 0, "usa só os N primeiros documentos")
+	flag.StringVar(&opts.Config, "config", opts.Config, "linear|indexed")
+	flag.StringVar(&opts.Select, "select", opts.Select, "topk|sort|heap")
+	flag.StringVar(&opts.OrderStrategy, "order_strategy", opts.OrderStrategy, "quick|heap|merge|std, só com -select sort")
 	order := flag.String("order", "desc", "asc ou desc")
 	presetID := flag.Int("preset", 0, "1=linear+topk 2=indexed+topk 3=linear+sort/merge")
 	context := flag.Bool("context", false, "imprime o texto completo dos resultados")
@@ -52,57 +36,27 @@ func main() {
 		fmt.Fprintln(os.Stderr, `uso: go run ./searchEngine -query "..." [-k 5] [-limit N] [-preset 1|2|3]`)
 		os.Exit(2)
 	}
-	if *k < 0 {
-		fmt.Fprintf(os.Stderr, "k deve ser >= 0, recebido: %d\n", *k)
+	if err := opts.ApplyPreset(*presetID); err != nil {
+		fmt.Fprintln(os.Stderr, err)
 		os.Exit(2)
-	}
-	if *presetID != 0 {
-		p, ok := presets[*presetID]
-		if !ok {
-			fmt.Fprintf(os.Stderr, "preset desconhecido: %d\n", *presetID)
-			os.Exit(2)
-		}
-		*config, *selectMode, *orderStrategy = p.config, p.selectMode, p.orderStrategy
 	}
 	if *order != "asc" && *order != "desc" {
 		fmt.Fprintf(os.Stderr, "order deve ser asc ou desc, recebido: %s\n", *order)
 		os.Exit(2)
 	}
-	algo, ok := sorting.Registry[*orderStrategy]
-	if !ok {
-		fmt.Fprintf(os.Stderr, "order_strategy desconhecida: %s\n", *orderStrategy)
-		os.Exit(2)
-	}
-	if _, err := selection.New(*selectMode, *k, algo); err != nil {
+	if err := opts.Validate(); err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(2)
 	}
-	if _, ok := searchers[*config]; !ok {
-		fmt.Fprintf(os.Stderr, "config desconhecida: %s\n", *config)
-		os.Exit(2)
-	}
 
-	start := time.Now()
-	raws, err := utils.ReadJSONL(utils.Resolve(*corpusPath))
+	eng, err := engine.Load(opts)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	}
-	if *limit > 0 && *limit < len(raws) {
-		raws = raws[:*limit]
-	}
-	c := corpus.Load(raws)
-	loadTime := time.Since(start)
-	indexTime := buildIndex(c, *config)
 	memKB := heapKB()
 
-	run := runner{
-		corpus:  c,
-		search:  searchers[*config],
-		label:   selectionLabel(*selectMode, *orderStrategy),
-		newSel:  func() selection.Selector { sel, _ := selection.New(*selectMode, *k, algo); return sel },
-		reverse: *order == "asc",
-	}
+	run := runner{engine: eng, reverse: *order == "asc"}
 
 	if *evalMode {
 		queries, err := utils.ReadQueries(utils.Resolve(*queriesPath))
@@ -110,12 +64,12 @@ func main() {
 			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)
 		}
-		runEval(run, queries, *k, *config, loadTime, indexTime, memKB)
+		runEval(run, queries, opts.K, opts.Config, memKB)
 		return
 	}
 
 	hits, stats := run.query(*query)
-	fmt.Printf("query: %q   k=%d   config=%s   select=%s\n\n", *query, *k, *config, stats.Selection)
+	fmt.Printf("query: %q   k=%d   config=%s   select=%s\n\n", *query, opts.K, opts.Config, stats.Selection)
 	if stats.EmptyQuery {
 		fmt.Println("consulta vazia após normalização")
 	}
@@ -123,7 +77,7 @@ func main() {
 	if *context {
 		printContext(hits)
 	}
-	printStats(stats, loadTime, indexTime, memKB)
+	printStats(stats, eng.LoadTime, eng.IndexTime, memKB)
 }
 
 func heapKB() uint64 {
@@ -133,41 +87,21 @@ func heapKB() uint64 {
 	return m.HeapAlloc / 1024
 }
 
-type searchFunc func(*types.Corpus, string, selection.Selector) ([]types.Hit, types.Stats)
-
-var searchers = map[string]searchFunc{
-	"linear":  linearsearch.Search,
-	"indexed": indexedsearch.Search,
-}
-
 type runner struct {
-	corpus  *types.Corpus
-	search  searchFunc
-	label   string
-	newSel  func() selection.Selector
+	engine  *engine.Engine
 	reverse bool
 }
 
 func (r runner) query(text string) ([]types.Hit, types.Stats) {
-	hits, stats := r.search(r.corpus, text, r.newSel())
-	stats.Selection = r.label
+	hits, stats := r.engine.Query(text)
 	if r.reverse {
 		slices.Reverse(hits)
 	}
 	return hits, stats
 }
 
-func buildIndex(c *types.Corpus, config string) time.Duration {
-	if config != "indexed" {
-		return 0
-	}
-	start := time.Now()
-	indexedsearch.BuildIndex(c)
-	return time.Since(start)
-}
-
-func runEval(run runner, queries []types.Query, k int, config string, loadTime, indexTime time.Duration, memKB uint64) {
-	fmt.Printf("eval: %d queries   k=%d   config=%s   select=%s\n\n", len(queries), k, config, run.label)
+func runEval(run runner, queries []types.Query, k int, config string, memKB uint64) {
+	fmt.Printf("eval: %d queries   k=%d   config=%s   select=%s\n\n", len(queries), k, config, run.engine.Label)
 	var results []eval.Result
 	for _, q := range queries {
 		hits, stats := run.query(q.Query)
@@ -175,7 +109,7 @@ func runEval(run runner, queries []types.Query, k int, config string, loadTime, 
 		results = append(results, result)
 		printEvalLine(result)
 	}
-	printSummary(eval.Summarize(results, k), k, loadTime, indexTime, memKB)
+	printSummary(eval.Summarize(results, k), k, run.engine.LoadTime, run.engine.IndexTime, memKB)
 }
 
 func printEvalLine(r eval.Result) {
@@ -200,13 +134,6 @@ func printStats(stats types.Stats, loadTime, indexTime time.Duration, memKB uint
 	fmt.Printf("\nN=%d  candidatos=%d  comparações=%d  seleção=%s  carga=%s  índice=%s  mem=%dkB  consulta=%s\n",
 		stats.N, stats.Candidates, stats.Comparisons, stats.Selection,
 		loadTime.Round(time.Millisecond), indexTime.Round(time.Microsecond), memKB, stats.QueryTime.Round(time.Microsecond))
-}
-
-func selectionLabel(mode, strategy string) string {
-	if mode == "sort" {
-		return mode + "/" + strategy
-	}
-	return mode
 }
 
 func printContext(hits []types.Hit) {
