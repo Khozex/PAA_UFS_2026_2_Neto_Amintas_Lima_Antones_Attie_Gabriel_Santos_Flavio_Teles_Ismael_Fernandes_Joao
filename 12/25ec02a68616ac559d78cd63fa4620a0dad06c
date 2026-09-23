@@ -1,0 +1,21 @@
+VIDEO.md
+  s_c44f49264e6b33::t_c6b0ecfef9a998 1-3
+README.md
+  s_c44f49264e6b33::t_c6b0ecfef9a998 277
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "1225ec02a68616ac559d78cd63fa4620a0dad06c",
+  "prompts": {},
+  "sessions": {
+    "s_c44f49264e6b33": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "67fcf432-aa55-49fd-b2c3-f220cfbdfc33",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Khozex <ismaelteles75@gmail.com>"
+    }
+  }
+}
