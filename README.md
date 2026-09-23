@@ -274,4 +274,4 @@ REST API, também MIT.
 
 ## Vídeo da atividade
 
-(a preencher: URL, também em `VIDEO.md`)
+https://youtu.be/gSicRRvsFK8 (também em `VIDEO.md`)
