@@ -30,17 +30,30 @@ type Document struct {
 	Len     int
 }
 
+type DocumentNode struct {
+	Path       string
+	Parent     *DocumentNode
+	Children   map[string]*DocumentNode
+	Operations map[string]*Document
+}
+
 type Corpus struct {
 	Docs         []Document
 	DF           map[string]int
 	IDF          map[string]float64
 	InverseIndex map[string][]int
+	GraphRoot    *DocumentNode
 }
 
 func NewCorpus() *Corpus {
 	return &Corpus{
 		DF:  make(map[string]int),
 		IDF: make(map[string]float64),
+		GraphRoot: &DocumentNode{
+			Path:       "",
+			Children:   make(map[string]*DocumentNode),
+			Operations: make(map[string]*Document),
+		},
 	}
 }
 
