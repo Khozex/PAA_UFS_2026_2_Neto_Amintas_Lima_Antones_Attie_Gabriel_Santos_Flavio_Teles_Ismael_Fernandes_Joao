@@ -17,6 +17,14 @@ func Load(raws []types.RawDocument) *types.Corpus {
 		for term := range distinctTerms(doc) {
 			corpus.DF[term]++
 		}
+
+		graphDoc := new(types.Document)
+		*graphDoc = doc
+
+		AddDocumentToGraph(
+			corpus.GraphRoot,
+			graphDoc,
+		)
 	}
 
 	total := float64(corpus.N())
@@ -77,4 +85,39 @@ func joinFields(lists ...[]types.Field) string {
 		}
 	}
 	return builder.String()
+}
+
+func AddDocumentToGraph(
+	root *types.DocumentNode,
+	doc *types.Document,
+) {
+	path := strings.Trim(doc.Path, "/")
+
+	current := root
+	currentPath := ""
+
+	if path != "" {
+		segments := strings.Split(path, "/")
+
+		for _, segment := range segments {
+			currentPath += "/" + segment
+
+			child, exists := current.Children[segment]
+			if !exists {
+				child = &types.DocumentNode{
+					Path:       currentPath,
+					Parent:     current,
+					Children:   make(map[string]*types.DocumentNode),
+					Operations: make(map[string]*types.Document),
+				}
+
+				current.Children[segment] = child
+			}
+
+			current = child
+		}
+	}
+
+	method := strings.ToUpper(doc.Method)
+	current.Operations[method] = doc
 }
