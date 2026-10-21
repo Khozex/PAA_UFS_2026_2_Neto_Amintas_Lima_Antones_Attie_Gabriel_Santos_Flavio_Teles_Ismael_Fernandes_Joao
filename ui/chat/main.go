@@ -3,6 +3,7 @@
 //
 //	go run ./ui/chat                              # REPL
 //	go run ./ui/chat -once "how do I cancel a workflow run?"
+//	go run ./ui/chat -plan -once "how do I delete a release?"   # com a ordem de chamadas do grafo
 //	go run ./ui/chat -model qwen2.5:3b -- -preset 3 -k 5   # flags após -- vão para ui/mcp
 package main
 
@@ -26,6 +27,7 @@ func main() {
 	once := flag.String("once", "", "faz uma pergunta só e sai")
 	verbose := flag.Bool("v", false, "mostra rodadas, tempo e tokens de cada pergunta")
 	k := flag.Int("k", 5, "quantas operações recuperar por pergunta")
+	plan := flag.Bool("plan", false, "manda junto a ordem de chamadas (pré-requisitos) de cada resultado")
 	flag.Parse()
 
 	ctx := context.Background()
@@ -40,7 +42,7 @@ func main() {
 	var history []bridge.Message
 	ask := func(text string) error {
 		history = append(history, bridge.Message{Role: "user", Content: text})
-		answer, err := b.Ask(ctx, *model, history, bridge.SearchOptions{}, func(e bridge.Event) {
+		answer, err := b.Ask(ctx, *model, history, bridge.SearchOptions{Plan: *plan}, func(e bridge.Event) {
 			switch e.Type {
 			case "tool_call":
 				args, _ := json.Marshal(e.Args)

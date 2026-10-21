@@ -18,6 +18,7 @@ import (
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 
 	"paa/searchEngine/engine"
+	"paa/searchEngine/graph"
 	"paa/searchEngine/types"
 )
 
@@ -39,6 +40,7 @@ type Input struct {
 	Config        string `json:"config,omitempty" jsonschema:"search configuration: linear (scan every document) or indexed (inverted index); default is the server's"`
 	Select        string `json:"select,omitempty" jsonschema:"how the top k are selected: topk, heap or sort; default is the server's"`
 	OrderStrategy string `json:"order_strategy,omitempty" jsonschema:"sorting algorithm when select=sort: quick, heap, merge or std"`
+	Plan          bool   `json:"plan,omitempty" jsonschema:"also return, for each result that needs an id produced by another call, the call order with prerequisites first"`
 }
 
 type Result struct {
@@ -64,10 +66,33 @@ type SearchStats struct {
 	K           int    `json:"k"`
 }
 
+// PlanStep é uma chamada do plano; a última de cada plano é o próprio resultado.
+type PlanStep struct {
+	ID     string `json:"id"`
+	Method string `json:"method"`
+	Path   string `json:"path"`
+}
+
+type CallPlan struct {
+	Rank  int        `json:"rank"`
+	Steps []PlanStep `json:"steps"`
+}
+
+// PlanStats é o custo dos planos (DFS nas arestas DependsOn do grafo).
+type PlanStats struct {
+	WithPrerequisites int   `json:"with_prerequisites"`
+	Prerequisites     int   `json:"prerequisites"`
+	EdgesScanned      int   `json:"edges_scanned"`
+	PlanUS            int64 `json:"plan_us"`
+	GraphUS           int64 `json:"graph_us"`
+}
+
 type Output struct {
-	Query   string      `json:"query"`
-	Results []Result    `json:"results"`
-	Stats   SearchStats `json:"stats"`
+	Query     string      `json:"query"`
+	Results   []Result    `json:"results"`
+	Stats     SearchStats `json:"stats"`
+	Plans     []CallPlan  `json:"plans,omitempty"`
+	PlanStats *PlanStats  `json:"plan_stats,omitempty"`
 }
 
 type server struct {
@@ -100,9 +125,59 @@ func (s *server) search(ctx context.Context, req *mcp.CallToolRequest, in Input)
 		QueryUS: stats.QueryTime.Microseconds(), IndexUS: s.engine.IndexTime.Microseconds(),
 		Config: config, Selection: stats.Selection, K: k,
 	}}
+	text := render(in.Query, stats, out.Results)
+	if in.Plan {
+		plans, planStats, err := s.engine.Graph.Plans(hits)
+		if err != nil {
+			return &mcp.CallToolResult{IsError: true, Content: []mcp.Content{&mcp.TextContent{Text: err.Error()}}}, Output{}, nil
+		}
+		out.Plans = toPlans(plans)
+		out.PlanStats = &PlanStats{
+			WithPrerequisites: planStats.WithPrerequisites, Prerequisites: planStats.Prerequisites,
+			EdgesScanned: planStats.EdgesScanned, PlanUS: planStats.Time.Microseconds(),
+			GraphUS: s.engine.GraphTime.Microseconds(),
+		}
+		text += renderPlans(out.Plans)
+		log.Printf("planos=%d pré-requisitos=%d arestas=%d plano=%s",
+			planStats.WithPrerequisites, planStats.Prerequisites, planStats.EdgesScanned, planStats.Time)
+	}
 	return &mcp.CallToolResult{
-		Content: []mcp.Content{&mcp.TextContent{Text: render(in.Query, stats, out.Results)}},
+		Content: []mcp.Content{&mcp.TextContent{Text: text}},
 	}, out, nil
+}
+
+// toPlans guarda só os planos com pré-requisito; os outros seriam só o próprio resultado.
+func toPlans(plans []graph.CallPlan) []CallPlan {
+	var out []CallPlan
+	for _, plan := range plans {
+		if len(plan.Prerequisites()) == 0 {
+			continue
+		}
+		steps := make([]PlanStep, 0, len(plan.Steps))
+		for _, doc := range plan.Steps {
+			steps = append(steps, PlanStep{ID: doc.ID, Method: doc.Method, Path: doc.Path})
+		}
+		out = append(out, CallPlan{Rank: plan.Rank, Steps: steps})
+	}
+	return out
+}
+
+// renderPlans é o bloco que o modelo lê depois dos trechos: uma linha por chamada.
+func renderPlans(plans []CallPlan) string {
+	if len(plans) == 0 {
+		return ""
+	}
+	var b strings.Builder
+	b.WriteString("Call order (prerequisites first; earlier calls return the ids used by later ones):\n\n")
+	for _, plan := range plans {
+		last := plan.Steps[len(plan.Steps)-1]
+		fmt.Fprintf(&b, "For [%d] %s %s:\n", plan.Rank, last.Method, last.Path)
+		for step, call := range plan.Steps {
+			fmt.Fprintf(&b, "  %d. %s %s\n", step+1, call.Method, call.Path)
+		}
+		b.WriteString("\n")
+	}
+	return b.String()
 }
 
 func toResults(hits []types.Hit, maxChars int) []Result {
@@ -149,6 +224,7 @@ func main() {
 
 	opts := engine.DefaultOptions()
 	opts.K = defaultK
+	opts.Graph = true
 	flag.StringVar(&opts.CorpusPath, "corpus", opts.CorpusPath, "caminho do docs.jsonl")
 	flag.StringVar(&opts.Config, "config", opts.Config, "linear|indexed")
 	flag.StringVar(&opts.Select, "select", opts.Select, "topk|sort|heap")
@@ -165,8 +241,8 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	log.Printf("mcp: N=%d config=%s seleção=%s carga=%s índice=%s",
-		eng.Corpus.N(), opts.Config, eng.Label, eng.LoadTime, eng.IndexTime)
+	log.Printf("mcp: N=%d config=%s seleção=%s carga=%s índice=%s grafo=%s V=%d E=%d",
+		eng.Corpus.N(), opts.Config, eng.Label, eng.LoadTime, eng.IndexTime, eng.GraphTime, eng.Graph.V(), eng.Graph.E())
 
 	srv := mcp.NewServer(&mcp.Implementation{Name: "github-api-search", Version: "0.1.0"}, nil)
 	mcp.AddTool(srv, &mcp.Tool{
