@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"flag"
 	"fmt"
 	"os"
 	"os/exec"
@@ -21,7 +22,26 @@ const queriesPath = "data/queries.json"
 
 var reHitLine = regexp.MustCompile(`^\s*\d+\. \S+`)
 
+type suite struct {
+	scenarios []scenarios.Scenario
+	output    string
+	csvHeader string
+	csvLine   func(report.Run) string
+}
+
+var suites = map[string]suite{
+	"":      {scenarios.All(), "benchmark_results", report.CSVHeader(), report.Run.CSVLine},
+	"grafo": {scenarios.Graph(), "benchmark_grafo", report.GraphCSVHeader(), report.Run.GraphCSVLine},
+}
+
 func main() {
+	trilha := flag.String("trilha", "", "vazio = cenários da AV1; grafo = cenários da Trilha C (AV2)")
+	flag.Parse()
+	selected, ok := suites[*trilha]
+	if !ok {
+		check(fmt.Errorf("trilha desconhecida: %s", *trilha))
+	}
+
 	root := utils.Resolve(".")
 	binary := filepath.Join(root, "bin", "search")
 	check(build(root, binary))
@@ -29,10 +49,10 @@ func main() {
 	queries, err := utils.ReadQueries(utils.Resolve(queriesPath))
 	check(err)
 
-	all := scenarios.All()
+	all := selected.scenarios
 	var log, csv strings.Builder
 	writeHeader(&log, all, queries)
-	csv.WriteString(report.CSVHeader() + "\n")
+	csv.WriteString(selected.csvHeader + "\n")
 
 	for _, scenario := range all {
 		for _, query := range queries {
@@ -45,15 +65,15 @@ func main() {
 					continue
 				}
 				run.Scenario, run.Preset, run.K, run.Query, run.Repetition = scenario.Name, scenario.Preset, scenario.K, query.Query, rep
-				csv.WriteString(run.CSVLine() + "\n")
+				csv.WriteString(selected.csvLine(run) + "\n")
 			}
 		}
 	}
 
 	outDir := filepath.Join(root, "artefatos")
 	check(os.MkdirAll(outDir, 0o755))
-	check(os.WriteFile(filepath.Join(outDir, "benchmark_results.txt"), []byte(log.String()), 0o644))
-	check(os.WriteFile(filepath.Join(outDir, "benchmark_results.csv"), []byte(csv.String()), 0o644))
+	check(os.WriteFile(filepath.Join(outDir, selected.output+".txt"), []byte(log.String()), 0o644))
+	check(os.WriteFile(filepath.Join(outDir, selected.output+".csv"), []byte(csv.String()), 0o644))
 	fmt.Printf("Cenários: %d   Queries: %d   Execuções: %d\n", len(all), len(queries), countRuns(all, queries))
 	fmt.Printf("Resultados em: %s\n", outDir)
 }
@@ -105,7 +125,15 @@ const maxLoggedHits = 5
 func trimHits(output string, keep int) string {
 	var out []string
 	hits, hidden := 0, 0
+	inGraphSection := false
 	for _, line := range strings.Split(output, "\n") {
+		if strings.HasPrefix(line, "relacionadas pelo grafo") || strings.HasPrefix(line, "plano de chamadas") {
+			inGraphSection = true
+		}
+		if inGraphSection {
+			out = append(out, line)
+			continue
+		}
 		isHit := reHitLine.MatchString(line)
 		isDetail := strings.HasPrefix(line, "    ")
 		if isHit {
