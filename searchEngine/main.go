@@ -10,6 +10,7 @@ import (
 
 	"paa/searchEngine/engine"
 	"paa/searchEngine/eval"
+	"paa/searchEngine/graph"
 	"paa/searchEngine/types"
 	"paa/searchEngine/utils"
 )
@@ -30,6 +31,10 @@ func main() {
 	context := flag.Bool("context", false, "imprime o texto completo dos resultados")
 	evalMode := flag.Bool("eval", false, "roda todas as queries do gabarito e imprime Precision@k")
 	queriesPath := flag.String("queries", "data/queries.json", "gabarito: query e operationIds relevantes")
+	expand := flag.String("expand", "", "expande os resultados pelo grafo: bfs|dijkstra")
+	hops := flag.Int("hops", 3, "profundidade máxima da expansão BFS")
+	budget := flag.Float64("budget", 3, "custo máximo da expansão Dijkstra")
+	plan := flag.Bool("plan", false, "ordem de chamadas (pré-requisitos primeiro) para o 1º resultado, via DFS")
 	flag.Parse()
 
 	if *query == "" && !*evalMode {
@@ -76,6 +81,19 @@ func main() {
 	printHits(hits)
 	if *context {
 		printContext(hits)
+	}
+	if *expand != "" || *plan {
+		if *expand != "" && *expand != "bfs" && *expand != "dijkstra" {
+			fmt.Fprintln(os.Stderr, "expand deve ser bfs ou dijkstra")
+			os.Exit(2)
+		}
+		g := graph.Build(eng.Corpus.GraphRoot)
+		if *expand != "" {
+			printRelated(g.Expand(hits, graph.ExpandOptions{Method: *expand, MaxHops: *hops, Budget: *budget, Limit: 10}))
+		}
+		if *plan {
+			printPlan(g, hits)
+		}
 	}
 	printStats(stats, eng.LoadTime, eng.IndexTime, memKB)
 }
@@ -140,5 +158,31 @@ func printContext(hits []types.Hit) {
 	fmt.Println()
 	for pos, hit := range hits {
 		fmt.Printf("[%d] %s %s\n%s\nFonte: %s\n\n", pos+1, hit.Doc.Method, hit.Doc.Path, hit.Doc.Text, hit.Doc.DocsURL)
+	}
+}
+
+func printRelated(rel []graph.Related) {
+	fmt.Printf("\nrelacionadas pelo grafo (%d):\n", len(rel))
+	for _, r := range rel {
+		fmt.Printf("  custo=%-4.1f %-42s %-6s %s\n", r.Cost, r.Doc.ID, r.Doc.Method, r.Doc.Path)
+	}
+}
+
+func printPlan(g *graph.Graph, hits []types.Hit) {
+	if len(hits) == 0 {
+		return
+	}
+	v, ok := g.OperationVertex(hits[0].Doc.ID)
+	if !ok {
+		return
+	}
+	steps, err := graph.Plan(g, v)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		return
+	}
+	fmt.Println("\nplano de chamadas (pré-requisitos primeiro):")
+	for i, s := range steps {
+		fmt.Printf("  %d. %s\n", i+1, g.Vertices[s].Label)
 	}
 }
