@@ -34,8 +34,14 @@ func main() {
 	expand := flag.String("expand", "", "expande os resultados pelo grafo: bfs|dijkstra")
 	hops := flag.Int("hops", 3, "profundidade máxima da expansão BFS")
 	budget := flag.Float64("budget", 3, "custo máximo da expansão Dijkstra")
-	plan := flag.Bool("plan", false, "ordem de chamadas (pré-requisitos primeiro) para o 1º resultado, via DFS")
+	plan := flag.Bool("plan", false, "ordem de chamadas (pré-requisitos primeiro) para cada resultado, via DFS")
 	flag.Parse()
+
+	if *expand != "" && *expand != "bfs" && *expand != "dijkstra" {
+		fmt.Fprintln(os.Stderr, "expand deve ser bfs ou dijkstra")
+		os.Exit(2)
+	}
+	opts.Graph = *expand != "" || *plan
 
 	if *query == "" && !*evalMode {
 		fmt.Fprintln(os.Stderr, `uso: go run ./searchEngine -query "..." [-k 5] [-limit N] [-preset 1|2|3]`)
@@ -82,20 +88,26 @@ func main() {
 	if *context {
 		printContext(hits)
 	}
-	if *expand != "" || *plan {
-		if *expand != "" && *expand != "bfs" && *expand != "dijkstra" {
-			fmt.Fprintln(os.Stderr, "expand deve ser bfs ou dijkstra")
-			os.Exit(2)
+	var related []graph.Related
+	var expandStats graph.ExpandStats
+	if *expand != "" {
+		related, expandStats = eng.Graph.Expand(hits, graph.ExpandOptions{Method: *expand, MaxHops: *hops, Budget: *budget, Limit: 10})
+		printRelated(related)
+	}
+	var planStats graph.PlanStats
+	if *plan {
+		var plans []graph.CallPlan
+		plans, planStats, err = eng.Graph.Plans(hits)
+		if err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(1)
 		}
-		g := graph.Build(eng.Corpus.GraphRoot)
-		if *expand != "" {
-			printRelated(g.Expand(hits, graph.ExpandOptions{Method: *expand, MaxHops: *hops, Budget: *budget, Limit: 10}))
-		}
-		if *plan {
-			printPlan(g, hits)
-		}
+		printPlans(plans)
 	}
 	printStats(stats, eng.LoadTime, eng.IndexTime, memKB)
+	if eng.Graph != nil {
+		printGraphStats(eng, *expand, len(related), expandStats, *plan, planStats)
+	}
 }
 
 func heapKB() uint64 {
@@ -168,21 +180,29 @@ func printRelated(rel []graph.Related) {
 	}
 }
 
-func printPlan(g *graph.Graph, hits []types.Hit) {
-	if len(hits) == 0 {
-		return
-	}
-	v, ok := g.OperationVertex(hits[0].Doc.ID)
-	if !ok {
-		return
-	}
-	steps, err := graph.Plan(g, v)
-	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		return
-	}
+func printPlans(plans []graph.CallPlan) {
 	fmt.Println("\nplano de chamadas (pré-requisitos primeiro):")
-	for i, s := range steps {
-		fmt.Printf("  %d. %s\n", i+1, g.Vertices[s].Label)
+	for _, plan := range plans {
+		if len(plan.Prerequisites()) == 0 {
+			continue
+		}
+		fmt.Printf("  [%d] %s\n", plan.Rank, plan.Steps[len(plan.Steps)-1].ID)
+		for step, doc := range plan.Steps {
+			fmt.Printf("      %d. %-42s %-6s %s\n", step+1, doc.ID, doc.Method, doc.Path)
+		}
 	}
+}
+
+func printGraphStats(eng *engine.Engine, expandMethod string, related int, expandStats graph.ExpandStats, plan bool, planStats graph.PlanStats) {
+	if expandMethod == "" {
+		expandMethod = "-"
+	}
+	fmt.Printf("grafo: V=%d  E=%d  construção=%s  expansão=%s  visitados=%d  arestas=%d  relacionadas=%d  expansão_tempo=%s",
+		eng.Graph.V(), eng.Graph.E(), eng.GraphTime.Round(time.Microsecond),
+		expandMethod, expandStats.Visited, expandStats.EdgesScanned, related, expandStats.Time.Round(time.Microsecond))
+	if plan {
+		fmt.Printf("  planos=%d  pré_requisitos=%d  plano_arestas=%d  plano_tempo=%s",
+			planStats.WithPrerequisites, planStats.Prerequisites, planStats.EdgesScanned, planStats.Time.Round(time.Microsecond))
+	}
+	fmt.Println()
 }

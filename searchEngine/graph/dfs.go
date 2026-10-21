@@ -3,10 +3,11 @@ package graph
 import "fmt"
 
 type DFSResult struct {
-	Pre    []int // ordem de descoberta
-	Post   []int // ordem de finalização
-	Cycle  []int
-	Parent []int
+	Pre          []int // ordem de descoberta
+	Post         []int // ordem de finalização
+	Cycle        []int
+	Parent       []int
+	EdgesScanned int
 }
 
 const (
@@ -45,6 +46,7 @@ func DFS(g *Graph, seeds []int, f Filter) *DFSResult {
 			}
 			e := g.Adj[u][next[u]]
 			next[u]++
+			r.EdgesScanned++
 			if !f.ok(e) {
 				continue
 			}
