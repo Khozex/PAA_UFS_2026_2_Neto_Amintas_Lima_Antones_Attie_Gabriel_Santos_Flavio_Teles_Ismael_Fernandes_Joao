@@ -182,6 +182,12 @@ func TestDuplicateDocumentCollapses(t *testing.T) {
 	if n != 1 {
 		t.Errorf("duplicata deveria colapsar em 1 operação, obteve %d", n)
 	}
+	if _, ok := g.OperationVertex("x"); !ok {
+		t.Error("com mesmo método + path deveria ficar o primeiro documento (x)")
+	}
+	if _, ok := g.OperationVertex("x2"); ok {
+		t.Error("o segundo documento (x2) não deveria entrar no grafo")
+	}
 }
 
 func randomGraph(r *rand.Rand, n, m int, unit bool) *Graph {
