@@ -1,0 +1,25 @@
+[
+  {"pergunta": "Como renomear uma branch", "query": "how to rename a branch", "relevant": ["repos/rename-branch"]},
+  {"pergunta": "Como renomear um commit", "query": "how to rename a commit", "relevant": []},
+  {"pergunta": "Como desfazer as alterações de um arquivo", "query": "how to undo the changes of a file", "relevant": []},
+  {"pergunta": "Como criar uma branch", "query": "how to create a branch", "relevant": ["git/create-ref"]},
+  {"pergunta": "Como desfazer as alterações de um commit", "query": "how to undo the changes of a commit", "relevant": []},
+
+  {"pergunta": "Como listar os comentários de issues de um repositório?", "query": "how to list the comments of issues of a repository", "relevant": ["issues/list-comments-for-repo"]},
+  {"pergunta": "Como obter as reações de um comentário de um commit?", "query": "how to get the reactions of a comment of a commit", "relevant": ["reactions/list-for-commit-comment"]},
+  {"pergunta": "Como ver as automações do usuário autenticado?", "query": "how to see the automations of the authenticated user", "relevant": []},
+  {"pergunta": "Como listar comentários de revisão de todas as pull requests em um repositório?", "query": "how to list review comments of all pull requests in a repository", "relevant": ["pulls/list-review-comments-for-repo"]},
+  {"pergunta": "Como listar as licenças mais comumente usadas no Github?", "query": "how to list the most commonly used licenses on github", "relevant": ["licenses/get-all-commonly-used"]},
+
+  {"pergunta": "Como criar uma nova release em um repositório?", "query": "how to create a new release in a repository", "relevant": ["repos/create-release"]},
+  {"pergunta": "Como excluir uma release específica de um repositório?", "query": "how to exclude a specific release of a repository", "relevant": ["repos/delete-release"]},
+  {"pergunta": "Como adicionar um usuário como colaborador de um repositório?", "query": "how to add a user as collaborator of a repository", "relevant": ["repos/add-collaborator"]},
+  {"pergunta": "Como obter os detalhes de uma execução específica de um workflow?", "query": "how to get the details of a specific execution of a workflow", "relevant": ["actions/get-workflow-run"]},
+  {"pergunta": "Como comparar dois commits ou branches de um repositório?", "query": "how to compare two commits or branches of a repository", "relevant": ["repos/compare-commits"]},
+
+  {"pergunta": "Como apagar um comentário que eu fiz numa issue?", "query": "how to erase a comment that i made on an issue", "relevant": ["issues/delete-comment"]},
+  {"pergunta": "Como baixar os logs de uma execução do GitHub Actions?", "query": "how to download the logs of an execution of github actions", "relevant": ["actions/download-workflow-run-logs"]},
+  {"pergunta": "Como rodar de novo só o job que falhou no CI?", "query": "how to run again only the job that failed in ci", "relevant": ["actions/re-run-job-for-workflow-run"]},
+  {"pergunta": "Como trocar a URL para onde meu webhook manda os eventos?", "query": "how to change the url where my webhook sends the events", "relevant": ["repos/update-webhook-config-for-repo", "repos/update-webhook"]},
+  {"pergunta": "Como impedir que alguém faça push direto na main?", "query": "how to prevent someone from pushing directly to main", "relevant": ["repos/update-branch-protection"]}
+]

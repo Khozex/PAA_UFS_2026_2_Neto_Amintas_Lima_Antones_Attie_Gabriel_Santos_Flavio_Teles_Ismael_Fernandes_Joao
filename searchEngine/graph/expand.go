@@ -2,6 +2,7 @@ package graph
 
 import (
 	"sort"
+	"time"
 
 	"paa/searchEngine/types"
 )
@@ -22,7 +23,15 @@ type ExpandOptions struct {
 	Filter  Filter
 }
 
-func (g *Graph) Expand(hits []types.Hit, o ExpandOptions) []Related {
+type ExpandStats struct {
+	Visited      int
+	EdgesScanned int
+	Time         time.Duration
+}
+
+func (g *Graph) Expand(hits []types.Hit, o ExpandOptions) ([]Related, ExpandStats) {
+	start := time.Now()
+	var stats ExpandStats
 	var seeds []int
 	inHits := map[int]bool{}
 	for _, h := range hits {
@@ -32,7 +41,8 @@ func (g *Graph) Expand(hits []types.Hit, o ExpandOptions) []Related {
 		}
 	}
 	if len(seeds) == 0 {
-		return nil
+		stats.Time = time.Since(start)
+		return nil, stats
 	}
 	f := o.Filter
 	if f == nil {
@@ -53,12 +63,14 @@ func (g *Graph) Expand(hits []types.Hit, o ExpandOptions) []Related {
 
 	if o.Method == "dijkstra" {
 		r := Dijkstra(g, seeds, o.Budget, f)
+		stats.Visited, stats.EdgesScanned = len(r.Settled), r.EdgesScanned
 		for _, v := range r.Settled {
 			p, _ := r.Path(v)
 			add(v, r.Dist[v], p)
 		}
 	} else {
 		r := BFS(g, seeds, o.MaxHops, f)
+		stats.Visited, stats.EdgesScanned = len(r.Order), r.EdgesScanned
 		for _, vis := range r.Order {
 			p, _ := r.Path(vis.Vertex)
 			add(vis.Vertex, float64(vis.Depth), p)
@@ -74,5 +86,6 @@ func (g *Graph) Expand(hits []types.Hit, o ExpandOptions) []Related {
 	if o.Limit > 0 && len(out) > o.Limit {
 		out = out[:o.Limit]
 	}
-	return out
+	stats.Time = time.Since(start)
+	return out, stats
 }

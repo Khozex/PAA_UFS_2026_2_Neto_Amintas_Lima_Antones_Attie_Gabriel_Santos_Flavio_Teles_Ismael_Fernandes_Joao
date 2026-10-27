@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"paa/searchEngine/corpus"
+	"paa/searchEngine/graph"
 	indexedsearch "paa/searchEngine/indexedSearch"
 	linearsearch "paa/searchEngine/linearSearch"
 	"paa/searchEngine/selection"
@@ -29,6 +30,7 @@ type Options struct {
 	Select        string // topk | heap | sort
 	OrderStrategy string // quick | heap | merge | std, só com Select=sort
 	K             int    // quantos resultados por consulta
+	Graph         bool   // monta o grafo de paths na carga (expansão e plano)
 }
 
 func DefaultOptions() Options {
@@ -92,6 +94,8 @@ type Engine struct {
 	Label     string        // rótulo da seleção: topk, heap ou sort/<algoritmo>
 	LoadTime  time.Duration // leitura do jsonl + TF/DF/IDF
 	IndexTime time.Duration // construção do índice invertido; 0 no linear
+	Graph     *graph.Graph  // nil se Options.Graph for false
+	GraphTime time.Duration // construção do grafo a partir da árvore de paths
 	opts      Options
 	search    searchFunc
 	algo      sorting.Algorithm
@@ -123,6 +127,12 @@ func Load(opts Options) (*Engine, error) {
 		start = time.Now()
 		indexedsearch.BuildIndex(e.Corpus)
 		e.IndexTime = time.Since(start)
+	}
+
+	if opts.Graph {
+		start = time.Now()
+		e.Graph = graph.Build(e.Corpus.GraphRoot)
+		e.GraphTime = time.Since(start)
 	}
 	return e, nil
 }

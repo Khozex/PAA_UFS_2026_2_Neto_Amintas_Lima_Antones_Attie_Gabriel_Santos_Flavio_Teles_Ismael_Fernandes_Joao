@@ -22,10 +22,44 @@ export type SearchStats = {
   k: number
 }
 
+// Operação vizinha dos resultados no grafo; não vem do ranking, então não tem score.
+export type RelatedOp = {
+  id: string
+  method: string
+  path: string
+  summary: string
+  docs_url: string
+  hops: number
+}
+
+export type RelatedStats = {
+  hops: number
+  visited: number
+  edges_scanned: number
+  expand_us: number
+  graph_us: number
+}
+
+export type PlanStep = { id: string; method: string; path: string; summary: string }
+
+export type CallPlan = { rank: number; steps: PlanStep[] }
+
+export type PlanStats = {
+  with_prerequisites: number
+  prerequisites: number
+  edges_scanned: number
+  plan_us: number
+  graph_us: number
+}
+
 export type SearchOutput = {
   query: string
   results: Operation[]
   stats: SearchStats
+  related?: RelatedOp[]
+  related_stats?: RelatedStats
+  plans?: CallPlan[]
+  plan_stats?: PlanStats
 }
 
 // O que a tela pode mudar por pergunta; vai como argumentos da tool MCP.
@@ -34,15 +68,20 @@ export type SearchOptions = {
   config: 'linear' | 'indexed'
   select: 'topk' | 'heap' | 'sort'
   order_strategy: 'quick' | 'heap' | 'merge' | 'std'
+  plan: boolean
+  related: number
+  hops: number
 }
 
-export const presets: { id: string; label: string; hint: string; opts: Omit<SearchOptions, 'k'> }[] = [
-  { id: '2', label: 'Preset 2 · indexado + topk', hint: 'o mais rápido no benchmark: ~375 µs por consulta', opts: { config: 'indexed', select: 'topk', order_strategy: 'merge' } },
-  { id: '1', label: 'Preset 1 · linear + topk', hint: 'varre os 1224 documentos: ~610 µs', opts: { config: 'linear', select: 'topk', order_strategy: 'merge' } },
-  { id: '3', label: 'Preset 3 · linear + sort/merge', hint: 'ordena todos os candidatos e corta k: ~670 µs', opts: { config: 'linear', select: 'sort', order_strategy: 'merge' } },
+type GraphOptions = 'plan' | 'related' | 'hops'
+
+export const presets: { id: string; label: string; hint: string; opts: Omit<SearchOptions, 'k' | GraphOptions> }[] = [
+  { id: '1', label: 'Preset 1 · varredura linear + top-k', hint: 'Varre os 1224 documentos: ~610 µs por consulta', opts: { config: 'linear', select: 'topk', order_strategy: 'merge' } },
+  { id: '2', label: 'Preset 2 · índice invertido + top-k', hint: 'O mais rápido no benchmark: ~375 µs por consulta', opts: { config: 'indexed', select: 'topk', order_strategy: 'merge' } },
+  { id: '3', label: 'Preset 3 · varredura linear + merge sort', hint: 'Ordena todos os candidatos e corta em k: ~670 µs por consulta', opts: { config: 'linear', select: 'sort', order_strategy: 'merge' } },
 ]
 
-export const defaultSearch: SearchOptions = { k: 3, ...presets[0].opts }
+export const defaultSearch: SearchOptions = { k: 3, ...presets[1].opts, plan: false, related: 0, hops: 3 }
 
 export type Stats = {
   rounds: number
@@ -71,6 +110,7 @@ export type Turn = {
   question: string
   answer: string
   tools: ToolTrace[]
+  search: SearchOptions
   stats?: Stats
   error?: string
   pending: boolean

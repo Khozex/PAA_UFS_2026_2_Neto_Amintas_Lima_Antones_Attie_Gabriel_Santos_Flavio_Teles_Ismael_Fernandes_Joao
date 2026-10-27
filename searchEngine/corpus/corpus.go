@@ -119,5 +119,7 @@ func AddDocumentToGraph(
 	}
 
 	method := strings.ToUpper(doc.Method)
-	current.Operations[method] = doc
+	if _, exists := current.Operations[method]; !exists {
+		current.Operations[method] = doc
+	}
 }

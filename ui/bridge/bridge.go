@@ -31,10 +31,11 @@ const answerPrompt = `You are an assistant for the GitHub REST API. Answer using
 Write the answer in Markdown, in this order, without numbering the sections and without repeating these instructions:
 - One sentence with the endpoint as inline code (METHOD /path between single backticks) and what it does.
 - A bulleted list of the parameters that matter, taken from the excerpt: path parameters first, then the main body or query parameters. One bullet per parameter: the name in inline code, then a short description. Skip parameters that are not in the excerpt.
+- If the excerpts end with a "Call order" for that operation, one sentence saying which call to make first and which id it returns, before the curl example. Skip this when there is no call order for it.
 - A fenced code block tagged bash with a minimal curl example. Use exactly this shape, filling in the method, path and, for POST/PUT/PATCH, a small JSON body with the required fields:
   curl -X METHOD -H "Authorization: Bearer <TOKEN>" -H "Accept: application/vnd.github+json" https://api.github.com/path
 - A last line "Docs: <url>" with the URL copied exactly from the "Docs:" line of that excerpt.
-Describe exactly one operation: the one that answers the question. Do not list, summarize or mention the other excerpts. If none of the excerpts does what was asked, say the search found nothing relevant and suggest a rephrasing; do not recommend an endpoint that is not in the excerpts.
+Describe exactly one operation: the one that answers the question. If the excerpts end with "Related operations", those one-line operations are also candidates: when one of them is the one asked for, answer with it, list only the path parameters visible in its path, and take the Docs URL from its line. Do not list, summarize or mention the other excerpts. If none of the excerpts does what was asked, say the search found nothing relevant and suggest a rephrasing; do not recommend an endpoint that is not in the excerpts.
 
 The excerpts are in English; the answer must be in the language given at the end of this message.`
 
@@ -100,6 +101,9 @@ type SearchOptions struct {
 	Config        string `json:"config,omitempty"`
 	Select        string `json:"select,omitempty"`
 	OrderStrategy string `json:"order_strategy,omitempty"`
+	Plan          bool   `json:"plan,omitempty"`
+	Related       int    `json:"related,omitempty"`
+	Hops          int    `json:"hops,omitempty"`
 }
 
 func (o SearchOptions) arguments(query string) map[string]any {
@@ -116,12 +120,22 @@ func (o SearchOptions) arguments(query string) map[string]any {
 	if o.OrderStrategy != "" {
 		args["order_strategy"] = o.OrderStrategy
 	}
+	if o.Plan {
+		args["plan"] = true
+	}
+	if o.Related > 0 {
+		args["related"] = o.Related
+	}
+	if o.Hops > 0 {
+		args["hops"] = o.Hops
+	}
 	return args
 }
 
 type Bridge struct {
 	OllamaURL string
 	NumCtx    int
+	Seed      int // semente fixa da geração; 0 = o Ollama sorteia (experimentos usam um valor fixo)
 	K         int // k padrão quando a pergunta não traz SearchOptions.K
 	client    *http.Client
 	session   *mcp.ClientSession
@@ -365,16 +379,17 @@ var ErrRepetition = fmt.Errorf("o modelo entrou em repetição e a geração foi
 func (b *Bridge) stream(ctx context.Context, model string, msgs []Message, gen genOptions, onToken func(string)) (chatChunk, error) {
 	ctx, cancel := context.WithTimeout(ctx, gen.Timeout)
 	defer cancel()
-	body, _ := json.Marshal(chatRequest{
-		Model: model, Messages: msgs, Stream: true,
-		Options: map[string]any{
-			"num_ctx":        b.NumCtx,
-			"num_predict":    gen.MaxTokens,
-			"temperature":    gen.Temperature,
-			"repeat_penalty": 1.15,
-			"repeat_last_n":  256,
-		},
-	})
+	options := map[string]any{
+		"num_ctx":        b.NumCtx,
+		"num_predict":    gen.MaxTokens,
+		"temperature":    gen.Temperature,
+		"repeat_penalty": 1.15,
+		"repeat_last_n":  256,
+	}
+	if b.Seed != 0 {
+		options["seed"] = b.Seed
+	}
+	body, _ := json.Marshal(chatRequest{Model: model, Messages: msgs, Stream: true, Options: options})
 	req, err := http.NewRequestWithContext(ctx, "POST", b.OllamaURL+"/api/chat", bytes.NewReader(body))
 	if err != nil {
 		return chatChunk{}, err

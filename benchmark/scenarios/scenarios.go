@@ -10,13 +10,20 @@ type Scenario struct {
 	K             int
 	Limit         int
 	Repetitions   int
+	Expand        string
+	Hops          int
+	Budget        float64
+	Plan          bool
 }
 
 const (
-	FullCorpus = 0
-	HalfCorpus = 612
-	DefaultK   = 5
-	Reps       = 2
+	FullCorpus  = 0
+	HalfCorpus  = 612
+	DefaultK    = 5
+	Reps        = 2
+	GraphReps   = 3
+	GraphHops   = 3
+	GraphBudget = 3
 )
 
 func All() []Scenario {
@@ -81,6 +88,36 @@ func ByK() []Scenario {
 	return out
 }
 
+func Graph() []Scenario {
+	approaches := []struct {
+		name   string
+		expand string
+		plan   bool
+	}{
+		{"base", "", false},
+		{"bfs", "bfs", false},
+		{"dijkstra", "dijkstra", false},
+		{"plan", "", true},
+	}
+	var out []Scenario
+	for _, approach := range approaches {
+		for _, limit := range []int{FullCorpus, HalfCorpus} {
+			out = append(out, Scenario{
+				Name:        fmt.Sprintf("grafo_%s_%s", approach.name, sizeLabel(limit)),
+				Preset:      2,
+				K:           DefaultK,
+				Limit:       limit,
+				Repetitions: GraphReps,
+				Expand:      approach.expand,
+				Hops:        GraphHops,
+				Budget:      GraphBudget,
+				Plan:        approach.plan,
+			})
+		}
+	}
+	return out
+}
+
 func (s Scenario) Args(query string) []string {
 	args := []string{"-query", query, "-k", fmt.Sprint(s.K)}
 	if s.Preset != 0 {
@@ -94,6 +131,12 @@ func (s Scenario) Args(query string) []string {
 	}
 	if s.Limit > 0 {
 		args = append(args, "-limit", fmt.Sprint(s.Limit))
+	}
+	if s.Expand != "" {
+		args = append(args, "-expand", s.Expand, "-hops", fmt.Sprint(s.Hops), "-budget", fmt.Sprint(s.Budget))
+	}
+	if s.Plan {
+		args = append(args, "-plan")
 	}
 	return args
 }

@@ -1,0 +1,12 @@
+=== Experimento LLM (AV2, trilha de grafos) ===
+timestamp: 2026-10-26T22:32:38-03:00
+commit: 01b24a8+alterações
+os: linux/amd64
+go_version: go1.26.5
+cpu: AMD Ryzen 7 7800X3D 8-Core Processor
+ram: 30.5 GiB
+comando: bin/llmExperiment -models qwen2.5:3b,qwen2.5:7b,qwen2.5:14b -reps 3 -out artefatos/experimento_llm
+modelos: qwen2.5:3b, qwen2.5:7b, qwen2.5:14b
+condicoes: A,B,C,D (A=top-5, B=top-5+5 relacionadas, C=top-10, D=top-5+plano)
+perguntas: 20   repeticoes: 3   semente: 42   respostas: 720
+

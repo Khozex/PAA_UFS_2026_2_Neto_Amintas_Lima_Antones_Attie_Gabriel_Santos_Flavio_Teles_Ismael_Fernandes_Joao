@@ -182,6 +182,12 @@ func TestDuplicateDocumentCollapses(t *testing.T) {
 	if n != 1 {
 		t.Errorf("duplicata deveria colapsar em 1 operação, obteve %d", n)
 	}
+	if _, ok := g.OperationVertex("x"); !ok {
+		t.Error("com mesmo método + path deveria ficar o primeiro documento (x)")
+	}
+	if _, ok := g.OperationVertex("x2"); ok {
+		t.Error("o segundo documento (x2) não deveria entrar no grafo")
+	}
 }
 
 func randomGraph(r *rand.Rand, n, m int, unit bool) *Graph {
@@ -328,9 +334,12 @@ func TestExpand(t *testing.T) {
 		t.Fatalf("semente inesperada %s", hits[0].Doc.ID)
 	}
 	for _, method := range []string{"bfs", "dijkstra"} {
-		rel := g.Expand(hits, ExpandOptions{Method: method, MaxHops: 2, Budget: 2})
+		rel, stats := g.Expand(hits, ExpandOptions{Method: method, MaxHops: 2, Budget: 2})
 		if len(rel) == 0 || rel[0].Doc.ID != "repos/get-release" {
 			t.Fatalf("%s: vizinho mais próximo deveria ser get-release, obteve %v", method, rel)
+		}
+		if stats.Visited <= len(rel) || stats.EdgesScanned == 0 {
+			t.Errorf("%s: contadores incoerentes: %+v para %d relacionadas", method, stats, len(rel))
 		}
 		for _, r := range rel {
 			if r.Doc.ID == "repos/delete-release" {
@@ -338,10 +347,10 @@ func TestExpand(t *testing.T) {
 			}
 		}
 	}
-	if g.Expand(nil, ExpandOptions{Method: "bfs", MaxHops: 3}) != nil {
+	if rel, stats := g.Expand(nil, ExpandOptions{Method: "bfs", MaxHops: 3}); rel != nil || stats.Visited != 0 {
 		t.Error("sem hits não há expansão")
 	}
-	if got := g.Expand(hits, ExpandOptions{Method: "dijkstra", Budget: -1, Limit: 2}); len(got) != 2 {
+	if got, _ := g.Expand(hits, ExpandOptions{Method: "dijkstra", Budget: -1, Limit: 2}); len(got) != 2 {
 		t.Errorf("Limit=2 devolveu %d", len(got))
 	}
 }

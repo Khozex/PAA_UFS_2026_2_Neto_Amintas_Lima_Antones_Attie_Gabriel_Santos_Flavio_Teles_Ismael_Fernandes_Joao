@@ -1,0 +1,241 @@
+cenario,k,N,query,repeticao,carga_ms,indice_us,mem_kb,consulta_us,posicao,V,E,construcao_grafo_us,expansao,visitados,arestas,relacionadas,expansao_us,achou_expandido,planos,pre_requisitos,plano_arestas,plano_us
+grafo_base_full,5,1224,"create a repository in an organization",1,60.000,7111.000,8025,508.000,1,,,,,,,,,true,,,,
+grafo_base_full,5,1224,"create a repository in an organization",2,60.000,6486.000,8020,591.000,1,,,,,,,,,true,,,,
+grafo_base_full,5,1224,"create a repository in an organization",3,64.000,6887.000,8020,752.000,1,,,,,,,,,true,,,,
+grafo_base_full,5,1224,"list dependabot alerts for a repository",1,68.000,10388.000,8025,841.000,3,,,,,,,,,true,,,,
+grafo_base_full,5,1224,"list dependabot alerts for a repository",2,65.000,7380.000,8030,585.000,3,,,,,,,,,true,,,,
+grafo_base_full,5,1224,"list dependabot alerts for a repository",3,65.000,6836.000,8167,578.000,3,,,,,,,,,true,,,,
+grafo_base_full,5,1224,"create or update a repository secret",1,61.000,6310.000,8025,570.000,3,,,,,,,,,true,,,,
+grafo_base_full,5,1224,"create or update a repository secret",2,62.000,6523.000,8025,472.000,3,,,,,,,,,true,,,,
+grafo_base_full,5,1224,"create or update a repository secret",3,60.000,6399.000,8031,500.000,3,,,,,,,,,true,,,,
+grafo_base_full,5,1224,"delete a repository webhook",1,60.000,6768.000,8025,377.000,1,,,,,,,,,true,,,,
+grafo_base_full,5,1224,"delete a repository webhook",2,60.000,6724.000,8025,541.000,1,,,,,,,,,true,,,,
+grafo_base_full,5,1224,"delete a repository webhook",3,61.000,8372.000,8025,384.000,1,,,,,,,,,true,,,,
+grafo_base_full,5,1224,"list branches",1,63.000,7272.000,8025,194.000,1,,,,,,,,,true,,,,
+grafo_base_full,5,1224,"list branches",2,62.000,6691.000,8030,175.000,1,,,,,,,,,true,,,,
+grafo_base_full,5,1224,"list branches",3,60.000,6567.000,8020,178.000,1,,,,,,,,,true,,,,
+grafo_base_full,5,1224,"create a team",1,62.000,7157.000,8020,138.000,1,,,,,,,,,true,,,,
+grafo_base_full,5,1224,"create a team",2,60.000,7116.000,8030,138.000,1,,,,,,,,,true,,,,
+grafo_base_full,5,1224,"create a team",3,59.000,6715.000,8020,176.000,1,,,,,,,,,true,,,,
+grafo_base_full,5,1224,"create an issue",1,59.000,6561.000,8136,139.000,0,,,,,,,,,false,,,,
+grafo_base_full,5,1224,"create an issue",2,61.000,6442.000,8030,122.000,0,,,,,,,,,false,,,,
+grafo_base_full,5,1224,"create an issue",3,60.000,6405.000,8025,124.000,0,,,,,,,,,false,,,,
+grafo_base_full,5,1224,"create a release",1,58.000,6564.000,8025,102.000,2,,,,,,,,,true,,,,
+grafo_base_full,5,1224,"create a release",2,61.000,6213.000,8099,112.000,2,,,,,,,,,true,,,,
+grafo_base_full,5,1224,"create a release",3,61.000,6506.000,8025,103.000,2,,,,,,,,,true,,,,
+grafo_base_full,5,1224,"merge a pull request",1,60.000,5834.000,8141,111.000,1,,,,,,,,,true,,,,
+grafo_base_full,5,1224,"merge a pull request",2,59.000,6521.000,8025,108.000,1,,,,,,,,,true,,,,
+grafo_base_full,5,1224,"merge a pull request",3,60.000,5777.000,8141,183.000,1,,,,,,,,,true,,,,
+grafo_base_full,5,1224,"cancel a workflow run",1,59.000,6625.000,8025,59.000,1,,,,,,,,,true,,,,
+grafo_base_full,5,1224,"cancel a workflow run",2,60.000,7352.000,8030,59.000,1,,,,,,,,,true,,,,
+grafo_base_full,5,1224,"cancel a workflow run",3,59.000,6224.000,8025,62.000,1,,,,,,,,,true,,,,
+grafo_base_n612,5,612,"create a repository in an organization",1,38.000,3639.000,4280,280.000,1,,,,,,,,,true,,,,
+grafo_base_n612,5,612,"create a repository in an organization",2,37.000,3259.000,4285,299.000,1,,,,,,,,,true,,,,
+grafo_base_n612,5,612,"create a repository in an organization",3,37.000,3574.000,4280,279.000,1,,,,,,,,,true,,,,
+grafo_base_n612,5,612,"list dependabot alerts for a repository",1,37.000,3188.000,4285,237.000,0,,,,,,,,,false,,,,
+grafo_base_n612,5,612,"list dependabot alerts for a repository",2,38.000,3909.000,4279,269.000,0,,,,,,,,,false,,,,
+grafo_base_n612,5,612,"list dependabot alerts for a repository",3,36.000,3338.000,4285,283.000,0,,,,,,,,,false,,,,
+grafo_base_n612,5,612,"create or update a repository secret",1,42.000,3508.000,4279,282.000,1,,,,,,,,,true,,,,
+grafo_base_n612,5,612,"create or update a repository secret",2,39.000,3350.000,4285,224.000,1,,,,,,,,,true,,,,
+grafo_base_n612,5,612,"create or update a repository secret",3,37.000,3458.000,4285,219.000,1,,,,,,,,,true,,,,
+grafo_base_n612,5,612,"delete a repository webhook",1,38.000,3284.000,4279,172.000,0,,,,,,,,,false,,,,
+grafo_base_n612,5,612,"delete a repository webhook",2,37.000,3238.000,4279,158.000,0,,,,,,,,,false,,,,
+grafo_base_n612,5,612,"delete a repository webhook",3,37.000,3584.000,4279,164.000,0,,,,,,,,,false,,,,
+grafo_base_n612,5,612,"list branches",1,38.000,3160.000,4285,89.000,0,,,,,,,,,false,,,,
+grafo_base_n612,5,612,"list branches",2,37.000,3171.000,4285,96.000,0,,,,,,,,,false,,,,
+grafo_base_n612,5,612,"list branches",3,37.000,3165.000,4280,96.000,0,,,,,,,,,false,,,,
+grafo_base_n612,5,612,"create a team",1,38.000,3833.000,4285,78.000,1,,,,,,,,,true,,,,
+grafo_base_n612,5,612,"create a team",2,37.000,3329.000,4284,77.000,1,,,,,,,,,true,,,,
+grafo_base_n612,5,612,"create a team",3,37.000,3142.000,4279,99.000,1,,,,,,,,,true,,,,
+grafo_base_n612,5,612,"create an issue",1,37.000,3213.000,4279,68.000,0,,,,,,,,,false,,,,
+grafo_base_n612,5,612,"create an issue",2,37.000,3377.000,4269,62.000,0,,,,,,,,,false,,,,
+grafo_base_n612,5,612,"create an issue",3,39.000,3410.000,4279,61.000,0,,,,,,,,,false,,,,
+grafo_base_n612,5,612,"create a release",1,38.000,3338.000,4285,57.000,0,,,,,,,,,false,,,,
+grafo_base_n612,5,612,"create a release",2,37.000,3072.000,4285,57.000,0,,,,,,,,,false,,,,
+grafo_base_n612,5,612,"create a release",3,38.000,3303.000,4285,63.000,0,,,,,,,,,false,,,,
+grafo_base_n612,5,612,"merge a pull request",1,42.000,3570.000,4280,58.000,0,,,,,,,,,false,,,,
+grafo_base_n612,5,612,"merge a pull request",2,51.000,4449.000,4270,59.000,0,,,,,,,,,false,,,,
+grafo_base_n612,5,612,"merge a pull request",3,40.000,3303.000,4274,42.000,0,,,,,,,,,false,,,,
+grafo_base_n612,5,612,"cancel a workflow run",1,37.000,3294.000,4274,44.000,1,,,,,,,,,true,,,,
+grafo_base_n612,5,612,"cancel a workflow run",2,37.000,3461.000,4279,48.000,1,,,,,,,,,true,,,,
+grafo_base_n612,5,612,"cancel a workflow run",3,36.000,3283.000,4285,52.000,1,,,,,,,,,true,,,,
+grafo_bfs_full,5,1224,"create a repository in an organization",1,59.000,5898.000,8422,683.000,1,2214,4737,1479.000,bfs,179,238,10,47.000,true,,,,
+grafo_bfs_full,5,1224,"create a repository in an organization",2,59.000,5963.000,8416,504.000,1,2214,4737,1832.000,bfs,179,238,10,23.000,true,,,,
+grafo_bfs_full,5,1224,"create a repository in an organization",3,59.000,6622.000,8417,511.000,1,2214,4737,839.000,bfs,179,238,10,28.000,true,,,,
+grafo_bfs_full,5,1224,"list dependabot alerts for a repository",1,61.000,6359.000,8417,757.000,3,2214,4737,1134.000,bfs,29,38,3,16.000,true,,,,
+grafo_bfs_full,5,1224,"list dependabot alerts for a repository",2,59.000,5852.000,8411,561.000,3,2214,4737,1556.000,bfs,29,38,3,29.000,true,,,,
+grafo_bfs_full,5,1224,"list dependabot alerts for a repository",3,61.000,6683.000,8411,549.000,3,2214,4737,845.000,bfs,29,38,3,9.000,true,,,,
+grafo_bfs_full,5,1224,"create or update a repository secret",1,65.000,6695.000,8417,480.000,3,2214,4737,962.000,bfs,48,65,10,14.000,true,,,,
+grafo_bfs_full,5,1224,"create or update a repository secret",2,63.000,7320.000,8422,479.000,3,2214,4737,1797.000,bfs,48,65,10,11.000,true,,,,
+grafo_bfs_full,5,1224,"create or update a repository secret",3,59.000,6625.000,8422,478.000,3,2214,4737,822.000,bfs,48,65,10,10.000,true,,,,
+grafo_bfs_full,5,1224,"delete a repository webhook",1,59.000,6641.000,8417,371.000,1,2214,4737,1279.000,bfs,36,58,10,12.000,true,,,,
+grafo_bfs_full,5,1224,"delete a repository webhook",2,60.000,5859.000,8422,363.000,1,2214,4737,1577.000,bfs,36,58,10,10.000,true,,,,
+grafo_bfs_full,5,1224,"delete a repository webhook",3,60.000,6445.000,8422,378.000,1,2214,4737,910.000,bfs,36,58,10,13.000,true,,,,
+grafo_bfs_full,5,1224,"list branches",1,62.000,6028.000,8416,193.000,1,2214,4737,1654.000,bfs,121,143,10,20.000,true,,,,
+grafo_bfs_full,5,1224,"list branches",2,61.000,6597.000,8417,179.000,1,2214,4737,875.000,bfs,121,143,10,18.000,true,,,,
+grafo_bfs_full,5,1224,"list branches",3,60.000,6905.000,8416,183.000,1,2214,4737,888.000,bfs,121,143,10,19.000,true,,,,
+grafo_bfs_full,5,1224,"create a team",1,59.000,6029.000,8422,133.000,1,2214,4737,1601.000,bfs,89,109,10,12.000,true,,,,
+grafo_bfs_full,5,1224,"create a team",2,62.000,6739.000,8416,133.000,1,2214,4737,855.000,bfs,89,109,10,12.000,true,,,,
+grafo_bfs_full,5,1224,"create a team",3,60.000,6537.000,8411,134.000,1,2214,4737,909.000,bfs,89,109,10,11.000,true,,,,
+grafo_bfs_full,5,1224,"create an issue",1,59.000,6684.000,8422,155.000,0,2214,4737,810.000,bfs,81,94,10,13.000,false,,,,
+grafo_bfs_full,5,1224,"create an issue",2,61.000,6215.000,8416,120.000,0,2214,4737,1645.000,bfs,81,94,10,14.000,false,,,,
+grafo_bfs_full,5,1224,"create an issue",3,60.000,6070.000,8422,153.000,0,2214,4737,1383.000,bfs,81,94,10,15.000,false,,,,
+grafo_bfs_full,5,1224,"create a release",1,58.000,6274.000,8411,98.000,2,2214,4737,783.000,bfs,99,124,10,12.000,true,,,,
+grafo_bfs_full,5,1224,"create a release",2,59.000,6461.000,8422,101.000,2,2214,4737,834.000,bfs,99,124,10,16.000,true,,,,
+grafo_bfs_full,5,1224,"create a release",3,60.000,6295.000,8417,140.000,2,2214,4737,1682.000,bfs,99,124,10,42.000,true,,,,
+grafo_bfs_full,5,1224,"merge a pull request",1,60.000,6432.000,8422,112.000,1,2214,4737,799.000,bfs,112,132,10,12.000,true,,,,
+grafo_bfs_full,5,1224,"merge a pull request",2,58.000,7007.000,8417,125.000,1,2214,4737,786.000,bfs,112,132,10,16.000,true,,,,
+grafo_bfs_full,5,1224,"merge a pull request",3,59.000,5931.000,8422,118.000,1,2214,4737,1912.000,bfs,112,132,10,13.000,true,,,,
+grafo_bfs_full,5,1224,"cancel a workflow run",1,59.000,6779.000,8416,62.000,1,2214,4737,1862.000,bfs,23,37,2,7.000,true,,,,
+grafo_bfs_full,5,1224,"cancel a workflow run",2,58.000,7037.000,8416,61.000,1,2214,4737,1273.000,bfs,23,37,2,13.000,true,,,,
+grafo_bfs_full,5,1224,"cancel a workflow run",3,59.000,5701.000,8460,88.000,1,2214,4737,1225.000,bfs,23,37,2,10.000,true,,,,
+grafo_bfs_n612,5,612,"create a repository in an organization",1,37.000,3375.000,4495,277.000,1,1130,2443,421.000,bfs,186,251,10,36.000,true,,,,
+grafo_bfs_n612,5,612,"create a repository in an organization",2,36.000,3458.000,4490,279.000,1,1130,2443,421.000,bfs,186,251,10,31.000,true,,,,
+grafo_bfs_n612,5,612,"create a repository in an organization",3,36.000,3413.000,4500,340.000,1,1130,2443,448.000,bfs,186,251,10,53.000,true,,,,
+grafo_bfs_n612,5,612,"list dependabot alerts for a repository",1,36.000,3386.000,4501,241.000,0,1130,2443,419.000,bfs,23,32,2,16.000,false,,,,
+grafo_bfs_n612,5,612,"list dependabot alerts for a repository",2,36.000,3125.000,4495,232.000,0,1130,2443,425.000,bfs,23,32,2,13.000,false,,,,
+grafo_bfs_n612,5,612,"list dependabot alerts for a repository",3,40.000,3277.000,4506,327.000,0,1130,2443,477.000,bfs,23,32,2,18.000,false,,,,
+grafo_bfs_n612,5,612,"create or update a repository secret",1,37.000,3313.000,4495,213.000,1,1130,2443,825.000,bfs,56,75,10,22.000,true,,,,
+grafo_bfs_n612,5,612,"create or update a repository secret",2,37.000,3212.000,4501,210.000,1,1130,2443,519.000,bfs,56,75,10,22.000,true,,,,
+grafo_bfs_n612,5,612,"create or update a repository secret",3,38.000,3294.000,4495,224.000,1,1130,2443,450.000,bfs,56,75,10,29.000,true,,,,
+grafo_bfs_n612,5,612,"delete a repository webhook",1,38.000,3364.000,4495,169.000,0,1130,2443,463.000,bfs,19,35,6,14.000,false,,,,
+grafo_bfs_n612,5,612,"delete a repository webhook",2,39.000,4122.000,4495,226.000,0,1130,2443,496.000,bfs,19,35,6,22.000,false,,,,
+grafo_bfs_n612,5,612,"delete a repository webhook",3,40.000,3583.000,4490,228.000,0,1130,2443,446.000,bfs,19,35,6,34.000,false,,,,
+grafo_bfs_n612,5,612,"list branches",1,51.000,4303.000,4496,131.000,0,1130,2443,751.000,bfs,32,41,3,19.000,false,,,,
+grafo_bfs_n612,5,612,"list branches",2,43.000,3389.000,4495,93.000,0,1130,2443,505.000,bfs,32,41,3,14.000,false,,,,
+grafo_bfs_n612,5,612,"list branches",3,37.000,3372.000,4495,95.000,0,1130,2443,453.000,bfs,32,41,3,17.000,false,,,,
+grafo_bfs_n612,5,612,"create a team",1,39.000,3759.000,4501,77.000,1,1130,2443,474.000,bfs,89,109,10,16.000,true,,,,
+grafo_bfs_n612,5,612,"create a team",2,38.000,3542.000,4490,78.000,1,1130,2443,471.000,bfs,89,109,10,16.000,true,,,,
+grafo_bfs_n612,5,612,"create a team",3,37.000,3363.000,4495,99.000,1,1130,2443,422.000,bfs,89,109,10,21.000,true,,,,
+grafo_bfs_n612,5,612,"create an issue",1,37.000,3327.000,4501,64.000,0,1130,2443,425.000,bfs,59,74,6,14.000,false,,,,
+grafo_bfs_n612,5,612,"create an issue",2,37.000,3350.000,4495,65.000,0,1130,2443,454.000,bfs,59,74,6,20.000,false,,,,
+grafo_bfs_n612,5,612,"create an issue",3,37.000,3271.000,4495,65.000,0,1130,2443,410.000,bfs,59,74,6,12.000,false,,,,
+grafo_bfs_n612,5,612,"create a release",1,37.000,3437.000,4496,57.000,0,1130,2443,443.000,bfs,95,111,10,15.000,false,,,,
+grafo_bfs_n612,5,612,"create a release",2,38.000,3267.000,4495,60.000,0,1130,2443,466.000,bfs,95,111,10,29.000,false,,,,
+grafo_bfs_n612,5,612,"create a release",3,41.000,2995.000,4500,55.000,0,1130,2443,443.000,bfs,95,111,10,14.000,false,,,,
+grafo_bfs_n612,5,612,"merge a pull request",1,37.000,3402.000,4490,43.000,0,1130,2443,403.000,bfs,99,113,9,14.000,false,,,,
+grafo_bfs_n612,5,612,"merge a pull request",2,38.000,3202.000,4495,46.000,0,1130,2443,530.000,bfs,99,113,9,17.000,false,,,,
+grafo_bfs_n612,5,612,"merge a pull request",3,37.000,3215.000,4495,45.000,0,1130,2443,492.000,bfs,99,113,9,13.000,false,,,,
+grafo_bfs_n612,5,612,"cancel a workflow run",1,37.000,3511.000,4490,47.000,1,1130,2443,458.000,bfs,23,37,2,17.000,true,,,,
+grafo_bfs_n612,5,612,"cancel a workflow run",2,37.000,3374.000,4490,47.000,1,1130,2443,455.000,bfs,23,37,2,9.000,true,,,,
+grafo_bfs_n612,5,612,"cancel a workflow run",3,40.000,3285.000,4496,53.000,1,1130,2443,428.000,bfs,23,37,2,9.000,true,,,,
+grafo_dijkstra_full,5,1224,"create a repository in an organization",1,60.000,6532.000,8411,494.000,1,2214,4737,915.000,dijkstra,272,678,10,69.000,true,,,,
+grafo_dijkstra_full,5,1224,"create a repository in an organization",2,62.000,6074.000,8427,710.000,1,2214,4737,1476.000,dijkstra,272,678,10,104.000,true,,,,
+grafo_dijkstra_full,5,1224,"create a repository in an organization",3,63.000,6547.000,8417,695.000,1,2214,4737,846.000,dijkstra,272,678,10,104.000,true,,,,
+grafo_dijkstra_full,5,1224,"list dependabot alerts for a repository",1,61.000,6509.000,8411,698.000,3,2214,4737,797.000,dijkstra,47,216,10,20.000,true,,,,
+grafo_dijkstra_full,5,1224,"list dependabot alerts for a repository",2,60.000,5955.000,8422,536.000,3,2214,4737,1644.000,dijkstra,47,216,10,16.000,true,,,,
+grafo_dijkstra_full,5,1224,"list dependabot alerts for a repository",3,60.000,6534.000,8417,546.000,3,2214,4737,919.000,dijkstra,47,216,10,18.000,true,,,,
+grafo_dijkstra_full,5,1224,"create or update a repository secret",1,63.000,6376.000,8422,482.000,3,2214,4737,871.000,dijkstra,60,146,10,30.000,true,,,,
+grafo_dijkstra_full,5,1224,"create or update a repository secret",2,59.000,6664.000,8416,691.000,3,2214,4737,1217.000,dijkstra,60,146,10,63.000,true,,,,
+grafo_dijkstra_full,5,1224,"create or update a repository secret",3,61.000,5878.000,8417,480.000,3,2214,4737,1730.000,dijkstra,60,146,10,25.000,true,,,,
+grafo_dijkstra_full,5,1224,"delete a repository webhook",1,63.000,6470.000,8422,364.000,1,2214,4737,914.000,dijkstra,44,222,10,19.000,true,,,,
+grafo_dijkstra_full,5,1224,"delete a repository webhook",2,62.000,6351.000,8422,511.000,1,2214,4737,1473.000,dijkstra,44,222,10,26.000,true,,,,
+grafo_dijkstra_full,5,1224,"delete a repository webhook",3,60.000,6431.000,8417,366.000,1,2214,4737,1021.000,dijkstra,44,222,10,20.000,true,,,,
+grafo_dijkstra_full,5,1224,"list branches",1,62.000,6441.000,8416,186.000,1,2214,4737,850.000,dijkstra,218,539,10,66.000,true,,,,
+grafo_dijkstra_full,5,1224,"list branches",2,59.000,6570.000,8416,180.000,1,2214,4737,1084.000,dijkstra,218,539,10,68.000,true,,,,
+grafo_dijkstra_full,5,1224,"list branches",3,61.000,6809.000,8417,182.000,1,2214,4737,865.000,dijkstra,218,539,10,66.000,true,,,,
+grafo_dijkstra_full,5,1224,"create a team",1,59.000,6452.000,8422,131.000,1,2214,4737,1137.000,dijkstra,138,351,10,35.000,true,,,,
+grafo_dijkstra_full,5,1224,"create a team",2,61.000,6087.000,8422,136.000,1,2214,4737,1621.000,dijkstra,138,351,10,36.000,true,,,,
+grafo_dijkstra_full,5,1224,"create a team",3,59.000,5812.000,8427,133.000,1,2214,4737,1496.000,dijkstra,138,351,10,37.000,true,,,,
+grafo_dijkstra_full,5,1224,"create an issue",1,61.000,5968.000,8422,128.000,0,2214,4737,1589.000,dijkstra,142,360,10,63.000,false,,,,
+grafo_dijkstra_full,5,1224,"create an issue",2,60.000,6378.000,8417,118.000,0,2214,4737,1859.000,dijkstra,142,360,10,44.000,false,,,,
+grafo_dijkstra_full,5,1224,"create an issue",3,60.000,6001.000,8417,121.000,0,2214,4737,1468.000,dijkstra,142,360,10,68.000,false,,,,
+grafo_dijkstra_full,5,1224,"create a release",1,59.000,6189.000,8416,107.000,2,2214,4737,854.000,dijkstra,187,483,10,54.000,true,,,,
+grafo_dijkstra_full,5,1224,"create a release",2,62.000,6451.000,8422,102.000,2,2214,4737,819.000,dijkstra,187,483,10,75.000,true,,,,
+grafo_dijkstra_full,5,1224,"create a release",3,62.000,6777.000,8411,101.000,2,2214,4737,820.000,dijkstra,187,483,10,54.000,true,,,,
+grafo_dijkstra_full,5,1224,"merge a pull request",1,60.000,6760.000,8417,109.000,1,2214,4737,792.000,dijkstra,202,518,10,88.000,true,,,,
+grafo_dijkstra_full,5,1224,"merge a pull request",2,61.000,6341.000,8411,110.000,1,2214,4737,800.000,dijkstra,202,518,10,57.000,true,,,,
+grafo_dijkstra_full,5,1224,"merge a pull request",3,60.000,6142.000,8417,105.000,1,2214,4737,1461.000,dijkstra,202,518,10,60.000,true,,,,
+grafo_dijkstra_full,5,1224,"cancel a workflow run",1,58.000,6364.000,8422,61.000,1,2214,4737,787.000,dijkstra,34,85,10,13.000,true,,,,
+grafo_dijkstra_full,5,1224,"cancel a workflow run",2,59.000,6445.000,8417,87.000,1,2214,4737,1214.000,dijkstra,34,85,10,19.000,true,,,,
+grafo_dijkstra_full,5,1224,"cancel a workflow run",3,59.000,6722.000,8416,91.000,1,2214,4737,846.000,dijkstra,34,85,10,50.000,true,,,,
+grafo_dijkstra_n612,5,612,"create a repository in an organization",1,38.000,3126.000,4500,280.000,1,1130,2443,443.000,dijkstra,278,685,10,78.000,true,,,,
+grafo_dijkstra_n612,5,612,"create a repository in an organization",2,37.000,3238.000,4495,280.000,1,1130,2443,451.000,dijkstra,278,685,10,78.000,true,,,,
+grafo_dijkstra_n612,5,612,"create a repository in an organization",3,38.000,3231.000,4495,281.000,1,1130,2443,438.000,dijkstra,278,685,10,74.000,true,,,,
+grafo_dijkstra_n612,5,612,"list dependabot alerts for a repository",1,38.000,3169.000,4500,240.000,0,1130,2443,418.000,dijkstra,34,116,10,18.000,false,,,,
+grafo_dijkstra_n612,5,612,"list dependabot alerts for a repository",2,37.000,3397.000,4495,232.000,0,1130,2443,421.000,dijkstra,34,116,10,20.000,false,,,,
+grafo_dijkstra_n612,5,612,"list dependabot alerts for a repository",3,36.000,3141.000,4495,240.000,0,1130,2443,435.000,dijkstra,34,116,10,26.000,false,,,,
+grafo_dijkstra_n612,5,612,"create or update a repository secret",1,37.000,3266.000,4495,215.000,1,1130,2443,453.000,dijkstra,70,167,10,25.000,true,,,,
+grafo_dijkstra_n612,5,612,"create or update a repository secret",2,37.000,3344.000,4495,209.000,1,1130,2443,412.000,dijkstra,70,167,10,39.000,true,,,,
+grafo_dijkstra_n612,5,612,"create or update a repository secret",3,38.000,3211.000,4501,212.000,1,1130,2443,415.000,dijkstra,70,167,10,25.000,true,,,,
+grafo_dijkstra_n612,5,612,"delete a repository webhook",1,37.000,3168.000,4506,166.000,0,1130,2443,420.000,dijkstra,22,97,9,29.000,false,,,,
+grafo_dijkstra_n612,5,612,"delete a repository webhook",2,37.000,3101.000,4500,154.000,0,1130,2443,709.000,dijkstra,22,97,9,29.000,false,,,,
+grafo_dijkstra_n612,5,612,"delete a repository webhook",3,37.000,3211.000,4495,163.000,0,1130,2443,415.000,dijkstra,22,97,9,27.000,false,,,,
+grafo_dijkstra_n612,5,612,"list branches",1,36.000,3235.000,4500,91.000,0,1130,2443,425.000,dijkstra,52,158,10,32.000,false,,,,
+grafo_dijkstra_n612,5,612,"list branches",2,37.000,3339.000,4495,94.000,0,1130,2443,414.000,dijkstra,52,158,10,33.000,false,,,,
+grafo_dijkstra_n612,5,612,"list branches",3,37.000,3192.000,4501,129.000,0,1130,2443,438.000,dijkstra,52,158,10,31.000,false,,,,
+grafo_dijkstra_n612,5,612,"create a team",1,37.000,3351.000,4501,108.000,1,1130,2443,439.000,dijkstra,138,351,10,51.000,true,,,,
+grafo_dijkstra_n612,5,612,"create a team",2,37.000,3381.000,4490,78.000,1,1130,2443,424.000,dijkstra,138,351,10,36.000,true,,,,
+grafo_dijkstra_n612,5,612,"create a team",3,39.000,3304.000,4496,74.000,1,1130,2443,417.000,dijkstra,138,351,10,34.000,true,,,,
+grafo_dijkstra_n612,5,612,"create an issue",1,37.000,3303.000,4500,64.000,0,1130,2443,409.000,dijkstra,99,265,10,42.000,false,,,,
+grafo_dijkstra_n612,5,612,"create an issue",2,37.000,3627.000,4495,59.000,0,1130,2443,447.000,dijkstra,99,265,10,27.000,false,,,,
+grafo_dijkstra_n612,5,612,"create an issue",3,38.000,3202.000,4495,92.000,0,1130,2443,425.000,dijkstra,99,265,10,38.000,false,,,,
+grafo_dijkstra_n612,5,612,"create a release",1,38.000,3507.000,4490,77.000,0,1130,2443,397.000,dijkstra,148,384,10,36.000,false,,,,
+grafo_dijkstra_n612,5,612,"create a release",2,38.000,3324.000,4500,58.000,0,1130,2443,446.000,dijkstra,148,384,10,48.000,false,,,,
+grafo_dijkstra_n612,5,612,"create a release",3,37.000,3342.000,4500,83.000,0,1130,2443,424.000,dijkstra,148,384,10,57.000,false,,,,
+grafo_dijkstra_n612,5,612,"merge a pull request",1,36.000,3436.000,4495,42.000,0,1130,2443,486.000,dijkstra,171,447,10,47.000,false,,,,
+grafo_dijkstra_n612,5,612,"merge a pull request",2,36.000,3310.000,4501,62.000,0,1130,2443,428.000,dijkstra,171,447,10,67.000,false,,,,
+grafo_dijkstra_n612,5,612,"merge a pull request",3,38.000,3187.000,4511,44.000,0,1130,2443,924.000,dijkstra,171,447,10,45.000,false,,,,
+grafo_dijkstra_n612,5,612,"cancel a workflow run",1,36.000,3325.000,4501,48.000,1,1130,2443,441.000,dijkstra,34,85,10,13.000,true,,,,
+grafo_dijkstra_n612,5,612,"cancel a workflow run",2,37.000,3122.000,4495,52.000,1,1130,2443,503.000,dijkstra,34,85,10,14.000,true,,,,
+grafo_dijkstra_n612,5,612,"cancel a workflow run",3,36.000,3298.000,4495,47.000,1,1130,2443,422.000,dijkstra,34,85,10,23.000,true,,,,
+grafo_plan_full,5,1224,"create a repository in an organization",1,61.000,6234.000,8416,510.000,1,2214,4737,1683.000,-,0,0,0,0.000,true,0,0,5,38.000
+grafo_plan_full,5,1224,"create a repository in an organization",2,62.000,6744.000,8417,528.000,1,2214,4737,971.000,-,0,0,0,0.000,true,0,0,5,57.000
+grafo_plan_full,5,1224,"create a repository in an organization",3,60.000,5981.000,8427,500.000,1,2214,4737,1281.000,-,0,0,0,0.000,true,0,0,5,17.000
+grafo_plan_full,5,1224,"list dependabot alerts for a repository",1,59.000,6313.000,8416,547.000,3,2214,4737,856.000,-,0,0,0,0.000,true,0,0,5,14.000
+grafo_plan_full,5,1224,"list dependabot alerts for a repository",2,60.000,6391.000,8422,540.000,3,2214,4737,772.000,-,0,0,0,0.000,true,0,0,5,28.000
+grafo_plan_full,5,1224,"list dependabot alerts for a repository",3,60.000,5994.000,8427,556.000,3,2214,4737,1813.000,-,0,0,0,0.000,true,0,0,5,46.000
+grafo_plan_full,5,1224,"create or update a repository secret",1,60.000,5805.000,8427,500.000,3,2214,4737,1460.000,-,0,0,0,0.000,true,0,0,5,16.000
+grafo_plan_full,5,1224,"create or update a repository secret",2,58.000,6682.000,8421,490.000,3,2214,4737,833.000,-,0,0,0,0.000,true,0,0,5,11.000
+grafo_plan_full,5,1224,"create or update a repository secret",3,60.000,6338.000,8422,478.000,3,2214,4737,816.000,-,0,0,0,0.000,true,0,0,5,53.000
+grafo_plan_full,5,1224,"delete a repository webhook",1,59.000,6098.000,8421,366.000,1,2214,4737,1578.000,-,0,0,0,0.000,true,5,5,15,15.000
+grafo_plan_full,5,1224,"delete a repository webhook",2,60.000,5755.000,8527,427.000,1,2214,4737,1100.000,-,0,0,0,0.000,true,5,5,15,45.000
+grafo_plan_full,5,1224,"delete a repository webhook",3,59.000,6401.000,8416,384.000,1,2214,4737,877.000,-,0,0,0,0.000,true,5,5,15,13.000
+grafo_plan_full,5,1224,"list branches",1,60.000,5960.000,8427,184.000,1,2214,4737,1459.000,-,0,0,0,0.000,true,0,0,5,43.000
+grafo_plan_full,5,1224,"list branches",2,58.000,6460.000,8422,184.000,1,2214,4737,865.000,-,0,0,0,0.000,true,0,0,5,33.000
+grafo_plan_full,5,1224,"list branches",3,59.000,6521.000,8416,195.000,1,2214,4737,888.000,-,0,0,0,0.000,true,0,0,5,12.000
+grafo_plan_full,5,1224,"create a team",1,59.000,6300.000,8421,133.000,1,2214,4737,817.000,-,0,0,0,0.000,true,0,0,5,14.000
+grafo_plan_full,5,1224,"create a team",2,61.000,6255.000,8421,135.000,1,2214,4737,780.000,-,0,0,0,0.000,true,0,0,5,11.000
+grafo_plan_full,5,1224,"create a team",3,63.000,6558.000,8422,155.000,1,2214,4737,839.000,-,0,0,0,0.000,true,0,0,5,26.000
+grafo_plan_full,5,1224,"create an issue",1,59.000,6570.000,8422,117.000,0,2214,4737,951.000,-,0,0,0,0.000,false,1,1,7,21.000
+grafo_plan_full,5,1224,"create an issue",2,58.000,6611.000,8416,161.000,0,2214,4737,815.000,-,0,0,0,0.000,false,1,1,7,26.000
+grafo_plan_full,5,1224,"create an issue",3,59.000,6501.000,8422,116.000,0,2214,4737,873.000,-,0,0,0,0.000,false,1,1,7,14.000
+grafo_plan_full,5,1224,"create a release",1,59.000,6132.000,8421,107.000,2,2214,4737,854.000,-,0,0,0,0.000,true,3,3,11,30.000
+grafo_plan_full,5,1224,"create a release",2,58.000,6379.000,8421,110.000,2,2214,4737,796.000,-,0,0,0,0.000,true,3,3,11,25.000
+grafo_plan_full,5,1224,"create a release",3,59.000,6299.000,8421,102.000,2,2214,4737,873.000,-,0,0,0,0.000,true,3,3,11,20.000
+grafo_plan_full,5,1224,"merge a pull request",1,60.000,6782.000,8416,159.000,1,2214,4737,809.000,-,0,0,0,0.000,true,0,0,5,25.000
+grafo_plan_full,5,1224,"merge a pull request",2,60.000,7028.000,8422,146.000,1,2214,4737,793.000,-,0,0,0,0.000,true,0,0,5,13.000
+grafo_plan_full,5,1224,"merge a pull request",3,58.000,6485.000,8422,110.000,1,2214,4737,832.000,-,0,0,0,0.000,true,0,0,5,14.000
+grafo_plan_full,5,1224,"cancel a workflow run",1,59.000,6698.000,8411,59.000,1,2214,4737,1127.000,-,0,0,0,0.000,true,5,5,15,12.000
+grafo_plan_full,5,1224,"cancel a workflow run",2,59.000,7019.000,8416,59.000,1,2214,4737,814.000,-,0,0,0,0.000,true,5,5,15,12.000
+grafo_plan_full,5,1224,"cancel a workflow run",3,59.000,6669.000,8422,89.000,1,2214,4737,807.000,-,0,0,0,0.000,true,5,5,15,12.000
+grafo_plan_n612,5,612,"create a repository in an organization",1,36.000,3201.000,4500,275.000,1,1130,2443,436.000,-,0,0,0,0.000,true,0,0,5,22.000
+grafo_plan_n612,5,612,"create a repository in an organization",2,37.000,3359.000,4495,279.000,1,1130,2443,418.000,-,0,0,0,0.000,true,0,0,5,43.000
+grafo_plan_n612,5,612,"create a repository in an organization",3,37.000,3425.000,4495,283.000,1,1130,2443,541.000,-,0,0,0,0.000,true,0,0,5,22.000
+grafo_plan_n612,5,612,"list dependabot alerts for a repository",1,39.000,3222.000,4495,235.000,0,1130,2443,411.000,-,0,0,0,0.000,false,0,0,5,23.000
+grafo_plan_n612,5,612,"list dependabot alerts for a repository",2,37.000,3086.000,4495,237.000,0,1130,2443,443.000,-,0,0,0,0.000,false,0,0,5,39.000
+grafo_plan_n612,5,612,"list dependabot alerts for a repository",3,36.000,3337.000,4495,234.000,0,1130,2443,415.000,-,0,0,0,0.000,false,0,0,5,27.000
+grafo_plan_n612,5,612,"create or update a repository secret",1,37.000,3178.000,4495,208.000,1,1130,2443,914.000,-,0,0,0,0.000,true,0,0,5,21.000
+grafo_plan_n612,5,612,"create or update a repository secret",2,36.000,3284.000,4506,211.000,1,1130,2443,425.000,-,0,0,0,0.000,true,0,0,5,22.000
+grafo_plan_n612,5,612,"create or update a repository secret",3,37.000,3226.000,4500,214.000,1,1130,2443,419.000,-,0,0,0,0.000,true,0,0,5,27.000
+grafo_plan_n612,5,612,"delete a repository webhook",1,37.000,3423.000,4496,162.000,0,1130,2443,442.000,-,0,0,0,0.000,false,5,6,18,46.000
+grafo_plan_n612,5,612,"delete a repository webhook",2,37.000,3332.000,4490,164.000,0,1130,2443,432.000,-,0,0,0,0.000,false,5,6,18,23.000
+grafo_plan_n612,5,612,"delete a repository webhook",3,37.000,3453.000,4490,206.000,0,1130,2443,439.000,-,0,0,0,0.000,false,5,6,18,32.000
+grafo_plan_n612,5,612,"list branches",1,37.000,3324.000,4500,95.000,0,1130,2443,415.000,-,0,0,0,0.000,false,0,0,5,38.000
+grafo_plan_n612,5,612,"list branches",2,39.000,4187.000,4495,135.000,0,1130,2443,730.000,-,0,0,0,0.000,false,0,0,5,41.000
+grafo_plan_n612,5,612,"list branches",3,42.000,3634.000,4490,142.000,0,1130,2443,763.000,-,0,0,0,0.000,false,0,0,5,39.000
+grafo_plan_n612,5,612,"create a team",1,38.000,3248.000,4495,87.000,1,1130,2443,426.000,-,0,0,0,0.000,true,0,0,5,37.000
+grafo_plan_n612,5,612,"create a team",2,38.000,3130.000,4490,73.000,1,1130,2443,423.000,-,0,0,0,0.000,true,0,0,5,25.000
+grafo_plan_n612,5,612,"create a team",3,37.000,3237.000,4495,72.000,1,1130,2443,399.000,-,0,0,0,0.000,true,0,0,5,22.000
+grafo_plan_n612,5,612,"create an issue",1,37.000,3323.000,4495,61.000,0,1130,2443,448.000,-,0,0,0,0.000,false,3,3,11,26.000
+grafo_plan_n612,5,612,"create an issue",2,40.000,3567.000,4495,85.000,0,1130,2443,553.000,-,0,0,0,0.000,false,3,3,11,56.000
+grafo_plan_n612,5,612,"create an issue",3,46.000,2882.000,4642,63.000,0,1130,2443,585.000,-,0,0,0,0.000,false,3,3,11,40.000
+grafo_plan_n612,5,612,"create a release",1,41.000,3416.000,4495,69.000,0,1130,2443,489.000,-,0,0,0,0.000,false,0,0,5,21.000
+grafo_plan_n612,5,612,"create a release",2,37.000,3461.000,4490,64.000,0,1130,2443,602.000,-,0,0,0,0.000,false,0,0,5,26.000
+grafo_plan_n612,5,612,"create a release",3,39.000,3293.000,4495,77.000,0,1130,2443,457.000,-,0,0,0,0.000,false,0,0,5,38.000
+grafo_plan_n612,5,612,"merge a pull request",1,43.000,3325.000,4490,43.000,0,1130,2443,429.000,-,0,0,0,0.000,false,1,1,7,21.000
+grafo_plan_n612,5,612,"merge a pull request",2,39.000,3295.000,4495,42.000,0,1130,2443,426.000,-,0,0,0,0.000,false,1,1,7,21.000
+grafo_plan_n612,5,612,"merge a pull request",3,39.000,3341.000,4495,45.000,0,1130,2443,518.000,-,0,0,0,0.000,false,1,1,7,21.000
+grafo_plan_n612,5,612,"cancel a workflow run",1,44.000,3367.000,4500,48.000,1,1130,2443,781.000,-,0,0,0,0.000,true,5,5,15,24.000
+grafo_plan_n612,5,612,"cancel a workflow run",2,41.000,4167.000,4490,50.000,1,1130,2443,544.000,-,0,0,0,0.000,true,5,5,15,40.000
+grafo_plan_n612,5,612,"cancel a workflow run",3,43.000,4143.000,4500,50.000,1,1130,2443,1170.000,-,0,0,0,0.000,true,5,5,15,36.000
