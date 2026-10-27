@@ -31,10 +31,13 @@ import (
 	"paa/ui/bridge"
 )
 
+// question é uma pergunta do gabarito. Prerequisites são os passos que vêm
+// antes da operação; cada passo lista as chamadas que servem para ele.
 type question struct {
-	Pergunta string   `json:"pergunta"`
-	Query    string   `json:"query"`
-	Relevant []string `json:"relevant"`
+	Pergunta      string     `json:"pergunta"`
+	Query         string     `json:"query"`
+	Relevant      []string   `json:"relevant"`
+	Prerequisites [][]string `json:"prerequisites"`
 }
 
 type condition struct {
@@ -59,29 +62,37 @@ type toolOutput struct {
 }
 
 type record struct {
-	Model           string   `json:"modelo"`
-	Condition       string   `json:"condicao"`
-	Rep             int      `json:"repeticao"`
-	Question        string   `json:"pergunta"`
-	Relevant        []string `json:"relevantes"`
-	Query           string   `json:"consulta"`
-	ContextIDs      []string `json:"contexto"`
-	ContextChars    int      `json:"contexto_chars"`
-	AnswerInContext bool     `json:"resposta_no_contexto"`
-	Cited           string   `json:"endpoint_citado"`
-	CitedID         string   `json:"id_citado"`
-	Correct         bool     `json:"acertou"`
-	Hallucinated    bool     `json:"alucinou"`
-	NeedsPrereq     bool     `json:"precisa_pre_requisito"`
-	ExplainedPrereq bool     `json:"explicou_pre_requisito"`
-	PromptTokens    int      `json:"tokens_entrada"`
-	OutputTokens    int      `json:"tokens_saida"`
-	LLMMillis       int64    `json:"llm_ms"`
-	Note            string   `json:"aviso,omitempty"`
-	Answer          string   `json:"resposta"`
+	Model           string     `json:"modelo"`
+	Condition       string     `json:"condicao"`
+	Rep             int        `json:"repeticao"`
+	Question        string     `json:"pergunta"`
+	Relevant        []string   `json:"relevantes"`
+	Prerequisites   [][]string `json:"pre_requisitos"`
+	Query           string     `json:"consulta"`
+	ContextIDs      []string   `json:"contexto"`
+	ContextChars    int        `json:"contexto_chars"`
+	AnswerInContext bool       `json:"resposta_no_contexto"`
+	Cited           []string   `json:"endpoints_citados"`
+	Correct         bool       `json:"acertou"`
+	Invented        []string   `json:"inventados"`
+	NeedsPrereq     bool       `json:"precisa_pre_requisito"`
+	CitedPrereq     bool       `json:"citou_pre_requisito"`
+	ContextUse      string     `json:"uso_do_contexto"`
+	PromptTokens    int        `json:"tokens_entrada"`
+	OutputTokens    int        `json:"tokens_saida"`
+	LLMMillis       int64      `json:"llm_ms"`
+	Note            string     `json:"aviso,omitempty"`
+	Answer          string     `json:"resposta"`
 }
 
-var endpointPattern = regexp.MustCompile(`\b(GET|POST|PUT|PATCH|DELETE)\s+(/[^\s` + "`" + `)\]*,]+)`)
+// call é uma chamada à API escrita na resposta, como "MÉTODO /path" ou como
+// "curl -X MÉTODO https://api.github.com/path".
+type call struct{ Method, Path string }
+
+var (
+	endpointPattern = regexp.MustCompile(`\b(GET|POST|PUT|PATCH|DELETE)\s+(/[^\s` + "`" + `)\]*,"']+)`)
+	curlPattern     = regexp.MustCompile(`(?:-X\s*|--request\s+)(GET|POST|PUT|PATCH|DELETE)\b[^\n]{0,120}?https?://api\.github\.com(/[^\s"'` + "`" + `)?]+)|https?://api\.github\.com(/[^\s"'` + "`" + `)?]+)[^\n]{0,60}?-X\s*(GET|POST|PUT|PATCH|DELETE)`)
+)
 
 func main() {
 	models := flag.String("models", "qwen2.5:3b,qwen2.5:7b,qwen2.5:14b", "modelos do Ollama, separados por vírgula")
@@ -93,10 +104,15 @@ func main() {
 	ollama := flag.String("ollama", "http://localhost:11434", "endereço do Ollama")
 	numCtx := flag.Int("num_ctx", 8192, "janela de contexto do modelo")
 	mcpBin := flag.String("mcp", "bin/mcp", "binário do servidor MCP")
+	rescore := flag.Bool("rescore", false, "recalcula as métricas das respostas já gravadas em <out>.jsonl, sem chamar a LLM")
 	flag.Parse()
 
 	questions := loadQuestions(utils.Resolve(*questionsPath))
 	eng := loadEngine()
+	if *rescore {
+		rescoreRecords(*out, questions, eng.Corpus.Docs)
+		return
+	}
 	ctx := context.Background()
 	b, err := bridge.Connect(ctx, *ollama, *numCtx, utils.Resolve(*mcpBin), nil)
 	check(err)
@@ -126,8 +142,8 @@ func main() {
 					line, _ := json.Marshal(r)
 					fmt.Fprintln(jsonlFile, string(line))
 					done++
-					fmt.Fprintf(os.Stderr, "[%d/%d] %s %s rep%d acertou=%v alucinou=%v %dms  %s\n",
-						done, total, model, cond.Name, rep, r.Correct, r.Hallucinated, r.LLMMillis, q.Pergunta)
+					fmt.Fprintf(os.Stderr, "[%d/%d] %s %s rep%d acertou=%v inventou=%v %dms  %s\n",
+						done, total, model, cond.Name, rep, r.Correct, len(r.Invented) > 0, r.LLMMillis, q.Pergunta)
 				}
 			}
 		}
@@ -169,7 +185,7 @@ func warmUp(ctx context.Context, b *bridge.Bridge, model string) {
 }
 
 func ask(ctx context.Context, b *bridge.Bridge, eng *engine.Engine, model string, cond condition, rep int, q question) record {
-	r := record{Model: model, Condition: cond.Name, Rep: rep, Question: q.Pergunta, Relevant: q.Relevant}
+	r := record{Model: model, Condition: cond.Name, Rep: rep, Question: q.Pergunta, Relevant: q.Relevant, Prerequisites: q.Prerequisites}
 	var output toolOutput
 	var stats *bridge.Stats
 	history := []bridge.Message{{Role: "user", Content: q.Pergunta}}
@@ -195,109 +211,209 @@ func ask(ctx context.Context, b *bridge.Bridge, eng *engine.Engine, model string
 			r.Note = stats.Note
 		}
 	}
-	evaluate(&r, output, eng)
+	r.ContextIDs = contextIDs(output)
+	score(&r, eng.Corpus.Docs)
 	return r
 }
 
-// evaluate preenche as métricas automáticas. O endpoint citado é o primeiro
-// "MÉTODO /path" da resposta, a mesma regra que a interface usa.
-func evaluate(r *record, output toolOutput, eng *engine.Engine) {
-	inContext := map[string]bool{}
-	add := func(id, method, path string) {
-		key := strings.ToUpper(method) + " " + path
-		if !inContext[key] {
-			inContext[key] = true
-			r.ContextIDs = append(r.ContextIDs, id)
+// contextIDs lista, sem repetir, as operações que foram para o contexto da LLM:
+// os resultados, as relacionadas e os passos dos planos.
+func contextIDs(output toolOutput) []string {
+	var ids []string
+	add := func(id string) {
+		if !slices.Contains(ids, id) {
+			ids = append(ids, id)
 		}
 	}
 	for _, x := range output.Results {
-		add(x.ID, x.Method, x.Path)
+		add(x.ID)
 	}
 	for _, x := range output.Related {
-		add(x.ID, x.Method, x.Path)
+		add(x.ID)
 	}
 	for _, plan := range output.Plans {
 		for _, x := range plan.Steps {
-			add(x.ID, x.Method, x.Path)
+			add(x.ID)
 		}
 	}
+	return ids
+}
+
+// score aplica os quatro critérios determinísticos à resposta:
+//
+//	acertou              uma operação do gabarito aparece em qualquer lugar do texto;
+//	                     sem resposta no corpus, acerta quem não cita nenhuma chamada
+//	inventados           chamadas do texto que não existem no corpus (método + path)
+//	citou_pre_requisito  com a operação certa, cada passo do pré-requisito aparece
+//	uso_do_contexto      cruza o acerto com a operação certa estar no contexto
+func score(r *record, docs []types.Document) {
+	calls := callsIn(r.Answer)
+	r.Cited, r.Invented = nil, nil
+	for _, c := range calls {
+		r.Cited = append(r.Cited, c.Method+" "+c.Path)
+		if !existsInCorpus(c, docs) {
+			r.Invented = append(r.Invented, c.Method+" "+c.Path)
+		}
+	}
+
+	r.AnswerInContext = false
 	for _, id := range r.Relevant {
 		if slices.Contains(r.ContextIDs, id) {
 			r.AnswerInContext = true
 		}
 	}
 
-	if m := endpointPattern.FindStringSubmatch(r.Answer); m != nil {
-		r.Cited = m[1] + " " + strings.TrimRight(m[2], ".:;")
-		r.CitedID = docByEndpoint(eng, r.Cited)
-		r.Hallucinated = !inContext[r.Cited]
-	}
 	if len(r.Relevant) == 0 {
-		r.Correct = r.Cited == ""
+		r.Correct = len(calls) == 0
 	} else {
-		r.Correct = slices.Contains(r.Relevant, r.CitedID)
+		r.Correct = anyAppears(r.Relevant, calls, docs)
 	}
 
-	if prereqs := prerequisitePaths(eng, r.CitedID); len(prereqs) > 0 {
-		r.NeedsPrereq = true
-		for _, path := range prereqs {
-			if mentionsCall(r.Answer, path) {
-				r.ExplainedPrereq = true
+	r.NeedsPrereq = len(r.Prerequisites) > 0
+	r.CitedPrereq = r.NeedsPrereq && r.Correct
+	for _, step := range r.Prerequisites {
+		if !anyAppears(step, calls, docs) {
+			r.CitedPrereq = false
+		}
+	}
+
+	r.ContextUse = contextUse(r)
+}
+
+func contextUse(r *record) string {
+	switch {
+	case len(r.Relevant) == 0:
+		return ""
+	case r.Correct && r.AnswerInContext:
+		return "trouxe_e_usou"
+	case r.Correct:
+		return "de_memoria"
+	case r.AnswerInContext:
+		return "trouxe_e_nao_usou"
+	default:
+		return "busca_falhou"
+	}
+}
+
+// callsIn extrai as chamadas escritas como "MÉTODO /path" e as dos exemplos de
+// curl, na ordem em que aparecem e sem repetir.
+func callsIn(answer string) []call {
+	var calls []call
+	add := func(method, path string) {
+		path = strings.TrimRight(strings.SplitN(path, "?", 2)[0], ".:;")
+		c := call{Method: method, Path: path}
+		if !slices.Contains(calls, c) {
+			calls = append(calls, c)
+		}
+	}
+	for _, m := range endpointPattern.FindAllStringSubmatch(answer, -1) {
+		add(m[1], m[2])
+	}
+	for _, m := range curlPattern.FindAllStringSubmatch(answer, -1) {
+		if m[1] != "" {
+			add(m[1], m[2])
+		} else {
+			add(m[4], m[3])
+		}
+	}
+	return calls
+}
+
+// matchesTemplate compara o path escrito com o do corpus segmento a segmento:
+// os segmentos fixos têm que ser iguais e "{parâmetro}" aceita qualquer valor
+// ({owner}, <OWNER>, octocat).
+func matchesTemplate(template, path string) bool {
+	want := strings.Split(strings.Trim(template, "/"), "/")
+	got := strings.Split(strings.Trim(path, "/"), "/")
+	if len(want) != len(got) {
+		return false
+	}
+	for i := range want {
+		if !strings.HasPrefix(want[i], "{") && want[i] != got[i] {
+			return false
+		}
+	}
+	return true
+}
+
+func isCall(doc types.Document, c call) bool {
+	return strings.EqualFold(doc.Method, c.Method) && matchesTemplate(doc.Path, c.Path)
+}
+
+func existsInCorpus(c call, docs []types.Document) bool {
+	for _, doc := range docs {
+		if isCall(doc, c) {
+			return true
+		}
+	}
+	return false
+}
+
+// anyAppears diz se alguma das operações aparece entre as chamadas do texto.
+func anyAppears(ids []string, calls []call, docs []types.Document) bool {
+	for _, doc := range docs {
+		if !slices.Contains(ids, doc.ID) {
+			continue
+		}
+		for _, c := range calls {
+			if isCall(doc, c) {
+				return true
 			}
 		}
 	}
+	return false
 }
 
-// mentionsCall diz se a resposta cita a chamada pelo path inteiro, com ou sem
-// "GET" antes. O path tem que terminar ali: o da própria operação começa com o
-// do pré-requisito (…/releases/{release_id} contém …/releases), e só procurar o
-// texto marcava toda resposta como "explicou".
-func mentionsCall(answer, path string) bool {
-	pattern := regexp.MustCompile(`(?:GET\s+)?` + regexp.QuoteMeta(path) + `(?:[^/\w{]|$)`)
-	return pattern.MatchString(answer)
-}
+// rescoreRecords relê <out>.jsonl, aplica de novo os critérios com o gabarito
+// atual e regrava o .jsonl e o .csv. O cabeçalho .txt ganha uma linha dizendo
+// quando e com que commit a reavaliação foi feita.
+func rescoreRecords(out string, questions []question, docs []types.Document) {
+	byQuestion := map[string]question{}
+	for _, q := range questions {
+		byQuestion[q.Pergunta] = q
+	}
+	raw, err := os.ReadFile(utils.Resolve(out + ".jsonl"))
+	check(err)
+	var records []record
+	for line := range strings.SplitSeq(strings.TrimSpace(string(raw)), "\n") {
+		var r record
+		check(json.Unmarshal([]byte(line), &r))
+		q, ok := byQuestion[r.Question]
+		if !ok {
+			check(fmt.Errorf("pergunta fora do gabarito: %q", r.Question))
+		}
+		r.Relevant, r.Prerequisites = q.Relevant, q.Prerequisites
+		score(&r, docs)
+		records = append(records, r)
+	}
 
-func docByEndpoint(eng *engine.Engine, endpoint string) string {
-	for _, doc := range eng.Corpus.Docs {
-		if strings.ToUpper(doc.Method)+" "+doc.Path == endpoint {
-			return doc.ID
-		}
+	csvFile, jsonlFile := create(out+".csv"), create(out+".jsonl")
+	defer csvFile.Close()
+	defer jsonlFile.Close()
+	fmt.Fprintln(csvFile, csvHeader())
+	for _, r := range records {
+		fmt.Fprintln(csvFile, r.csvLine())
+		line, _ := json.Marshal(r)
+		fmt.Fprintln(jsonlFile, string(line))
 	}
-	return ""
-}
 
-// prerequisitePaths devolve os paths das chamadas que o plano do grafo põe
-// antes da operação citada; vazio se ela não precisa de nenhum id de outra chamada.
-func prerequisitePaths(eng *engine.Engine, id string) []string {
-	if id == "" {
-		return nil
-	}
-	for i := range eng.Corpus.Docs {
-		if eng.Corpus.Docs[i].ID != id {
-			continue
-		}
-		plans, _, err := eng.Graph.Plans([]types.Hit{{Doc: &eng.Corpus.Docs[i]}})
-		if err != nil || len(plans) == 0 {
-			return nil
-		}
-		var paths []string
-		for _, doc := range plans[0].Prerequisites() {
-			paths = append(paths, doc.Path)
-		}
-		return paths
-	}
-	return nil
+	txt, err := os.OpenFile(utils.Resolve(out+".txt"), os.O_APPEND|os.O_WRONLY, 0o644)
+	check(err)
+	defer txt.Close()
+	fmt.Fprintf(txt, "reavaliacao: %s, commit %s, comando: %s, %d respostas\n",
+		time.Now().Format(time.RFC3339), commit(), strings.Join(os.Args, " "), len(records))
+	fmt.Fprintf(os.Stderr, "%d respostas reavaliadas\n", len(records))
 }
 
 func csvHeader() string {
-	return "modelo,condicao,repeticao,pergunta,consulta,resposta_no_contexto,endpoint_citado,id_citado,acertou,alucinou,precisa_pre_requisito,explicou_pre_requisito,contexto_itens,contexto_chars,tokens_entrada,tokens_saida,llm_ms,aviso"
+	return "modelo,condicao,repeticao,pergunta,consulta,resposta_no_contexto,endpoints_citados,acertou,inventados,precisa_pre_requisito,citou_pre_requisito,uso_do_contexto,contexto_itens,contexto_chars,tokens_entrada,tokens_saida,llm_ms,aviso"
 }
 
 func (r record) csvLine() string {
 	fields := []string{
 		r.Model, r.Condition, fmt.Sprint(r.Rep), r.Question, r.Query,
-		fmt.Sprint(r.AnswerInContext), r.Cited, r.CitedID, fmt.Sprint(r.Correct), fmt.Sprint(r.Hallucinated),
-		fmt.Sprint(r.NeedsPrereq), fmt.Sprint(r.ExplainedPrereq), fmt.Sprint(len(r.ContextIDs)), fmt.Sprint(r.ContextChars),
+		fmt.Sprint(r.AnswerInContext), strings.Join(r.Cited, " | "), fmt.Sprint(r.Correct), strings.Join(r.Invented, " | "),
+		fmt.Sprint(r.NeedsPrereq), fmt.Sprint(r.CitedPrereq), r.ContextUse, fmt.Sprint(len(r.ContextIDs)), fmt.Sprint(r.ContextChars),
 		fmt.Sprint(r.PromptTokens), fmt.Sprint(r.OutputTokens), fmt.Sprint(r.LLMMillis), r.Note,
 	}
 	for i, f := range fields {
