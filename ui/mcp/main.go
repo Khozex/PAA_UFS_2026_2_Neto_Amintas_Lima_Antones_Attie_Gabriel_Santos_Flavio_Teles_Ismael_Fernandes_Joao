@@ -26,6 +26,9 @@ const (
 	toolName        = "search_github_api"
 	defaultK        = 3
 	maxK            = 10
+	maxRelated      = 10
+	defaultHops     = 3
+	maxHops         = 5
 	defaultMaxChars = 0 // 0 = texto completo de cada operação (como -context no CLI)
 	description     = "Search the GitHub REST API documentation. Given a natural-language " +
 		"question about what an endpoint does (e.g. \"create a repository in an " +
@@ -41,6 +44,8 @@ type Input struct {
 	Select        string `json:"select,omitempty" jsonschema:"how the top k are selected: topk, heap or sort; default is the server's"`
 	OrderStrategy string `json:"order_strategy,omitempty" jsonschema:"sorting algorithm when select=sort: quick, heap, merge or std"`
 	Plan          bool   `json:"plan,omitempty" jsonschema:"also return, for each result that needs an id produced by another call, the call order with prerequisites first"`
+	Related       int    `json:"related,omitempty" jsonschema:"also return up to N operations on the same resources as the results (graph neighbors), 0 to 10; default 0"`
+	Hops          int    `json:"hops,omitempty" jsonschema:"how many graph edges the related search may walk from the results, 1 to 5; default 3"`
 }
 
 type Result struct {
@@ -66,11 +71,31 @@ type SearchStats struct {
 	K           int    `json:"k"`
 }
 
+// RelatedOp é uma operação vizinha dos resultados no grafo; não vem do ranking.
+type RelatedOp struct {
+	ID      string `json:"id"`
+	Method  string `json:"method"`
+	Path    string `json:"path"`
+	Summary string `json:"summary"`
+	DocsURL string `json:"docs_url"`
+	Hops    int    `json:"hops"`
+}
+
+// RelatedStats é o custo da expansão (BFS nas arestas estruturais do grafo).
+type RelatedStats struct {
+	Hops         int   `json:"hops"`
+	Visited      int   `json:"visited"`
+	EdgesScanned int   `json:"edges_scanned"`
+	ExpandUS     int64 `json:"expand_us"`
+	GraphUS      int64 `json:"graph_us"`
+}
+
 // PlanStep é uma chamada do plano; a última de cada plano é o próprio resultado.
 type PlanStep struct {
-	ID     string `json:"id"`
-	Method string `json:"method"`
-	Path   string `json:"path"`
+	ID      string `json:"id"`
+	Method  string `json:"method"`
+	Path    string `json:"path"`
+	Summary string `json:"summary"`
 }
 
 type CallPlan struct {
@@ -88,11 +113,13 @@ type PlanStats struct {
 }
 
 type Output struct {
-	Query     string      `json:"query"`
-	Results   []Result    `json:"results"`
-	Stats     SearchStats `json:"stats"`
-	Plans     []CallPlan  `json:"plans,omitempty"`
-	PlanStats *PlanStats  `json:"plan_stats,omitempty"`
+	Query        string        `json:"query"`
+	Results      []Result      `json:"results"`
+	Stats        SearchStats   `json:"stats"`
+	Related      []RelatedOp   `json:"related,omitempty"`
+	RelatedStats *RelatedStats `json:"related_stats,omitempty"`
+	Plans        []CallPlan    `json:"plans,omitempty"`
+	PlanStats    *PlanStats    `json:"plan_stats,omitempty"`
 }
 
 type server struct {
@@ -126,6 +153,22 @@ func (s *server) search(ctx context.Context, req *mcp.CallToolRequest, in Input)
 		Config: config, Selection: stats.Selection, K: k,
 	}}
 	text := render(in.Query, stats, out.Results)
+	if related := min(in.Related, maxRelated); related > 0 {
+		hops := in.Hops
+		if hops <= 0 {
+			hops = defaultHops
+		}
+		hops = min(hops, maxHops)
+		neighbors, expandStats := s.engine.Graph.Expand(hits, graph.ExpandOptions{Method: "bfs", MaxHops: hops, Limit: related})
+		out.Related = toRelated(neighbors)
+		out.RelatedStats = &RelatedStats{
+			Hops: hops, Visited: expandStats.Visited, EdgesScanned: expandStats.EdgesScanned,
+			ExpandUS: expandStats.Time.Microseconds(), GraphUS: s.engine.GraphTime.Microseconds(),
+		}
+		text += renderRelated(out.Related)
+		log.Printf("relacionadas=%d hops=%d visitados=%d arestas=%d expansão=%s",
+			len(out.Related), hops, expandStats.Visited, expandStats.EdgesScanned, expandStats.Time)
+	}
 	if in.Plan {
 		plans, planStats, err := s.engine.Graph.Plans(hits)
 		if err != nil {
@@ -146,6 +189,29 @@ func (s *server) search(ctx context.Context, req *mcp.CallToolRequest, in Input)
 	}, out, nil
 }
 
+func toRelated(neighbors []graph.Related) []RelatedOp {
+	out := make([]RelatedOp, 0, len(neighbors))
+	for _, item := range neighbors {
+		out = append(out, RelatedOp{ID: item.Doc.ID, Method: item.Doc.Method, Path: item.Doc.Path, Summary: item.Doc.Summary, DocsURL: item.Doc.DocsURL, Hops: item.Hops})
+	}
+	return out
+}
+
+// renderRelated é o bloco curto que o modelo lê depois dos trechos: uma linha
+// por operação, sem o texto completo, para custar poucos tokens.
+func renderRelated(related []RelatedOp) string {
+	if len(related) == 0 {
+		return ""
+	}
+	var b strings.Builder
+	b.WriteString("Related operations (same resources as the results above, not ranked by the search):\n\n")
+	for _, op := range related {
+		fmt.Fprintf(&b, "- %s %s: %s. Docs: %s\n", op.Method, op.Path, op.Summary, op.DocsURL)
+	}
+	b.WriteString("\n")
+	return b.String()
+}
+
 // toPlans guarda só os planos com pré-requisito; os outros seriam só o próprio resultado.
 func toPlans(plans []graph.CallPlan) []CallPlan {
 	var out []CallPlan
@@ -155,7 +221,7 @@ func toPlans(plans []graph.CallPlan) []CallPlan {
 		}
 		steps := make([]PlanStep, 0, len(plan.Steps))
 		for _, doc := range plan.Steps {
-			steps = append(steps, PlanStep{ID: doc.ID, Method: doc.Method, Path: doc.Path})
+			steps = append(steps, PlanStep{ID: doc.ID, Method: doc.Method, Path: doc.Path, Summary: doc.Summary})
 		}
 		out = append(out, CallPlan{Rank: plan.Rank, Steps: steps})
 	}

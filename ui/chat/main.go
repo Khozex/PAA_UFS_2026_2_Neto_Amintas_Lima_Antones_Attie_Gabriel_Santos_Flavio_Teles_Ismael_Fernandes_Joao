@@ -4,6 +4,7 @@
 //	go run ./ui/chat                              # REPL
 //	go run ./ui/chat -once "how do I cancel a workflow run?"
 //	go run ./ui/chat -plan -once "how do I delete a release?"   # com a ordem de chamadas do grafo
+//	go run ./ui/chat -related 5 -hops 3 -once "how do I delete a release?"   # com operações vizinhas no grafo
 //	go run ./ui/chat -model qwen2.5:3b -- -preset 3 -k 5   # flags após -- vão para ui/mcp
 package main
 
@@ -28,6 +29,8 @@ func main() {
 	verbose := flag.Bool("v", false, "mostra rodadas, tempo e tokens de cada pergunta")
 	k := flag.Int("k", 5, "quantas operações recuperar por pergunta")
 	plan := flag.Bool("plan", false, "manda junto a ordem de chamadas (pré-requisitos) de cada resultado")
+	related := flag.Int("related", 0, "manda junto até N operações vizinhas dos resultados no grafo; 0 = não manda")
+	hops := flag.Int("hops", 0, "quantas arestas a busca de vizinhas anda; 0 = padrão do servidor MCP (3)")
 	flag.Parse()
 
 	ctx := context.Background()
@@ -42,7 +45,7 @@ func main() {
 	var history []bridge.Message
 	ask := func(text string) error {
 		history = append(history, bridge.Message{Role: "user", Content: text})
-		answer, err := b.Ask(ctx, *model, history, bridge.SearchOptions{Plan: *plan}, func(e bridge.Event) {
+		answer, err := b.Ask(ctx, *model, history, bridge.SearchOptions{Plan: *plan, Related: *related, Hops: *hops}, func(e bridge.Event) {
 			switch e.Type {
 			case "tool_call":
 				args, _ := json.Marshal(e.Args)
