@@ -167,22 +167,45 @@ func TestExpandDoesNotRecoverIssueCreate(t *testing.T) {
 	}
 }
 
-func TestPlanAddsPrerequisiteForUserKnownName(t *testing.T) {
+func TestPlanSkipsValuesTheUserKnows(t *testing.T) {
 	e := loadWithGraph(t, 0)
-	_, plans := plansOf(t, e, "update a label")
-	plan, ok := planFor(plans, "issues/update-label")
-	if !ok || !slices.Equal(stepIDs(plan.Prerequisites()), []string{"issues/list-labels-for-repo"}) {
-		t.Errorf("o plano de update-label mudou (era o falso pré-requisito list-labels-for-repo): atualize este teste e a tabela de testes")
+	cases := []struct{ query, operation string }{
+		{"update a label", "issues/update-label"},
+		{"merge a pull request", "pulls/merge"},
+	}
+	for _, c := range cases {
+		hits, plans := plansOf(t, e, c.query)
+		if !slices.Contains(hitIDs(hits), c.operation) {
+			t.Fatalf("%q: %s saiu do top-5", c.query, c.operation)
+		}
+		if plan, ok := planFor(plans, c.operation); ok && len(plan.Prerequisites()) > 0 {
+			t.Errorf("%q: %s não deveria ter pré-requisito, veio %v", c.query, c.operation, stepIDs(plan.Steps))
+		}
 	}
 }
 
-func TestPlanMissesIDInTheMiddleOfPath(t *testing.T) {
+func TestPlanFindsIDInTheMiddleOfPath(t *testing.T) {
 	e := loadWithGraph(t, 0)
 	hits, plans := plansOf(t, e, "cancel a workflow run")
 	if !slices.Contains(hitIDs(hits), "actions/cancel-workflow-run") {
 		t.Fatal("actions/cancel-workflow-run saiu do top-5")
 	}
-	if plan, ok := planFor(plans, "actions/cancel-workflow-run"); ok && len(plan.Prerequisites()) > 0 {
-		t.Errorf("cancel-workflow-run passou a ter plano %v: atualize este teste e a tabela de testes", stepIDs(plan.Steps))
+	plan, _ := planFor(plans, "actions/cancel-workflow-run")
+	want := []string{"actions/list-workflow-runs-for-repo", "actions/cancel-workflow-run"}
+	if got := stepIDs(plan.Steps); !slices.Equal(got, want) {
+		t.Errorf("plano %v, esperava %v", got, want)
+	}
+}
+
+func TestPlanChainsTwoIDs(t *testing.T) {
+	e := loadWithGraph(t, 0)
+	_, plans := plansOf(t, e, "delete a release")
+	plan, ok := planFor(plans, "reactions/delete-for-release")
+	if !ok {
+		t.Fatal("reactions/delete-for-release saiu do top-5")
+	}
+	want := []string{"repos/list-releases", "reactions/list-for-release", "reactions/delete-for-release"}
+	if got := stepIDs(plan.Steps); !slices.Equal(got, want) {
+		t.Errorf("plano %v, esperava %v", got, want)
 	}
 }

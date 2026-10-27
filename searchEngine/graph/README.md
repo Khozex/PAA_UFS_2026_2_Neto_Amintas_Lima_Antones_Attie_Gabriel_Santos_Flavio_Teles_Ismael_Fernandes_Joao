@@ -25,7 +25,7 @@ Funcionalidade em `searchEngine/graph/`, com flags de uso em `searchEngine/main.
 | `Within` | recurso filho → recurso pai | 1 | o contrário da operação anterior|
 | `Exposes` | recurso → operação | 0,5 | o recurso tem essa operação |
 | `ExposedBy` | operação → recurso | 0,5 | o contrário |
-| `DependsOn` | operação → operação | 1 | precisa ser chamada antes (ex.: `DELETE …/releases/{id}` precisa de `GET …/releases`, que dá o `{id}`) |
+| `DependsOn` | operação → operação | 1 | precisa ser chamada antes (ex.: `DELETE …/releases/{release_id}` precisa de `GET …/releases`, que dá o `{release_id}`) |
 
 - **Peso**: é a "distância" entre dois itens. Quanto menor, mais perto. Duas
   operações do mesmo recurso ficam a custo 1 (0,5 + 0,5). Os valores 1 e 0,5 foram
@@ -37,6 +37,27 @@ Funcionalidade em `searchEngine/graph/`, com flags de uso em `searchEngine/main.
   `DELETE …/releases/{id}` → recurso `…/releases/{id}` → `PATCH …/releases/{id}`
   mostra que as duas operações mexem no mesmo recurso. O custo do caminho é a
   soma dos pesos.
+
+### Regra do `DependsOn`
+
+A dependência sai do path. Para cada operação, sobe pelos ancestrais do path;
+toda vez que um segmento é um parâmetro terminado em `_id}`, a operação passa
+a depender do `GET` do recurso logo acima dele, que é a lista que devolve esse
+id.
+
+```
+POST /repos/{owner}/{repo}/actions/runs/{run_id}/cancel
+                                        └─ {run_id} → GET /repos/{owner}/{repo}/actions/runs
+
+DELETE /repos/{owner}/{repo}/releases/{release_id}/reactions/{reaction_id}
+                                                             └─ {reaction_id} → GET …/releases/{release_id}/reactions
+                                      └─ {release_id} → GET /repos/{owner}/{repo}/releases
+```
+
+Só `_id` cria dependência porque é um valor gerado pela API, que o usuário não
+vê na tela nem na URL. Nomes (`{owner}`, `{repo}`, `{org}`, `{name}`) e números
+(`{issue_number}`, `{pull_number}`) o usuário já sabe, então não pedem uma
+chamada antes. Essas decisões são suposições e estão nas hipóteses no fim.
 
 ### Grafo × heurística de busca por texto
 
@@ -61,12 +82,15 @@ go run ./searchEngine -query "delete a release" -plan
 ```
 
 - `-expand bfs|dijkstra` mostra até 10 operações relacionadas.
-- `-plan` mostra a ordem de chamadas do primeiro resultado.
+- `-plan` mostra a ordem de chamadas de cada resultado do top-k que tem
+  pré-requisito, e não só do primeiro.
 - `-hops` (padrão 3) limita a BFS; `-budget` (padrão 3) limita o Dijkstra.
 
 Obs.: A BFS conta arestas (operação → recurso → operação = 2). O Dijkstra soma
-  pesos (mesmo recurso = 1). Por isso `-hops 2` e `-budget 2` não devolvem
-  exatamente o mesmo conjunto.
+  pesos (mesmo recurso = 1). Com os pesos atuais, entre duas operações o custo
+  é sempre o número de arestas menos 1 (as duas pontas valem 0,5 e o resto
+  vale 1). Então `-hops h` e `-budget h−1` devolvem o mesmo conjunto, na mesma
+  ordem: o Dijkstra só passa a diferir da BFS se os pesos mudarem.
 
 ## Especificação do problema
 
@@ -102,7 +126,7 @@ Obs.: A BFS conta arestas (operação → recurso → operação = 2). O Dijkstr
 |---|---|
 | Corpus | `data/processed/docs.jsonl`: 1224 operações da GitHub REST API v1.1.4 |
 | Representação | Um documento por operação (método + path); vértices e arestas como acima |
-| Tamanho do grafo | `V = R + O` vértices (R recursos, O = 1224 operações); `E = 2(R−1) + 2·O + D` arestas (D dependências) |
+| Tamanho do grafo | `V = R + O` vértices (R recursos, O = 1224 operações); `E = 2(R−1) + 2·O + D` arestas (D dependências). No corpus completo: V = 2214 (R = 990), E = 4737 (D = 311) |
 | Consultas | As 10 do gabarito `data/queries.json`, mais consultas livres |
 | Sementes | k = 5 no CLI, k = 3 na interface; `-preset 2` |
 | Expansão | H = 3, B = 3, L = 10 |
@@ -127,12 +151,17 @@ chamadas. A referência é a regra "lista antes do item".
 | Consulta sem resultado | Sem sementes, nada a expandir; devolve vazio | `TestExpand` |
 | Semente que não está no grafo | É ignorada | `TestEmptyAndDisconnected` |
 | Empate | Desempata por ID (e por índice do vértice no Dijkstra); o resultado deve ser sempre o mesmo | `TestBuildStructure` |
-| Documento duplicado (mesmo método + path) | Vira uma operação só | `TestDuplicateDocumentCollapses` |
+| Documento duplicado (mesmo método + path) | Vira uma operação só; fica o primeiro documento | `TestDuplicateDocumentCollapses` |
 | Limite excedido | Trunca a lista, mantendo os mais próximos | `TestBFSDepthLimitAndDijkstraBudget`, `TestExpand` |
 | Grafo desconexo / sem caminho | Distância infinita; `Path` avisa que não há caminho | `TestEmptyAndDisconnected` |
 | Peso negativo ou inválido | `AddEdge` recusa | `TestAddEdgeRejectsInvalid` |
 | Ciclo de dependência | `TopoOrder` e `Plan` devolvem erro. No grafo montado pelo `Build` não acontece, só em grafos feitos de maneira arbitrária | `TestDFSDetectsCycle` |
 | Operação sem pré-requisito | O plano tem só ela | `TestPlanOrdersPrerequisitesFirst` |
+| Parâmetro que o usuário já sabe (`{name}`, `{pull_number}`) | Não cria pré-requisito | `TestPlanSkipsValuesTheUserKnows` |
+| `_id` no meio do path (`…/runs/{run_id}/cancel`) | Cria pré-requisito mesmo não sendo o último segmento | `TestPlanFindsIDInTheMiddleOfPath` |
+| Dois `_id` no mesmo path | Cadeia de dois pré-requisitos, na ordem certa | `TestPlanChainsTwoIDs` |
+| Resposta certa fora do 1º lugar | O plano dela existe, porque roda para todo o top-k | `TestPlanCoversAnswerOutsideFirstPlace` |
+| Resposta fora do top-k (`create an issue`) | A expansão não recupera; falha conhecida | `TestExpandDoesNotRecoverIssueCreate` |
 
 
 ## Algoritmos e provas de corretude
@@ -246,6 +275,53 @@ segue:
 - Em um grafo onde os dois divergem, como 1 aresta de custo 10 contra 3 arestas de custo 1, a BFS escolhe a de menos arestas, o Dijkstra a de menor custo.
 - A ordem do `Plan` respeita todas as arestas `DependsOn` do grafo da API.
 - Montar o grafo duas vezes dá o mesmo grafo.
+- No corpus real (1224 e 612 operações): toda operação vira vértice, toda
+  `DependsOn` aponta para um `GET` num path mais curto acima dela, `E` bate com
+  a fórmula e não há ciclo (`searchEngine/engine/graph_test.go`).
+
+## Análise assintótica
+
+Notação: `V` vértices, `E` arestas, `k` sementes (top-k), `H` limite de saltos,
+`B` orçamento de custo, `d` profundidade do path, `n` operações alcançadas
+pela expansão.
+
+Medidas do corpus completo que entram no caso médio:
+
+| Medida | Valor |
+|---|---|
+| Profundidade do path | média 4,9 segmentos, máximo 10 |
+| `_id` por path | 868 operações com 0, 336 com 1, 20 com 2; nunca mais de 2 |
+| Vértices visitados pela expansão (k = 5) | mediana 85 na BFS (H = 3) e 140 no Dijkstra (B = 3), de 2214 |
+
+| Algoritmo | Melhor caso | Pior caso | Caso médio no corpus |
+|---|---|---|---|
+| `Build` | Θ(V + E + O·d) | Θ(V + E + O·d + E log E) | igual aos outros casos: monta tudo sempre |
+| Expansão BFS | Θ(V): sementes sem vizinhos | O(V + E + n·H + n log n): tudo a até `H` saltos | Θ(V) + ~85 vértices visitados |
+| Expansão Dijkstra | Θ(V): sementes sem vizinhos | O(V + E log E + n log n) | Θ(V) + ~140 vértices visitados |
+| `Plans` (k resultados) | Θ(k·V) | O(k·(V + E)) | Θ(k·V) + no máximo 3 vértices por plano |
+
+- **`Build`**: percorre a árvore de paths uma vez (`V + E`) e, para cada
+  operação, sobe pelos ancestrais (`O·d`). No fim ordena a lista de arestas de
+  cada vértice; no pior caso, um vértice com quase todas as arestas, isso custa
+  `E log E`. Na prática os graus são pequenos e a ordenação é barata.
+- **Por que o melhor caso não é O(k)**: BFS, DFS e Dijkstra criam vetores do
+  tamanho de `V` (`depth`, `color`, `Dist`) a cada chamada. Mesmo sem nada para
+  visitar, isso custa Θ(V). Com V = 2214 é barato (µs), mas é o termo que
+  domina o caso médio.
+- **Expansão**: ela não para quando junta `L` relacionadas. Visita tudo até
+  `H` (ou `B`), monta o caminho de cada uma (até `H` passos), ordena e só então
+  corta em `L`. No Dijkstra, o heap aceita entradas repetidas, por isso o
+  `log E`.
+- **`Plans`**: roda uma DFS por resultado, só em `DependsOn`. Como um path tem
+  no máximo 2 `_id`, cada plano tem no máximo 3 operações, e a parte que anda
+  no grafo é constante no nosso dado. O custo que sobra é o Θ(V) de criar os
+  vetores, `k` vezes.
+
+O benchmark (`go run ./benchmark -trilha grafo`, resultados em
+`artefatos/benchmark_grafo.*`) confirma a ordem de grandeza: montar o grafo
+leva ~1 ms (o índice invertido leva ~6 ms), a expansão BFS ~15 µs, a Dijkstra
+~50 µs e os planos dos 5 resultados ~18 µs, contra ~170 µs da consulta TF-IDF.
+O grafo usa ~390 kB a mais de memória.
 
 ### Hipóteses de invalidade de corretude
 
@@ -278,5 +354,5 @@ As contraposições de corretude são importantes pois:
 | A BFS só vale para "menos arestas" | BFS | se os pesos forem diferentes, ela **não** dá o caminho mais barato; use Dijkstra |
 | As provas valem para as arestas que o filtro deixa passar | DFS, BFS e Dijkstra | `Plan` usa só `DependsOn`; a expansão usa as demais. Misturar muda o resultado |
 | "Perto" quer dizer "relevante" | expansão | sem garantia. Pode trazer operações próximas, mas inúteis |
-| `DependsOn` deduzida do path está certa | `Plan` | em casos como `{owner}`/`{repo}` (que não vêm de uma lista), ou quando o pai não tem `GET`, a dependência é errada ou falta |
-| Corpus real parecido com o de teste | DFS, BFS e Dijkstra | Não medi no corpus real; paths muito diferentes ou muitas colisões de método + path podem mudar a estrutura e o desempenho |
+| `DependsOn` deduzida do path está certa | `Plan` | a regra supõe que só `_id` é desconhecido do usuário e que o `GET` logo acima é a lista que dá esse id. Falha quando o pai não tem `GET` (a dependência falta) ou quando o `GET` lista só uma parte (ex.: `{gist_id}` sai de "List gists for the authenticated user", que não serve para o gist de outra pessoa) |
+| Pesos atuais (0,5 e 1) | expansão | com eles, Dijkstra com orçamento `h−1` é igual à BFS com `h` saltos. Se os pesos mudarem, os dois passam a diferir |

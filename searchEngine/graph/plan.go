@@ -23,8 +23,10 @@ type PlanStats struct {
 	Time              time.Duration
 }
 
-// Plans roda o Plan para cada resultado, e não só para o primeiro: assim o
-// plano da resposta certa existe sempre que ela estiver entre os k.
+// Plans faz a mesma busca do Plan para cada resultado, e não só para o
+// primeiro: assim o plano da resposta certa existe sempre que ela estiver
+// entre os k. A busca é repetida aqui, em vez de chamar o Plan, para somar
+// as arestas percorridas.
 func (g *Graph) Plans(hits []types.Hit) ([]CallPlan, PlanStats, error) {
 	start := time.Now()
 	var stats PlanStats

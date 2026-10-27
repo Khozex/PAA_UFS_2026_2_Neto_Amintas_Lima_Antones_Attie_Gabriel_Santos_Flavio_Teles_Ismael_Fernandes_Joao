@@ -127,23 +127,23 @@ func Build(root *types.DocumentNode) *Graph {
 	}
 	walk(root)
 
-	for node, rv := range ids {
-		_ = rv
-		if node.Parent == nil || !isParam(lastSegment(node.Path)) {
-			continue
-		}
-		list, ok := node.Parent.Operations["GET"]
-		if !ok {
-			continue
-		}
-		lv, ok := g.byDocID[list.ID]
-		if !ok {
-			continue
-		}
+	for node, resourceVertex := range ids {
 		for _, method := range sortedKeys(node.Operations) {
-			ov := g.opVertexOf(node.Operations[method], rv)
-			if ov >= 0 && ov != lv {
-				_ = g.AddEdge(ov, lv, WeightDependsOn, DependsOn)
+			operationVertex := g.opVertexOf(node.Operations[method], resourceVertex)
+			if operationVertex < 0 {
+				continue
+			}
+			for ancestor := node; ancestor.Parent != nil; ancestor = ancestor.Parent {
+				if !isGeneratedID(lastSegment(ancestor.Path)) {
+					continue
+				}
+				list, ok := ancestor.Parent.Operations["GET"]
+				if !ok {
+					continue
+				}
+				if listVertex, ok := g.byDocID[list.ID]; ok {
+					_ = g.AddEdge(operationVertex, listVertex, WeightDependsOn, DependsOn)
+				}
 			}
 		}
 	}
@@ -174,6 +174,10 @@ func lastSegment(path string) string {
 }
 
 func isParam(seg string) bool { return strings.HasPrefix(seg, "{") && strings.HasSuffix(seg, "}") }
+
+func isGeneratedID(segment string) bool {
+	return isParam(segment) && strings.HasSuffix(segment, "_id}")
+}
 
 func sortedKeys[V any](m map[string]V) []string {
 	keys := make([]string, 0, len(m))
