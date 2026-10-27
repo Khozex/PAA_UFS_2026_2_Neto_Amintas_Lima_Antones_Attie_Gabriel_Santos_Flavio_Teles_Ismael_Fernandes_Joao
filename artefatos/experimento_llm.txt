@@ -9,4 +9,5 @@ comando: bin/llmExperiment -models qwen2.5:3b,qwen2.5:7b,qwen2.5:14b -reps 3 -ou
 modelos: qwen2.5:3b, qwen2.5:7b, qwen2.5:14b
 condicoes: A,B,C,D (A=top-5, B=top-5+5 relacionadas, C=top-10, D=top-5+plano)
 perguntas: 20   repeticoes: 3   semente: 42   respostas: 720
-
+reexecucao: 2026-10-27T01:47:37-03:00, commit 7204e1b+alterações; 3 perguntas fora do corpus trocadas (renomear um commit, desfazer as alterações de um arquivo, desfazer as alterações de um commit -> trocar a foto de perfil, transferir uma issue, excluir a conta); 108 respostas substituídas com: bin/llmExperiment -models qwen2.5:3b,qwen2.5:7b,qwen2.5:14b -reps 3 -questions <só as 3 perguntas novas>
+reavaliacao: 2026-10-27T02:44:15-03:00, commit 7204e1b+alterações, comando: bin/llmExperiment -rescore, 720 respostas

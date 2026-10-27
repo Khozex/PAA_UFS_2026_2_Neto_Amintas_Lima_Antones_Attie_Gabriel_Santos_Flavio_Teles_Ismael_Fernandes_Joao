@@ -83,15 +83,20 @@ benchmark/             compila o searchEngine uma vez e roda a matriz de cenári
   report/              extrai a linha de estatísticas e os resultados; calcula posição e P@k
   hardware/            CPU, núcleos e RAM da máquina
 
+llmExperiment/         AV2: as 20 perguntas de data/queries_av2.json na LLM, nas condições A, B, C e D;
+                       avalia cada resposta por regras determinísticas
+
 data/
   githubApiDoc.json    corpus bruto (13 MB)
   queries.json         gabarito: 10 perguntas → operationId esperado
+  queries_av2.json     gabarito da AV2: 20 perguntas → operações certas e pré-requisitos
   processed/           gerado pela ingestão, fora do git
 
 artefatos/
   ficha-do-corpus.pdf
   benchmark_results.txt  log de cada execução (5 primeiros resultados + estatísticas)
   benchmark_results.csv  uma linha por execução
+  experimento_llm.*      respostas da LLM (.jsonl), métricas (.csv) e cabeçalho da execução (.txt)
 ```
 
 ## Fluxo de uma consulta
@@ -165,6 +170,39 @@ cabeçalho. Cenários:
 
 - presets 1, 2 e 3 com corpus completo (1224) e metade (612), k=5;
 - topk, heap, sort/merge, sort/quick e sort/std com k ∈ {5, 50, 500, 1224}.
+
+## Experimento com a LLM (AV2)
+
+```
+go build -o bin/mcp ./ui/mcp
+go build -o bin/llmExperiment ./llmExperiment
+bin/llmExperiment -models qwen2.5:3b,qwen2.5:7b,qwen2.5:14b -reps 3 -out artefatos/experimento_llm
+bin/llmExperiment -rescore       # recalcula as métricas das respostas gravadas, sem chamar a LLM
+```
+
+Precisa do Ollama com os modelos baixados. Cada pergunta de
+`data/queries_av2.json` passa pela LLM em quatro condições de contexto:
+
+- A: top-5 do TF-IDF;
+- B: top-5 + 5 operações relacionadas pelo grafo;
+- C: top-10 do TF-IDF (controle: mais contexto sem grafo);
+- D: top-5 + ordem de chamadas pelo grafo.
+
+O gabarito tem, por pergunta, a consulta em inglês, as operações certas
+(`relevant`, vazio nas perguntas sem resposta no corpus) e os pré-requisitos
+(`prerequisites`: os passos antes da operação, cada um com as chamadas que
+servem para ele). Uma chamada é qualquer `MÉTODO /path` ou
+`curl -X MÉTODO https://api.github.com/...` no texto; os segmentos
+`{parâmetro}` aceitam qualquer valor. Métricas de cada resposta:
+
+- `acertou`: uma operação certa aparece no texto; fora do corpus, nenhuma chamada citada;
+- `inventados`: chamadas cujo método e path não existem no corpus;
+- `citou_pre_requisito`: acertou e citou uma chamada de cada passo do pré-requisito;
+- `uso_do_contexto`: trouxe_e_usou, trouxe_e_nao_usou, de_memoria ou busca_falhou;
+- tokens de entrada e de saída e tempo de geração.
+
+`-rescore` relê `<out>.jsonl`, aplica o gabarito atual, reescreve o `.csv`
+e o `.jsonl` e acrescenta uma linha no `.txt`.
 
 ## Chat com modelo local (RAG via MCP)
 
